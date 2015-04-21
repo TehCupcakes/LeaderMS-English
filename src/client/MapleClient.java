@@ -411,46 +411,45 @@ public class MapleClient {
                     if (banned == -1) {
                         unban();
                     }
-                    if (getLoginState() > LOGIN_NOTLOGGEDIN) {
-                        loggedIn = false;
-                        loginok = 7;
-                        if (pwd.equalsIgnoreCase("fixme")) {
+                    if (passhash.equals(pwd)) {
+                        if (getLoginState() > LOGIN_NOTLOGGEDIN) {
                             try {
                                 ps = con.prepareStatement("UPDATE accounts SET loggedin = 0 WHERE name = ?");
                                 ps.setString(1, login);
                                 ps.executeUpdate();
                                 ps.close();
+                                loginok = 0;
                             } catch (SQLException se) {
+                                loggedIn = false;
+                                loginok = 7;
                             }
+                        } else {
+                            loginok = 0;
                         }
                     } else {
-                        if (passhash.equals(pwd)) {
+                        boolean updatePasswordHash = false;
+                        if (LoginCrypto.isLegacyPassword(passhash) && LoginCrypto.checkPassword(pwd, passhash)) {
+                            loginok = 0;
+                            updatePasswordHash = true;
+                        } else if (salt == null && LoginCrypto.checkSha1Hash(passhash, pwd)) {
+                            loginok = 0;
+                            updatePasswordHash = true;
+                        } else if (LoginCrypto.checkSaltedSha512Hash(passhash, pwd, salt)) {
                             loginok = 0;
                         } else {
-                            boolean updatePasswordHash = false;
-                            if (LoginCrypto.isLegacyPassword(passhash) && LoginCrypto.checkPassword(pwd, passhash)) {
-                                loginok = 0;
-                                updatePasswordHash = true;
-                            } else if (salt == null && LoginCrypto.checkSha1Hash(passhash, pwd)) {
-                                loginok = 0;
-                                updatePasswordHash = true;
-                            } else if (LoginCrypto.checkSaltedSha512Hash(passhash, pwd, salt)) {
-                                loginok = 0;
-                            } else {
-                                loggedIn = false;
-                                loginok = 4;
-                            }
-                            if (updatePasswordHash) {
-                                PreparedStatement pss = con.prepareStatement("UPDATE `accounts` SET `password` = ?, `salt` = ? WHERE id = ?");
-                                try {
-                                    String newSalt = LoginCrypto.makeSalt();
-                                    pss.setString(1, LoginCrypto.makeSaltedSha512Hash(pwd, newSalt));
-                                    pss.setString(2, newSalt);
-                                    pss.setInt(3, accId);
-                                    pss.executeUpdate();
-                                } finally {
-                                    pss.close();
-                                }
+                            loggedIn = false;
+                            loginok = 4;
+                        }
+                        if (updatePasswordHash) {
+                            PreparedStatement pss = con.prepareStatement("UPDATE `accounts` SET `password` = ?, `salt` = ? WHERE id = ?");
+                            try {
+                                String newSalt = LoginCrypto.makeSalt();
+                                pss.setString(1, LoginCrypto.makeSaltedSha512Hash(pwd, newSalt));
+                                pss.setString(2, newSalt);
+                                pss.setInt(3, accId);
+                                pss.executeUpdate();
+                            } finally {
+                                pss.close();
                             }
                         }
                     }

@@ -57,9 +57,9 @@ public class UseCashItemHandler extends AbstractMaplePacketHandler {
             c.getSession().close();
             return;
         }
-        /* Bloqueia o uso do Chalboard/Passed Gas/ETC */
+        /* Blocks use of Chalkboard/Passed Gas/ETC */
          if (/*item.getItemId() == 5370000 ||*/ item.getItemId() == 5370001 || item.getItemId() == 5281000)  {
-             c.getPlayer().dropOverheadMessage("O uso deste item esta desabilitado no momento, lamentamos!");
+             c.getPlayer().dropOverheadMessage("Use of this item is currently disabled, sorry!");
              return;
          }
         if (player.haveItem(itemId)) { 
@@ -615,7 +615,7 @@ public class UseCashItemHandler extends AbstractMaplePacketHandler {
 				}
                     break;
                 default:
-                    System.out.println("Non-existant cash item was used itemid: " + itemId);
+                    System.out.println("Non-existent cash item was used itemid: " + itemId);
             }
             c.getSession().write(MaplePacketCreator.enableActions());
         } catch (RemoteException e) {
@@ -623,7 +623,7 @@ public class UseCashItemHandler extends AbstractMaplePacketHandler {
             System.out.println("REMOTE ERROR" + e);
         }
     } else {
-    player.dropMessage(6, "Trying packages? Or not!");
+    player.dropMessage(6, "Something went wrong.");
     return;
     }
 }
