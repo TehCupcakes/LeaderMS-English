@@ -2,3 +2,8 @@
 /build/
 /nbproject/
 /scripts/MAPLECAKES_npc/
+/dist/
+
+LeaderMS.lnk
+build.xml
+nbbuild.xml
