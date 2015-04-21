@@ -226,16 +226,16 @@ public class PlayerNPCWorker implements Runnable {
         
         public static void updateAllNPCs() throws SQLException { 
             Connection con = DatabaseConnection.getConnection();
-            PreparedStatement urgay = con.prepareStatement("SELECT * FROM playernpcs WHERE name != '';");
-            ResultSet urmoregay = urgay.executeQuery();
-            while (urmoregay.next()) {
-                String urmoregaythanbillgates = urmoregay.getString("name");
-                updatePlayerNPC(urmoregaythanbillgates);
+            PreparedStatement query = con.prepareStatement("SELECT * FROM playernpcs WHERE name != '';");
+            ResultSet result = query.executeQuery();
+            while (result.next()) {
+                String name = result.getString("name");
+                updatePlayerNPC(name);
             }
             System.out.println("Player NPCs have all been updated.");
             System.out.println("Closing SQL Connections.");
-            urgay.close();
-            urmoregay.close();
+            query.close();
+            result.close();
             //con.close();
         }
 }

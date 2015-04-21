@@ -92,7 +92,7 @@ function playerExit(eim, player) {
 	player.changeMap(exitMap, exitMap.getPortal(0));
 }
 
-//Those offline cuntts
+//Those offline peeps
 function removePlayer(eim, player) {
 	eim.unregisterPlayer(player);
 	player.getMap().removePlayer(player);

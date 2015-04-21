@@ -124,7 +124,7 @@ function playerDisconnected(eim, player) {
 		}
 		eim.dispose();
 	}
-	else { //KICK THE D/CED CUNT
+	else { //KICK THE DISCONNECTED PLAYERS
 		// If only 5 players are left, uncompletable:
 		var party = eim.getPlayers();
 		if (party.size() < minPlayers) {
@@ -165,7 +165,6 @@ function playerExit(eim, player) {
 	player.changeMap(exitMap, exitMap.getPortal(0));
 }
 
-//Those offline cuntts
 function removePlayer(eim, player) {
 	eim.unregisterPlayer(player);
 	player.getMap().removePlayer(player);

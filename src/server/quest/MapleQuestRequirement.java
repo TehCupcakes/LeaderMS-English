@@ -111,7 +111,7 @@ public class MapleQuestRequirement {
                     int killReq = 0;
                     try {
                         killReq = MapleDataTool.getInt(mobEntry.getChildByPath("count"));
-                    } catch (Throwable t) {//wonder what quest is being a bitch
+                    } catch (Throwable t) {//wonder what quest is being stupid
                        FilePrinter.printError(FilePrinter.QUEST + quest.getId() + ".txt", t); 
                     }                 
                     if (c.getQuest(quest).getMobKills(mobId) < killReq) {
