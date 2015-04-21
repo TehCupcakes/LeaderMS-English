@@ -27,7 +27,7 @@
 
 
 function start() {
-	cm.sendNext ("A luz ea escuridao sempre coexistem ...");
+	cm.sendNext ("Light and darkness always coexist...");
 }
 
 function action() {

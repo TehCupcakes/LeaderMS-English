@@ -44,22 +44,22 @@ function action(mode, type, selection) {
     if (status == 0) {
 	if (cm.getEventInstance().getProperty("leader").equals(cm.getPlayer().getName())) {
 	    if (cm.getEventInstance().getProperty("stage4clear") != null && cm.getEventInstance().getProperty("stage4clear").equals("true")) {
-		cm.sendOk("Eu pensei que seria um sono imortal, eu finalmente encontrei alguem que vai salvar Sharenian. Eu posso realmente descansar em paz agora.");
-		cm.safeDispose();
+			cm.sendOk("I thought it would be an eternal sleep. I finally found someone who will save Sharenian! I can truly rest in peace now.");
+			cm.safeDispose();
 	    } else {
-		var prev = cm.getEventInstance().setProperty("stage4clear","true",true);
-		if (prev == null) {
-		    cm.sendNext("Eu pensei que seria um sono imortal, eu finalmente encontrei alguem que vai salvar Sharenian.  Este velho vai agora abrir o caminho para que você termine a quest..");
-		} else { 
-		    cm.sendOk("Eu pensei que seria um sono imortal, eu finalmente encontrei alguem que vai salvar Sharenian. Eu posso realmente descansar em paz agora.");
-		    cm.safeDispose();
-		}
+			var prev = cm.getEventInstance().setProperty("stage4clear","true",true);
+			if (prev == null) {
+				cm.sendNext("I thought it would be an eternal sleep. I finally found someone who will save Sharenian! This will pave the way for you to complete the quest...");
+			} else { 
+				cm.sendOk("I thought it would be an eternal sleep. I finally found someone who will save Sharenian! I can truly rest in peace now.");
+				cm.safeDispose();
+			}
 	    }
 	} else {
 	    if (cm.getEventInstance().getProperty("stage4clear") != null && cm.getEventInstance().getProperty("stage4clear").equals("true"))
-		cm.sendOk("Eu pensei que seria um sono imortal, eu finalmente encontrei alguem que vai salvar Sharenian. Eu posso realmente descansar em paz agora.");
+		cm.sendOk("I thought it would be an eternal sleep. I finally found someone who will save Sharenian! I can truly rest in peace now.");
 	    else
-		cm.sendOk("Peca o lider de seu grupo para falar comigo, mais ninguem.");
+		cm.sendOk("Please tell the leader of your group to talk to me, no one else.");
 	    cm.safeDispose();
 	}
     } else if (status == 1) {

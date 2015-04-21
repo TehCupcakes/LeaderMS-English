@@ -2,21 +2,21 @@ var status = -1;
 
 function action(mode, type, selection) {
     if (mode != 1) {
-	cm.sendOk("Boa sorte em terminar a Guild Quest!");
+	cm.sendOk("Good luck on finishing the Guild Quest!");
 	cm.dispose();
 	return;
     }
 status++;
     if (status == 0) {
 	if (cm.isPlayerInstance()) {
-		cm.sendSimple("O que voce gostaria de fazer? \r\n #L0#Sair da Guild Quest#l");
+		cm.sendSimple("What would you like to do? \r\n #L0#Exit the Guild Quest#l");
 	} else {
-		cm.sendOk("Desculpe, mas eu nao posso fazer nada por voce!");
+		cm.sendOk("Sorry, but I cannot do anything for you!");
 		cm.dispose();
 	}
     }
     else if (status == 1) {
-	cm.sendYesNo("Tem certeza de que quer fazer isso? Voce nao sera capaz de voltar!");
+		cm.sendYesNo("Are you sure you want to leave? You will be able to return!");
     }
     else if (status == 2) {
 	if (cm.isPlayerInstance()) { 

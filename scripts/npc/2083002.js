@@ -17,7 +17,7 @@ function action(mode, type, selection) {
 		cm.dispose();
 	} else {
 		if (status >= 0 && mode == 0) {
-			cm.sendOk("Ok, keep preservering!");
+			cm.sendOk("Ok, keep persevering!");
 			cm.dispose();
 			return;
 		}
@@ -37,7 +37,7 @@ function action(mode, type, selection) {
 			}
 		}else if(cm.getChar().getMapId()==240050500){
 			if (status==0) {
-				cm.sendNext("Tough luck there eh? You can always come back if your'e prepared... but anyway, I will take all the items you obtained from the PQ :)");				
+				cm.sendNext("Tough luck there, eh? You can always come back if you're prepared... but anyway, I will take all the items you obtained from the PQ :)");				
 			}else if (status == 1){
 				for (var i = 0; i < PQItems.length; i++) {
 					cm.removeAll(PQItems[i]);

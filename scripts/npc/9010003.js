@@ -7,63 +7,63 @@
 
 var status;
 function start() {
-status = -1;
-action( 1, 0, 0);
+	status = -1;
+	action( 1, 0, 0);
 }
 function action (mode, type , selection) {
-if (mode == 1) { 
-     status++; 
- }else{ 
-       status--; 
-}
-if(cm.getChar().getMapId() == 910000000){
-if (status == 0) { 
-cm.sendSimple("Ola #e#h ##n, eu sou Ria a auxiliar do LeaderMS.\r\nSe voce tem alguns pontos de cash e deseja trocar, basta prosseguir com nossa conversa. \r\n\r\nSe voce ja #epossui#n estes pontos, clique em trocar, caso nao tenha, volte novamente mais tarde.\r\n\r\nVoce possui (#e" + cm.getPlayer().getCSPoints(4) + "#n) Cash / LeaderPoints (#e" + cm.getPlayer().getCSPoints(2) + "#n).\r\n\#L0#Trocar Cash#l\r\n\#L1#Trocar LeaderPoints#l\r\n\#L3#Trocar Mesos#l\r\n\#L2##r#eComo obter pontos?#k#l#n");
-}else if (status == 1){
-if (selection == 0) {
-cm.sendSimple("                                #e#r<Cash - Troca>#k#n\r\n\r\n#L20#Trocar - 1.500 (Cash) por (1) Item Megaphone#l");
-}else if (selection == 1){
-cm.sendSimple("                                #e#r<LeaderPoints - Troca>#k#n\r\n\r\n#L23#Trocar - 4 (LeaderPoints) por (1) Incubadora#l");
-} else if (selection == 3){
-cm.sendSimple("                                #e#r<Mesos - Troca>#k#n\r\n\r\n#L24#Trocar - 100,000 (Mesos) por (1) Ovo de Pigmeu#l");
-} else if (selection == 2){
-cm.sendSimple("#e#r<Cash - Infos>#k#n\r\nO Cash pode ser obtido atraves dos monstros dentro do jogo, com chances aleatorias de cair um cartao de NX.#e#r\r\n\r\n<LeaderPoints - Infos>#k#n\r\nSao pontos de doacao, que tambem podem ser obtidos pelo site #bwww.leaderms.com.br/leadermalls#n");
-}
-} else if (status == 2){
-if (selection == 20){
-if (cm.getPlayer().getCSPoints(4) >= 1500){
-cm.getPlayer().modifyCSPoints(4, -1500);
-cm.gainItem(5076000, 1);
-cm.getPlayer().dropMessage("[Cash] Voce perdeu (1.500) de Cash!")
-cm.getPlayer().dropMessage("Voce ganhou um Item Megaphone!")
-cm.dispose();
-}else{
-cm.sendOk("Voce nao possui Cash suficiente para efutuar a troca!");
-cm.dispose();
-}
-}else if (selection == 23){
-if (cm.getPlayer().getCSPoints(2) >= 4) {
-cm.getPlayer().modifyCSPoints(2, -4);
-cm.gainItem(5060002, 1)
-cm.getPlayer().dropMessage("[LeaderPoints] Voce perdeu (-4) LeaderPoints!")
-cm.sendOk("Obrigado, voce ja pode usar seu novo item!");
-cm.dispose();
-}else{
-cm.sendOk("Voce nao possui LeaderPoints suficientes para efutuar a troca!");
-cm.dispose();
-}
-}else if (selection == 24){
-if (cm.getPlayer().getMeso() > 100000) {
-cm.gainMeso(-100000);
-cm.gainItem(4170000, 1)
-cm.sendOk("Obrigado, voce ja pode usar seu novo item!");
-cm.dispose();
-}else{
-cm.sendOk("Voce nao possui Mesos suficientes para efutuar a troca!");
-cm.dispose();
-}
-}
-}
-}
+	if (mode == 1) {
+		status++; 
+	} else {
+		status--;
+	}
+	if(cm.getChar().getMapId() == 910000000) {
+		if (status == 0) {
+			cm.sendSimple("Hello #e#h ##n, I am Ria, a LeaderMS assistant.\r\nIf you have some cash points you want to exchange, just continue with our conversation.\r\n\r\nIf you already have points, click exchange. If not, come back later.\r\n\r\nYou have (#e" + cm.getPlayer().getCSPoints(4) + "#n) Cash / LeaderPoints (#e" + cm.getPlayer().getCSPoints(2) + "#n).\r\n\#L0#Exchange Cash#l\r\n\#L1#Exchange LeaderPoints#l\r\n\#L3#Exchange Mesos#l\r\n\#L2##r#eHow to get points?#k#l#n");
+		} else if (status == 1) {
+			if (selection == 0) {
+				cm.sendSimple("                                #e#r<Cash - Exchange>#k#n\r\n\r\n#L20#Exchange - 1,500 (Cash) for (1) Megaphone#l");
+			} else if (selection == 1) {
+				cm.sendSimple("                                #e#r<LeaderPoints - Exchange>#k#n\r\n\r\n#L23#Exchange - 4 (LeaderPoints) for (1) Incubator#l");
+			} else if (selection == 3) {
+				cm.sendSimple("                                #e#r<Mesos - Exchange>#k#n\r\n\r\n#L24#Exchange - 100,000 (Mesos) for (1) Pygmy egg#l");
+			} else if (selection == 2) {
+				cm.sendSimple("#e#r<Cash - Info>#k#n\r\nCash can be obtained through the monsters in game, which have a random chance to drop an NX card.#e#r\r\n\r\n<LeaderPoints - Info>#k#n\r\nThese are donation points, which can be obtained on our site.");
+			}
+		} else if (status == 2) {
+			if (selection == 20) {
+				if (cm.getPlayer().getCSPoints(4) >= 1500) {
+					cm.getPlayer().modifyCSPoints(4, -1500);
+					cm.gainItem(5076000, 1);
+					cm.getPlayer().dropMessage("[Cash] You lost (1,500) Cash!")
+					cm.getPlayer().dropMessage("You gained a Megaphone!")
+					cm.dispose();
+				} else {
+					cm.sendOk("You do not have enough cash to exchange!");
+					cm.dispose();
+				}
+			} else if (selection == 23) {
+				if (cm.getPlayer().getCSPoints(2) >= 4) {
+					cm.getPlayer().modifyCSPoints(2, -4);
+					cm.gainItem(5060002, 1)
+					cm.getPlayer().dropMessage("[LeaderPoints] You lost (-4) LeaderPoints!")
+					cm.sendOk("Thank you. Enjoy your new item!");
+					cm.dispose();
+				} else {
+					cm.sendOk("You do not have enough LeaderPoints to exchange!");
+					cm.dispose();
+				}
+			} else if (selection == 24) {
+				if (cm.getPlayer().getMeso() > 100000) {
+					cm.gainMeso(-100000);
+					cm.gainItem(4170000, 1)
+					cm.sendOk("Thank you. Enjoy your new item!");
+					cm.dispose();
+				} else {
+					cm.sendOk("You do not have enough Mesos to exchange!");
+					cm.dispose();
+				}
+			}
+		}
+	}
 }
  

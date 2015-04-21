@@ -13,7 +13,7 @@ function start() {
 	            status--;
 	        }
 	    if (cm.getPlayer().getMapId() == 680000300){		
-				cm.sendOk("Congratulations on your wedding! Now lets take a lot of pictures to remember this great day.");
+				cm.sendOk("Congratulations on your wedding! Now let's take a lot of pictures to remember this great day.");
 				cm.dispose();
 			} 	 
 		}

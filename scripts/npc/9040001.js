@@ -32,7 +32,7 @@ var GQItems = new Array(1032033, 4001024, 4001025, 4001026, 4001027, 4001028, 40
 
 function start() {
 	if (cm.getPlayer().hasEquipped(1032033)) {
-		cm.sendOk("Por favor, remova o Brinco Protetor.");
+		cm.sendOk("Please remove the Shield Earrings.");
 	} else {
     		for (var i = 0; i < GQItems.length; i++) {
 			cm.removeAll(GQItems[i]);

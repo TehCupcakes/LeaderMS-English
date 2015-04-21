@@ -46,7 +46,7 @@ function action(mode, type, selection) {
 	}
 
 	if (status == 0) {
-		var where = "Onde voce quer ir hoje?";
+		var where = "Where do you want to go today?";
 		for (var i = 0; i < maps.length; i++) {
 			where += "\r\n#L" + i + "# " + mapNames[i] + "#l";
 		}
@@ -57,7 +57,7 @@ function action(mode, type, selection) {
 			cm.dispose();
 		} else {
 			if (status == 1) {
-					cm.sendNext ("Tudo bem, vejo voce na proxima vez.");
+					cm.sendNext ("All right, see you the next time.");
 					selectedMap = selection;
 					status++
 			} else if (status == 2) {

@@ -25,7 +25,7 @@ function action(mode, type, selection) {
 	else
 		status--;
 	if (status == 0) {
-		cm.sendNext("Ola! Bem-vindo(a) ao 6 estagio. Aqui, voce vera caixas com numeros escritos e, se ficar em cima da caixa correta apertando a SETA PARA CIMA, voce se transportara para a proxima caixa. Darei ao lider do grupo uma pista sobre como passar deste estagio #bapenas duas vezes#k e e dever do lider lembrar-se da pista e dar o passo certo, um por vez.\r\nAssim que chegar ao alto, voce ira encontrar o portal para o proximo estagio. Quando todos do seu grupo tiverem passado pelo portal, o estagio estara completo. Tudo vai depender de se lembrar das caixas corretas. Eu ja dei a pista #bduas vezes#k e nao posso mais ajudar voce daqui em diante. Boa sorte!");
+		cm.sendNext("Hello! Welcome to the 6th stage. Here you will see boxes with numbers written on them. Stand on top of a box and press the UP ARROW, then carry the box to the correct location. I will give the leader of the party a clue about how to pass this stage. I will do this on #btwo times#k, and the leader must keep track of each step.\r\nOnce you reach the top, you will find the portal to the next stage. When all of your party has passed through the portal, the stage will be complete. Everything depends on remembering the correct boxes. Once I have given you advice #btwo times#k I can no longer help you. Good luck!");
 		cm.dispose();
 		}
 	}

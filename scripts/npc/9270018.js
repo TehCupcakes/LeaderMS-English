@@ -43,17 +43,17 @@ function action(mode, type, selection) {
 		status++;
 	}
 	if(mode == 0) {
-		cm.sendOk("Please hold on for a sec, and plane will be taking off. Thanks for your patience.");
+		cm.sendOk("Please hold on for a sec, and the plane will be taking off. Thanks for your patience.");
 	}
 	if(status == 0) {
 		cm.sendYesNo("The plane will be taking off soon, Will you leave now? You will have buy the plane ticket again to come in here.");
 	} else if(status == 1) {
-		cm.sendNext("I have already told you the ticket is not refunable~ hope to see you again~");
+		cm.sendNext("I have already told you that the ticket is not refunable. Hope to see you again~");
 	} else if(status == 2) {
 		cm.warp(540010000);
 		cm.dispose();
 	} else {
-		cm.sendOk("You have make a bug! Please report this to http://www.valhalladev.com");
+		cm.sendOk("You have make a bug! Please report this using @bug");
 		cm.dispose();
 	}
 }

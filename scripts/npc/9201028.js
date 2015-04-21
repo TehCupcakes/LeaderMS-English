@@ -1,5 +1,4 @@
-
-/*  Cliff - Happy Ville NPC
+/*  Cliff - Happy Village NPC
  */
 importPackage(Packages.client);
 importPackage(Packages.server);
@@ -22,22 +21,22 @@ function action(mode, type, selection) {
         }
     } 
     if (status == 0) {
-        cm.sendNext("                                  <#eLeaderMS Halloween#n>             \r\n\r\nOla #e#h ##n, eu sou a Malady o auxiliar do LeaderMS.\r\nEstou precisando de sua ajuda para #bcoletar#k um item de outro mundo, se voce me recolher este item eu te ajudarei a crescer, pode me ajudar?\r\nTudo bem, os item que preciso e:\r\n\r\n#i4000524# #t4000524# - Qntd. 500\r\n\r\nVoce tem a quantia de (#e" + cm.getPlayer().countItem(4000524) + "#n) #t4000524#.\r\n\r\nSe voce ja #epossui#n estes items, clique em continuar, caso nao tenha, volte novamente mais tarde.");
+        cm.sendNext("                                  <#eLeaderMS Halloween#n>             \r\n\r\nHello #e#h ##n, I am Malady of auxiliary LeaderMS team.\r\nEstou needs your help to #bcollect#k an item from another world. If you collect this item for me, I will help you grow.\r\nAll right, the item I need is:\r\n\r\n#i4000524# #t4000524# - Qnty. 500\r\n\r\nYou currently have (#e" + cm.getPlayer().countItem(4000524) + "#n) #t4000524#.\r\n\r\nIf you already #epossess#n these items, click continue. If not, come back again later.");
     } else if (status == 1) {
-        cm.sendSimple("Qual item voce gostaria de trocar? \r\n\r\n#L0#Chapeu Falante - Atributos Aleatorios#l");
+        cm.sendSimple("Which item would you like to exchange? \r\n\r\n#L0#Hat Speaker - Random Attributes#l");
         
     } else if (selection == 1000){
-                 cm.sendSimple("#eConseguindo LeaderPoints - Mini Tuto#n\r\nOs LeaderPoints sao adquiridos atraves de monstros, cada monstro derrotado voce tem uma porcetagem de ganhar uma quantia de LeaderPoints, eles variam de 1 entre 3.\r\n\r\n#eConseguindo Ocupacao - Mini Tuto#n\r\nVoce devera participar de grande maioria das missoes espalhadas pelo Leader, apos o termino delas voce acumula pontos para poder obter uma ocupacao! ");
+                 cm.sendSimple("#eGetting LeaderPoints - Mini Tutorial#n\r\nLeaderPoints are acquired through monsters. Each monster you defeat has a chance to earn an amount of LeaderPoints, ranging from 1 to 3.\r\n\r\n#eGetting Occupation - Mini Tutorial#n\r\nYou should attend the vast majority of missions around LeaderMS, from which you can accumulate points in order to get an occupation! ");
     } else if(selection == 0) { /* HERO */
       if(cm.haveItem(4000524, 1)) {
             var ii = MapleItemInformationProvider.getInstance();
             var newItem = ii.randomizeStatsMalady(ii.getEquipById(1000027));
             MapleInventoryManipulator.addFromDrop(cm.getC(), newItem, "");
             cm.gainItem(4000524, -1);
-            cm.sendOk("Obrigado, voce ja pode aproveitar seu novo item!");
+            cm.sendOk("Thank you! Enjoy your new item!");
             cm.dispose();
         } else {
-        cm.sendOk("Que pena, voce ainda nao tem os items suficientes.");
+        cm.sendOk("Too bad, you do not have the required items.");
         cm.dispose();
    } 
  }

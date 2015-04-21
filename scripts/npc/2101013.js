@@ -33,14 +33,14 @@ function start() {
 
 function action(mode, type, selection) {
 	if (status == 0) {
-		cm.sendYesNo("Deseja ir para Ellinia?");
+		cm.sendYesNo("Do you want to go to Ellinia?");
 		status++;
 	} else {
 		if ((status == 1 && type == 1 && selection == -1 && mode == 0) || mode == -1) {
 			cm.dispose();
 		} else {
 			if (status == 1) {
-				cm.sendNext ("Ate a proxima...");
+				cm.sendNext ("Until next time...");
 				status++
 			} else if (status == 2) {
 				cm.warp(101000000, 0);

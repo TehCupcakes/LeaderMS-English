@@ -35,7 +35,7 @@ function start() {
                 eim.finishPQ();
             }
             else {
-                cm.sendOk("Este e o seu desafio final. Derrote o mal que espreita dentro do Rubian e devolva para mim.");
+                cm.sendOk("This is the final challenge. Defeat the evil that lurks within the Rubian and return to me.");
             }
         }
     }

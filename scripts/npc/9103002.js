@@ -27,11 +27,11 @@ function action(mode, type, selection) {
             status--;
         if (status == 0) {
 			//cm.warp(220000000,0);
-			cm.sendNext("Uau, voce fez isso! Aqui esta uma recompensa por seu trabalho. Bem feito!");
+			cm.sendNext("Wow, you did it! Here is a reward for your work. Well done!");
         } else if (status == 1) {
 			var randmm = Math.floor(Math.random() * itemArray.length);
 			cm.gainItem(itemArray[randmm], itemQuan[randmm]);
-			cm.sendNext("Aqui esta a sua recompensa!");
+			cm.sendNext("Here is your reward!");
 			if (randmm > 3) randmm = 3; //Random Portal when warped out =D
 			cm.warp(220000000,randmm);
 		}

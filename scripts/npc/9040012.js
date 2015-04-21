@@ -27,7 +27,7 @@
  */
 
 function start() {
-        cm.sendOk("A placa traduz da seguinte forma: \r\n\"Os cavaleiros da Sharenian sao guerreiros orgulhosos. Sua Longinus Spears sao as duas armas formidaveis e a chave para a defesa do castelo: por remove-los de suas plataformas em pontos mais altos deste salao, eles bloqueiam a entrada de invasores.\"\r\n\r\nAlgo parece estar gravado em Ingles na lateral, pouco legivel: \r\n\"Mal roubou lancas, acorrentado atras de obstaculos, vooltar ao topo da torres. Grande lanca, garra do mais alto.\"\r\n...Obviamente quem percebi isso nao tem muito tempo para viver... pobre rapaz.");
+        cm.sendOk("The card translates as follows: \r\n\"The Sharenian riders are proud warriors. Sua Longinus Spears are the two formidable weapons and the key to the castle's defense. By removing them from their platforms in the highest points of this place, they can be used to block incoming invaders.\"\r\n\r\nThis text appears to be written in English on the side, although barely readable: \r\n\"Evil stole spears, charged through obstacles, and vaulted over the top of the towers.\"\r\n...Obviously he figured out he did not have long to live... poor guy.");
         cm.dispose();
 }
 

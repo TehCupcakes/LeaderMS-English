@@ -27,7 +27,7 @@
  */
 
 function start() {
-        cm.sendOk("\"Eu lutei contra o Rubian e eu perdi, e agora eu estou preso no proprio portao que bloqueia o meu caminho, meu corpo profanado. No entanto, a minha roupa velha tem poder sagrado dentro. Se voce pode devolver a roupa para o meu corpo, eu deveria ser capaz de abrir o portao. Por favor, depressa! \r\n- Sharen III \r\n\r\nP.S. Eu sei que isso e bastante exigente de mim, mas voce pode por favor, devolva as roupas para o meu corpo.\"");
+        cm.sendOk("\"I fought the Rubian and lost. Now I'm stuck, blocked by my own gate, defiled by my own body. However, my old clothes have sacred power within. If you can return the clothes to my body, I should be able to open the gate. Please hurry! \r\n- Sharen III \r\n\r\nP.S. I know this may seem a bit demanding, but can you please return my clothes to my body.\"");
         cm.dispose();
 }
 

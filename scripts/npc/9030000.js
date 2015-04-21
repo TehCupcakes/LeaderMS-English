@@ -8,7 +8,7 @@ function start() {
 	action(1, 0, 0);
 } 
 
-var texto = "                          #e<LeaderMS Comerciantes>#n\r\n\r\nOla #e#h ##n,\r\nEu sou o Fredrick, cuido do banco de items/mesos do     #eLeaderMS#n.\r\n";
+var texto = "                          #e<LeaderMS Merchants>#n\r\n\r\nHello #e#h ##n,\r\nMy name is  Fredrick, and I take care of storing items/mesos in #eLeaderMS#n.\r\n";
 
 
 function action(mode, type, selection) {
@@ -23,40 +23,40 @@ function action(mode, type, selection) {
 	else if (status == 1)
 		if (cm.hasTemp()) {
 			if (cm.getHiredMerchantItems(true)) {
-				cm.sendOk("Esses itens foram salvos do desligamento do servidor passado!");
+				cm.sendOk("These items were saved from the last server shutdown!");
 				cm.dispose();
 			} else {
-				cm.sendOk("Por favor, faca um pouco de espaco para receber todos os seus itens.");
+				cm.sendOk("Please make a little space to receive all of your items.");
 				cm.dispose();
 			}
 		} else {
-			cm.sendSimple("Oque gostaria de retirar?\r\n\r\n#b#L0#Mesos#l\r\n#L1#Items#l");
+			cm.sendSimple("What did you wish to withdraw?\r\n\r\n#b#L0#Mesos#l\r\n#L1#Items#l");
 		}
 	else if (status == 2) {
-		cm.sendNext("Deixa-me tirar de seus arquivos ...");
+		cm.sendNext("Let me get your files...");
 		choice = selection;
 	} else {
 		if (choice == 0) {
 			if (status == 3) {
 				var mesoEarnt = cm.getHiredMerchantMesos();
 				if (mesoEarnt > 0)
-					cm.sendYesNo("Voce fez "+mesoEarnt+" mesos em sua loja ate o momento. Gostaria de retirar-los?");
+					cm.sendYesNo("You have "+mesoEarnt+" mesos in this shop at the moment. Would you like to remove them?");
 				else {
-					cm.sendOk("Voce nao fez qualquer mesos.");
+					cm.sendOk("You did not earn any mesos.");
 					cm.dispose();
 				}
 			} else if (status == 4) {
-				cm.sendNext("Obrigado por usar os meus servicos.");
+				cm.sendNext("Thank you for using my services.");
 				cm.gainMeso(cm.getHiredMerchantMesos());
 				cm.setHiredMerchantMesos(0);
 				cm.dispose();
 			}
 		} else {
 			if (cm.getHiredMerchantItems(false)) {
-				cm.sendOk("Obrigado por usar os meus servicos.");
+				cm.sendOk("Thank you for using my services.");
 				cm.dispose();
 			} else {
-				cm.sendOk("Por favor, faca um pouco de espaco para receber todos os seus itens.");
+				cm.sendOk("Please make a little space to receive all of your items.");
 				cm.dispose();
 			}
 		}

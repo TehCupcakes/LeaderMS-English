@@ -15,7 +15,7 @@ function action(mode, type, selection){
     var mapId = cm.getPlayer().getMapId();
     if (mapId == 103000890) {
         if (status == 0) {
-            cm.sendNext("Entendo. O trabalho de equipe e muito importante aqui. Por favor, esforce-se mais com os membros do seu grupo.");
+            cm.sendNext("I see. Team-work is very important here. Please work together with the members of your group.");
         } else {
             cm.warp(103000000);
             cm.removeAll(4001007);
@@ -24,9 +24,9 @@ function action(mode, type, selection){
         }
     } else {
         if (status == 0) {
-            var outText = "Se sair do mapa, voce vai precisar refazer toda a missao se quiser tentar novamente. Ainda quer sair deste mapa?";
+            var outText = "If you leave the map, you will need to redo the entire mission if you want to try again. Do you still want to leave this map?";
             if (mapId == 103000805) {
-                outText = "Voce esta pronto para deixar este mapa?";
+                outText = "Are you ready to leave this map?";
             }
             cm.sendYesNo(outText);
         } else if (mode == 1) {

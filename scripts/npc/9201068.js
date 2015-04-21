@@ -24,9 +24,9 @@ close = false;
 oldSelection = -1;
 
 function start() {
-    var text = "Ola, eu sou o leitor de ticket's.";
+    var text = "Hello , I am the ticket gate.";
     if(cm.haveItem(4031713))
-        text += " Voce sera levado imediatamente, que ticket quer usar?#b";
+        text += " Which ticket do you want to use? You will be warped immediately.#b";
     else
         close = true;
     if(cm.haveItem(4031713))
@@ -42,13 +42,13 @@ function action(mode, type, selection) {
     status++;
     if (mode != 1) {
         if(mode == 0)
-            cm.sendNext("Voce deve ter algum negocio para cuidar aqui, certo?");
+            cm.sendNext("You must have some business to take care of here, right?");
         cm.dispose();
         return;
     }
     if (status == 0) {
         if(selection == 0){
-            cm.sendYesNo("Me parece que ha muito espaco para esse passeio. Por favor, tenha o seu bilhete pronto para que eu possa deixa-lo entrar. A viagem pode ser longa, mas voce vai chegar ao seu destino muito bem. O que voce acha? Voce quer entrar nesta viagem?");
+            cm.sendYesNo("It seems like there is still plenty of room on this ride. Please keep your ticket ready so I can let you on. The journey may be long, but you will get to your destination safely. What do you think? Do you want to go on this ride?");
         }
         oldSelection = selection;
     } else if(status == 1){

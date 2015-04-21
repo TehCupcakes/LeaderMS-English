@@ -50,13 +50,13 @@ function action(mode, type, selection) {
 			status--;
 		if (status == 0) {
 			if (!cm.isLeader()) { // not party leader
-					cm.sendNext("Por favor, informe o seu #bLider do Grupo#k para falar comigo.");
+					cm.sendNext("Please tell the #bParty Leader#k to talk to me.");
 					cm.dispose();
 			} else  { //party leader
 				copns = cm.getPlayer().countItem(4001106);
-				if (copns < 30) { cm.sendNext("Voce deve ter 30 ou mais cupons para concluir a quest."); cm.dispose(); }
+				if (copns < 30) { cm.sendNext("You must have 30 or more coupons to complete the quest."); cm.dispose(); }
 				else {
-					cm.sendNext("Uau, voce recolheu " + copns + " cupons! Parabens! Voce sera levado para outro mapa para receber sua #bEXP#k e Rolly lhe dara as recompensas!");
+					cm.sendNext("Wow, you picked up " + copns + " coupons! Congratulations! You will be taken to another map to get your #bEXP#k and Rolly will give you your rewards!");
 				}
 			}
 		} else if (status == 1) {

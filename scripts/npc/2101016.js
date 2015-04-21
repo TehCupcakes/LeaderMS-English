@@ -32,10 +32,10 @@ function action(mode, type, selection) {
 			joias = cm.getPlayer().countItem(4031868);
 			if (joias <= 5) {
 				cm.removeAll(4031868);
-				cm.sendNext("                                  #e<LeaderMS APQ>#n\r\n\r\nTraga mais #eJoias#n da proxima vez, se quiser ganhar mais #eexperiencia#n.");
+				cm.sendNext("                                  #e<LeaderMS APQ>#n\r\n\r\nBring more #eJewelry#n next time if you want to earn more #eexperience#n.");
 			} else {
 				cm.removeAll(PQItems);
-				cm.sendNext("                                  #e<LeaderMS APQ>#n\r\n\r\nObrigado pelas #b#eJoias#k#n.");
+				cm.sendNext("                                  #e<LeaderMS APQ>#n\r\n\r\nThanks for the #b#eJewelry#k#n.");
                                 cm.gainExp(100 * cm.getC().getChannelServer().getExpRate() * joias);
                              //   cm.gainPQPoints(joias / 3.5 * teste);
 			}

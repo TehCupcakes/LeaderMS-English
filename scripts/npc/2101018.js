@@ -15,7 +15,7 @@ function start() {
 
 function action(mode, type, selection) { 
     if (status == 0) { 
-        cm.sendYesNo("                          #e<LeaderMS AriantPQ>#n\r\n\r\nGostaria de ir para #bAriant Coliseu#k?\r\nVoce deve ser nivel #e20-30#n para participar."); 
+        cm.sendYesNo("                          #e<LeaderMS AriantPQ>#n\r\n\r\nWould you like to go to the #bAriant Coliseum#k?\r\nYou should be level #e20-30#n to participate."); 
         status++; 
     } else { 
         if ((status == 1 && type == 1 && selection == -1 && mode == 0) || mode == -1) { 
@@ -27,7 +27,7 @@ function action(mode, type, selection) {
                     cm.warp(980010000, 3); 
                     cm.dispose(); 
                 } else { 
-                    cm.sendOk("Voce nao esta entre o nivel 20 e 30. Desculpe, voce nao pode participar."); 
+                    cm.sendOk("You are not between level 20 and 30. Sorry, you cannot participate."); 
                     cm.dispose(); 
                 } 
             } 

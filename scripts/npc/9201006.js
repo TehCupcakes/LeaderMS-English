@@ -20,7 +20,7 @@ var x;
 		if (cm.getPlayer().getMapId() == 680000210){
 	    if (status == 0) {
 	                var text = "";
-	                var choice = new Array("Quando e o inicio do casamento?", "Eu quero sair?");
+	                var choice = new Array("When does the wedding begin?", "I want out!");
 	                for (x = 0; x < choice.length; x++) {
 	                        text += "\r\n#L" + x + "##b" + choice[x] + "#l";
 	                }
@@ -28,7 +28,7 @@ var x;
 	        } else if (status == 1) {
 	                switch(selection) {
 	                        case 0:
-	                                cm.sendOk("E so esperar ate que a noiva eo noivo estejam prontos para se casar. Aguarde uns minutinhos!");
+	                                cm.sendOk("We will wait until the bride and groom are ready. Please wait a few minutes!");
 	                                cm.dispose();
 	                                break;
 	                        case 1:
@@ -39,7 +39,7 @@ var x;
 	                        }                
 					}		
 			} else if (cm.getPlayer().getMapId() == 680000200){
-			cm.sendOk("Uhh, desculpe pelo atraso, Padre Joao correu para fazer algo bem rapido. Ele nao deve demorar, aguarde para que possamos comecar.");
+			cm.sendOk("Uhh, sorry for the delay. Father John went to do something very quickly. It should not be long; please wait for us to start.");
 			cm.dispose();
 			}
 	}

@@ -19,9 +19,9 @@ function action(mode, type, selection) {
 		else
 			status--;
 		if (status == 0) {
-			cm.sendNext("Voce terminou todos os seus treinamentos, otimo trabalho. Voce parece estar pronto para comecar a jornada de imediato! Bom, eu vou deixar voce passar para o proximo lugar.");
+			cm.sendNext("Great job, you finished all your training! You seem to be ready to start the journey. Well, I'll let you go to the next place.");
 		} else if (status == 1) {
-			cm.sendNextPrev("Mas lembre-se, uma vez que voce sair daqui, nao podera mais voltar. La fora a um mundo cheio de monstros, entao cuidado!");
+			cm.sendNextPrev("But remember, once you leave here, you can not come back. I will send you away to a world full of monsters, so be careful!");
 		} else if (status == 2) {
 			cm.warp(40000, 0);
 			//cm.gainExp(3 * cm.getC().getChannelServer().getExpRate());

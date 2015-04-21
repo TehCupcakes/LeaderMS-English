@@ -14,7 +14,7 @@ function start() {
 }
 
 function action() {
- cm.sendOk("Esta quest so estara disponivel apos dia #e31/01/13#n.\r\nOutras infos - #bwww.leaderms.com.br#k\r\n ID para suporte - 14"); 
+ cm.sendOk("This quest is currently unavailable. Report this ID: 9201043"); 
  cm.dispose();
 }
 
