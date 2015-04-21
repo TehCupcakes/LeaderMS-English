@@ -22,7 +22,7 @@ public class MobDamageMobHandler extends AbstractMaplePacketHandler {
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         int oid1 = slea.readInt(); //Id of mob that got attacked?
         @SuppressWarnings("unused")
-        int randomshit = slea.readInt(); //Dunno
+        int randomstuff = slea.readInt(); //Dunno
         int oid2 = slea.readInt(); //Oid of mob that attacked?
         MapleMap map = c.getPlayer().getMap();
         MapleMonster attacked;

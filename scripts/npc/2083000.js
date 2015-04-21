@@ -81,7 +81,7 @@ function action(mode, type, selection) {
 					// Kick it into action.  Slate says nothing here, just warps you in.
 					var em = cm.getEventManager("HontalePQ");
 					if (em == null) {
-						cm.sendOk("#e#bPlease fuck off...#n#k");
+						cm.sendOk("#e#bPlease leave...#n#k");
 						cm.dispose();
 					}
 					else {

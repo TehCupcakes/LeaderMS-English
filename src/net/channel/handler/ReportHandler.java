@@ -71,7 +71,7 @@ public class ReportHandler extends AbstractMaplePacketHandler {
 		ps.executeUpdate();
 		ps.close();
 		} catch (Exception ex){
-			//do shit
+			//do stuff
 			return false;
 		}
 		return true;

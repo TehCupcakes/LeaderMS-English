@@ -28,6 +28,6 @@
 function act(){
 	rm.getPlayer().setScheduledTask(null);
 	rm.getPlayer().getClient().getChannelServer().setDollhouseState(false);
-	rm.playerMessage(5, "Voce foi expulso deste mapa por uma forca desconhecida.");
+	rm.playerMessage(5, "You were kicked out of the map by an unknown force.");
 	rm.warp(221024400);
 }

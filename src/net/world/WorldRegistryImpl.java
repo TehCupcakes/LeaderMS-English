@@ -112,7 +112,7 @@ public class WorldRegistryImpl extends UnicastRemoteObject implements WorldRegis
             try {
                 instance = new WorldRegistryImpl();
             } catch (RemoteException e) {
-                // can't do much anyway we are fucked ^^
+                // can't do much anyway
                 throw new RuntimeException(e);
             }
         }

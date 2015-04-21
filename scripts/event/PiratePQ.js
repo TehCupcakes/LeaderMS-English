@@ -95,7 +95,7 @@ function playerEntry(eim, player) {
 	var map = eim.getMapInstance(925100000);
 	player.changeMap(map, map.getPortal(0));
 	
-	//THE CLOCK IS SHIT o_O
+	//THE CLOCK SUCKS
 	player.getClient().getSession().write(MaplePacketCreator.getClock((Long.parseLong(eim.getProperty("entryTimestamp")) - System.currentTimeMillis()) / 1000));
 }
 

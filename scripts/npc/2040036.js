@@ -72,7 +72,7 @@ function action(mode, type, selection) {
 					var qstring = "member1st" + cm.getChar().getId().toString();
 					var question = eim.getProperty(qstring);
 					if (question == null) {
-						qstring = "FUCK";
+						qstring = "CRAP";
 					}
 					cm.sendNext("Ola! Bem-vindo(a) ao 1º estagio. Ande pelo mapa e encontre varios tipos de monstros vagando pelo local. Derrote todos, colete #b25 #t4001022#s#k e traga para mim. Junte os #t4001022#s coletados e entregue ao lider do seu grupo, que, por sua vez, entregara para mim. Voce pode estar familiarizado com esses monstros, mas eles podem ser mais poderosos do que o esperado. Por isto, tenha cuidado!");
 					

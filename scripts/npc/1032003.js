@@ -100,7 +100,7 @@ function action(mode, type, selection) {
 //rewards = [["Trofeu", 14000038, 15]]; 
 //
 //function start() { 
-//    var talk = "Ola #e#h ##n, eu me chamo Shane. Estou aqui para poder te ajudar a trocar seus JQ Points. Cada item custa 15 JQ Points.\r\nOque deseja trocar?"; 
+//    var talk = "Hello #e#h ##n, my name is Shane. I am here to help you exchange your JQ Points. Each item costs 15 JQ Points.\r\nDo you want to exchange?"; 
 //    for(var i = 0; i < rewards.length; i++) 
 //        talk += "\r\n#L"+i+"#"+rewards[i][0]+"#l"; 
 //    cm.sendSimple(talk); 
@@ -110,11 +110,11 @@ function action(mode, type, selection) {
 //    cm.dispose(); 
 //    if(m > 0){ 
 //        if (cm.getPlayer().getJQPoints() >= rewards[s][2]){ 
-//            cm.sendOk("Aqui voce ja pode desfrutar do seu premio !"); 
+//            cm.sendOk("Here you go! Enjoy your prize!"); 
 //            cm.gainItem(rewards[s][1]); 
 //            cm.getPlayer().addJQPoints(-rewards[s][2]); 
 //        } else { 
-//            cm.sendOk("Voce nao tem numero suficiente de pontos em JQ!"); 
+//            cm.sendOk("You do not have sufficient JQ Points!"); 
 //            cm.dispose(); 
 //        } 
 //    } 

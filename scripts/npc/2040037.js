@@ -72,7 +72,7 @@ function action(mode, type, selection) {
 					var qstring = "member2nd" + cm.getChar().getId().toString();
 					var question = eim.getProperty(qstring);
 					if (question == null) {
-						qstring = "FUCK";
+						qstring = "CRAP";
 					}
 					cm.sendNext("Ola! Bem-vindo(a) ao 2 estagio. Ande pelo mapa e encontre as caixas espalhadas pelo local. Quebre uma caixa e voce vai ser enviado para outro mapa ou recompensado com um #t4001022#. Procure, em cada caixa, colete #b15 #t4001022#s#k e traga para mim. Junte os #t4001022#s coletados e entregue ao lider do seu grupo, que, por sua vez, entregara para mim. Boa sorte!");
 					

@@ -83,7 +83,7 @@ function action(mode, type, selection) {
 					var qstring = "member5th" + cm.getChar().getId().toString();
 					var question = eim.getProperty(qstring);
 					if (question == null) {
-						qstring = "FUCK";
+						qstring = "CRAP";
 					}
 					cm.sendNext("Hello and welcome to the first stage. I will spawn 3 portals here, and you will decide which one is the right one, girls will go into the left portal, while guys go into the right portal. Kill the monsters there and then get the leader to talk to my friend, Glimmer Man.");
 				}

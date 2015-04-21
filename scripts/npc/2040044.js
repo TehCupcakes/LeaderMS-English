@@ -75,7 +75,7 @@ function action(mode, type, selection) {
 					var qstring = "member9th" + cm.getChar().getId().toString();
 					var question = eim.getProperty(qstring);
 					if (question == null) {
-						qstring = "FUCK";
+						qstring = "CRAP";
 					}
 						cm.sendNext("Voce conseguiu chegar ate aqui. Agora e a sua chance de finalmente colocar as maos no verdadeiro culpado. Va para a direita e voce vera um monstro. Derrote-o para encontrar um monstruoso #b#o9300012##k aparecendo do nada. Ele vai estar muito agitado pela presenca do seu grupo, tenha cuidado. \r\nSua tarefa e derrota-lo, coletar o #b#t4001023##k que ele possui e trazer para mim, Se voce conseguir tirar a chave do monstro, nao ha como a porta dimensional ser aberta novamente. Tenho fe em voces. Boa sorte!");
 					

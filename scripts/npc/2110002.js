@@ -58,7 +58,7 @@ function action(mode, type, selection) {
 	//var map = eim.getMapInstance(cm.getChar().getMapId());
 	map.broadcastMessage(MaplePacketCreator.showEffect("quest/party/clear"));
 	//map.broadcastMessage(packetsnd);
-	cm.sendOk("Fuck u");
+	cm.sendOk("Nothing to see here.");
 	cm.dispose();
 }
 }

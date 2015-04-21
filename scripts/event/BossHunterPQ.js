@@ -62,7 +62,7 @@ function setup() {
 	var portals = map.getPortals();
 	map.removePortals();
 	map.spawnNpc(9201082, new java.awt.Point(2272, 158));
-	//Fuck this timer
+	//Timer
 	em.schedule("timeOut", 60000 * 30);
 	em.schedule("broadcastClock", 1500);
 	em.schedule("invasion", 2400);
@@ -79,7 +79,7 @@ function playerEntry(eim, player) {
 	player.getClient().getSession().write(MaplePacketCreator.getClock((Long.parseLong(eim.getProperty("entryTimestamp")) - System.currentTimeMillis()) / 1000));
 	player.getClient().getSession().write(MaplePacketCreator.serverNotice(6, "Omega Sector is under attack. Protect it!!"));
 	player.getClient().getSession().write(MaplePacketCreator.musicChange("Bgm14/DragonNest"));
-	//THE CLOCK IS SHIT
+	//THE CLOCK SUCKS
 	//player.getClient().getSession().write(MaplePacketCreator.getClock(1800));
 	//y=2000
 }

@@ -646,7 +646,7 @@ public class MapleMap {
         * Fim
         *///922010600
 
-        String text = "shit";
+        String text = "";
         EventInstanceManager eim = dropOwner.getEventInstance();
         if (eim != null) {
             text = eim.getName();
@@ -1272,7 +1272,7 @@ public class MapleMap {
 //		} else {
 //			maxDrops = 4 * cserv.getDropRate();
 //		}
-//        String text = "shit";
+//        String text = "";
 //        scripting.event.EventInstanceManager eim = dropOwner.getEventInstance();
 //        if (eim != null) {
 //            text = eim.getName();
@@ -3910,7 +3910,7 @@ public class MapleMap {
 				}
 			}
 		}
-                for (MapleMapObject o : mapobjects.values()) { //Goddess reactor shit
+                for (MapleMapObject o : mapobjects.values()) { //Goddess reactor
 			if (o.getType() == MapleMapObjectType.REACTOR){
 				if (((MapleReactor) o).getId() == 2006001) {
 					if (item.getItemId() == 4001055){

@@ -31,7 +31,7 @@ function action(mode, type, selection) {
         else
             status--;
         if (status == 0) {
-			cm.sendNext("Incrivel! Voce completou todos os estagios e agora esta aqui aproveitando sua vitoria. Uau! Meus sinceros parabens para cada um de voces pelo trabalho bem feito. Aqui esta um presentinho para voces. Antes de aceitar, verifique se seu inventario de uso e equip. tem um slot disponivel.");
+			cm.sendNext("Amazing! You completed all the stages and here you can enjoy your victory. Wow! My sincere congratulations to each of you for a job well done. Here is a little present for you guys. Before accepting, make sure your Equip and Use inventory tabs have an available slot.");
         } else if (status == 1) {
 			for (var i = 0; i < PQItems.length; i++) {
 				cm.removeAll(PQItems[i]); 

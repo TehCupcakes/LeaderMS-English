@@ -72,7 +72,7 @@ function action(mode, type, selection) {
 					var qstring = "member7th" + cm.getChar().getId().toString();
 					var question = eim.getProperty(qstring);
 					if (question == null) {
-						qstring = "FUCK";
+						qstring = "CRAP";
 					}
 						cm.sendNext("Ola! Bem-vindo ao 7 estagio.  Aqui voce vai encontrar um monstro ridiculamente poderoso chamado #b#o9300010##k. Derrote o monstro e encontre o #b#t4001022##k necessario para seguir para o proximo estagio. Por favor, colete #b3#t4001022#s#k.\r\nPara acabar com o monstro, derrote-o de longe. A unica maneira de atacar seria de uma longa distancia, mas... ah, sim, tenha cuidado, #o9300010# e muito perigoso. Com certeza voce vai se machucar se nao tomar cuidado. Boa sorte!");
 					

@@ -60,7 +60,7 @@ function setup() {
 	// eim.addMapInstance(240050100,map);
 	var firstPortal = eim.getMapInstance(240050100).getPortal("in00");
 	firstPortal.setScriptName("hontale_BtoB1");
-	//Fuck this timer
+	//Timer
 	eim.setProperty("bulbWay", 0);
 	em.schedule("timeOut", 60000 * 30);
 	em.schedule("broadcastClock", 1500);
@@ -79,7 +79,7 @@ function playerEntry(eim, player) {
 	var map = eim.getMapInstance(240050100);
 	player.changeMap(map, map.getPortal(0));
 	player.getClient().getSession().write(MaplePacketCreator.getClock((Long.parseLong(eim.getProperty("entryTimestamp")) - System.currentTimeMillis()) / 1000));
-	//THE CLOCK IS SHIT
+	//THE CLOCK SUCKS
 	//player.getClient().getSession().write(MaplePacketCreator.getClock(1800));
 }
 

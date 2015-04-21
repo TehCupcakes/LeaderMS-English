@@ -82,7 +82,7 @@ function setup() {
 	onTheWayUpMap.getPortal(23).setScriptName("orbisPQOnTheWayUpExit");
 	bossMap.getPortal(1).setScriptName("orbisPQGardenExit");
 	roomOfDarknessMap.getPortal(1).setScriptName("orbisPQRoomOfDarknessExit");
-	//-->Fuck we are done with portals -.-
+	//-->Done with portals
 	eim.setProperty("killedCellions", "0");
 	eim.setProperty("papaSpawned", "no");
 	em.schedule("timeOut", 60 * 60000);

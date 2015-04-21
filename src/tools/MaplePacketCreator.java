@@ -204,7 +204,7 @@ public class MaplePacketCreator {
                 mplew.writeMapleAsciiString(messages.get(i));
             }
         }
-        mplew.writeInt(1337); // time limit shit lol 'Your thing still start in blah blah seconds'
+        mplew.writeInt(1337); // time limit lol 'Your thing still start in blah blah seconds'
         if (partner != null) {
             addCharLook(mplew, partner, false);
         }
@@ -1907,7 +1907,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
             mplew.writeInt(dropperoid);
         mplew.write(0);
         if (mod != 2) {
-            mplew.write(0); //fuck knows
+            mplew.write(0); //who knows
             mplew.write(1); //PET Meso pickup
         }
         if (!mesos) {

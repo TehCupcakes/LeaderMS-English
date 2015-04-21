@@ -72,7 +72,7 @@ function action(mode, type, selection) {
 					var qstring = "member4th" + cm.getChar().getId().toString();
 					var question = eim.getProperty(qstring);
 					if (question == null) {
-						qstring = "FUCK";
+						qstring = "CRAP";
 					}
 						cm.sendNext("Ola! Bem-vindo(a) ao 4 estagio. Aqui voce vai encontrar um espaco negro criado pela fenda dimensional. La dentro, voce vai encontrar um monstro chamado #b#o9300008##k escondido na escuridao. Por isto, você mal conseguira enxerga-lo mesmo com os olhos bem abertos. Derrote os monstros e colete #b6 #t4001022#s#k.\r\nO lider do seu grupo deve coletar todos os #b#t4001022#s#k de voce. Como eu disse, #b#o9300008##k nao podem ser vistos, a nao ser que voce esteja com os olhos bem abertos. E um tipo diferente de monstro que se funde sorrateiramente na escuridao. Boa sorte!");
 					

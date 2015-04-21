@@ -73,23 +73,23 @@ function action(mode, type, selection) {
 					pstring = "member1stpreamble" + cm.getChar().getId().toString();
 					preamble = eim.getProperty(pstring);
 					if (status == 0 && preamble == null) {
-						cm.sendNext("Ola, bem-vindo a primeira etapa de AquariumPQ. Veja estas lulas aqui? Mate-os e me de 200 passes e eu irei concluir a primeira etapa.");
+						cm.sendNext("Hello, welcome to the first stage of the Aquarium PQ. See these squids here? Kill them and give me 200 passes and to complete the first stage.");
 					}
 					else if (status == 0) {// otherwise
 	                        		// check for stage completed
 	                        		var complete = eim.getProperty("1stageclear");
 	                        		if (complete != null) {
-	                        			cm.sendNext("Prossiga com a missao pois o portal ja foi liberado!");
-	                        			cm.dispose();
+                                                    cm.sendNext("Continue the mission. The portal has already opened!");
+                                                    cm.dispose();
 	                        		}
 	                        		else {
-								cm.sendOk("Por favor, fale comigo depois de ter concluido o estagio.");
-								cm.dispose();
+                                                    cm.sendOk("Please talk to me after completing the stage.");
+                                                    cm.dispose();
 						}
 					}
 					else if (status == 1) {
 						if (preamble == null) {
-							cm.sendOk("Ok, boa sorte para voce!");
+							cm.sendOk("Ok, good luck to you!");
 							cm.dispose();
 						}
 						else { // shouldn't happen, if it does then just dispose
@@ -113,7 +113,7 @@ function action(mode, type, selection) {
 						party = eim.getPlayers();
 						preamble = eim.getProperty("leader2ndpreamble");
 						if (preamble == null) {
-							cm.sendNext("Bem-vindo a segunda etapa de AquariumPQ. Veja estas lulas aqui? Mate-os e me de 50 passes e eu irei concluir a segunda etapa.");
+							cm.sendNext("Welcome to the second stage of the Aquarium PQ. See these squids here? Kill them and give me 50 passes to complete the second stage.");
 							eim.setProperty("leader2ndpreamble","done");
 							cm.dispose();
 						}
@@ -121,16 +121,16 @@ function action(mode, type, selection) {
 								// check for stage completed
 								var complete = eim.getProperty("2stageclear");
 								if (complete != null) {
-									cm.sendNext("Prossiga com a missao pois o portal ja foi liberado!");
+									cm.sendNext("Continue the mission. The portal has already opened!");
 									cm.dispose();
 								}
 								else {
 								if (cm.haveItem(4001022, 50) == false) {
-									cm.sendNext("Me desculpe, mas voce nao tem todos os 50 passes necessarios para concluir esta fase.");
+									cm.sendNext("I'm sorry, but you do not have all 50 passes required to complete this stage.");
 									cm.dispose();
 								}
 								else {
-									cm.sendNext("Parabens pela conclusao da segunda fase, vou abrir o portal agora.");
+									cm.sendNext("Congratulations on completing the second stage! The portal will now open.");
 									clear(2,eim,cm);
                                                                         //cm.givePartyQPoints(20, party);
 									eim.setProperty("2stageclear","done");
@@ -148,24 +148,24 @@ function action(mode, type, selection) {
 					pstring = "member2ndpreamble" + cm.getChar().getId().toString();
 					preamble = eim.getProperty(pstring);
 					if (status == 0 && preamble == null) {
-						cm.sendNext("Bem-vindo a segunda etapa de AquariumPQ. Veja estas lulas aqui? Mate-os e me 50 passes e eu irei concluir a segunda etapa.");
+						cm.sendNext("Welcome to the second stage of the Aquarium PQ. See these squids here? Kill them and give me 50 passes to complete the second stage.");
 						
 					}
 					else if (status == 0) {// otherwise
 	                        		// check for stage completed
 	                        		var complete = eim.getProperty("2stageclear");
 	                        		if (complete != null) {
-	                        			cm.sendNext("Prossiga com a missao pois o portal ja foi liberado!");
+	                        			cm.sendNext("Continue the mission. The portal has already opened!");
 	                        			cm.dispose();
 	                        		}
 	                        		else {
-								cm.sendOk("Por favor, fale comigo depois de ter concluido o estagio.");
-								cm.dispose();
+							cm.sendOk("Please talk to me after completing the stage.");
+							cm.dispose();
 						}
 					}
 					else if (status == 1) {
 						if (preamble == null) {
-							cm.sendOk("Ok, boa sorte para voce!");
+							cm.sendOk("Ok, good luck to you!");
 							cm.dispose();
 						}
 						else { // shouldn't happen, if it does then just dispose
@@ -189,7 +189,7 @@ function action(mode, type, selection) {
 						party = eim.getPlayers();
 						preamble = eim.getProperty("leader3rdpreamble");
 						if (preamble == null) {
-							cm.sendNext("Bem-vindo a terceira etapa de AquariumPQ. Veja estas lulas aqui? Mate-os e me de 150 passes e eu irei concluir a terceira etapa.");
+							cm.sendNext("Welcome to the third stage of the Aquarium PQ. See these squids here? Kill them and give me 150 passes to complete the third stage.");
 							eim.setProperty("leader3rdpreamble","done");
 							cm.dispose();
 						}
@@ -197,16 +197,16 @@ function action(mode, type, selection) {
 	                        			// check for stage completed
 	                        			var complete = eim.getProperty("3stageclear");
 	                        			if (complete != null) {
-	                        				cm.sendNext("Prossiga com a missao pois o portal ja foi liberado!");
+	                        				cm.sendNext("Continue the mission. The portal has already opened!");
 	                        				cm.dispose();
 	                        			}
 	                        			else {
 								if (cm.haveItem(4001022, 150) == false) {
-									cm.sendNext("Me desculpe, mas voce nao tem todos os 150 passes necessarios para concluir esta fase.");
+									cm.sendNext("I'm sorry, but you do not have all 150 passes required to complete this stage.");
 									cm.dispose();
 								}
 								else {
-									cm.sendNext("Parabens pela conclusao da terceira fase, vou abrir o portal agora.");
+									cm.sendNext("Congratulations on completing the third stage! The portal will now open.");
 									clear(3,eim,cm);
                                                                         //cm.givePartyQPoints(20, party);
 									cm.getPlayer().getMap().getPortal(4).setScriptName("aqua_pq_in_2");
@@ -223,24 +223,24 @@ function action(mode, type, selection) {
 					pstring = "member3rdpreamble" + cm.getChar().getId().toString();
 					preamble = eim.getProperty(pstring);
 					if (status == 0 && preamble == null) {
-						cm.sendNext("Bem-vindo a terceira etapa de AquariumPQ. Veja estas lulas aqui? Mate-os e me de 150 passes e eu irei concluir a terceira etapa.");
+						cm.sendNext("Welcome to the third stage of the Aquarium PQ. See these squids here? Kill them and give me 150 passes to complete the third stage.");
 						
 					}
 					else if (status == 0) {// otherwise
 	                        		// check for stage completed
 	                        		var complete = eim.getProperty("3stageclear");
 	                        		if (complete != null) {
-	                        			cm.sendNext("Prossiga com a missao pois o portal ja foi liberado!");
+	                        			cm.sendNext("Continue the mission. The portal has already opened!");
 	                        			cm.dispose();
 	                        		}
 	                        		else {
-								cm.sendOk("Por favor, fale comigo depois de ter concluido o estagio.");
-								cm.dispose();
+							cm.sendOk("Please talk to me after completing the stage.");
+							cm.dispose();
 						}
 					}
 					else if (status == 1) {
 						if (preamble == null) {
-							cm.sendOk("Ok, boa sorte para voce!");
+							cm.sendOk("Ok, good luck to you!");
 							cm.dispose();
 						}
 						else { // shouldn't happen, if it does then just dispose
@@ -264,7 +264,7 @@ function action(mode, type, selection) {
 						party = eim.getPlayers();
 						preamble = eim.getProperty("leader4thpreamble");
 						if (preamble == null) {
-							cm.sendNext("Bem-vindo a etapa final de AquariumPQ. Veja estas lulas aqui? Mate-os e me de 300 passes e eu irei concluir a etapa final.");
+							cm.sendNext("Welcome to the final stage of the Aquarium PQ. See these squids here? Kill them and give me 300 passes to complete the final stage.");
 							eim.setProperty("leader4thpreamble","done");
 							cm.dispose();
 						}
@@ -272,16 +272,16 @@ function action(mode, type, selection) {
 	                        			// check for stage completed
 	                        			var complete = eim.getProperty("4stageclear");
 	                        			if (complete != null) {
-	                        				cm.sendNext("Prossiga com a missao pois o portal ja foi liberado!");
+	                        				cm.sendNext("Continue the mission. The portal has already opened!");
 	                        				cm.dispose();
 	                        			}
 	                        			else {
 								if (cm.haveItem(4001022, 300) == false) {
-									cm.sendNext("Me desculpe, mas voce nao tem todos os 300 passes necessarios para concluir esta fase.");
+									cm.sendNext("I'm sorry, but you do not have all 300 passes required to complete this stage.");
 									cm.dispose();
 								}
 								else {
-									cm.sendNext("Parabens por concluir a fase final! Vou abrir o portal agora, va terminar a forca do mal que e o #bSuper Pianus#k.");
+									cm.sendNext("Congratulations on completing the final stage! I will now open the portal. Go forth and defeat the evil force of #bSuper Pianus#k.");
 									clear(4,eim,cm);
                                                                         //cm.givePartyQPoints(20, party);
 									cm.getPlayer().getMap().getPortal(4).setScriptName("aqua_pq_boss_0");
@@ -298,24 +298,24 @@ function action(mode, type, selection) {
 					pstring = "member4thpreamble" + cm.getChar().getId().toString();
 					preamble = eim.getProperty(pstring);
 					if (status == 0 && preamble == null) {
-						cm.sendNext("Bem-vindo a etapa final de AquariumPQ. Veja estas lulas aqui? Mate-os e me de 300 passes e eu irei concluir a etapa final.");
+						cm.sendNext("Welcome to the final stage of the Aquarium PQ. See these squids here? Kill them and give me 300 passes to complete the final stage.");
 						
 					}
 					else if (status == 0) {// otherwise
 	                        		// check for stage completed
 	                        		var complete = eim.getProperty("4stageclear");
 	                        		if (complete != null) {
-	                        			cm.sendNext("Prossiga com a missao pois o portal ja foi liberado!");
+	                        			cm.sendNext("Continue the mission. The portal has already opened!");
 	                        			cm.dispose();
 	                        		}
 	                        		else {
-								cm.sendOk("Por favor, fale comigo depois de ter concluido o estagio.");
-								cm.dispose();
+							cm.sendOk("Please talk to me after completing the stage.");
+                                                        cm.dispose();
 						}
 					}
 					else if (status == 1) {
 						if (preamble == null) {
-							cm.sendOk("Ok, boa sorte para voce!");
+							cm.sendOk("Ok, good luck to you!");
 							cm.dispose();
 						}
 						else { // shouldn't happen, if it does then just dispose
@@ -334,7 +334,7 @@ function action(mode, type, selection) {
 				}
 			} else if (cm.getPlayer().getMapId() == 230040420) {
 				if (status == 0) {
-					cm.sendNext("Boa sorte no combate contra o #bSuper Pianus#k!");
+					cm.sendNext("Good luck in the fight against #bSuper Pianus#k!");
 					cm.dispose();
 				}
 			}

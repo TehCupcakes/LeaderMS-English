@@ -43,7 +43,7 @@ public class MapleTVHandler extends AbstractMaplePacketHandler {
 		The MapleTV packet for Origin2
 
 		You could check who's actually watched the MapleTV here or atleast passed by...
-		This is why I don't have a fuckin clue why nexon implemented this packet.
+		This is why I don't have a clue why nexon implemented this packet.
 		If there's any suggestions, feel free to PM TheRamon
 	*/
 		String chString = slea.readMapleAsciiString();

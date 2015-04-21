@@ -56,7 +56,7 @@ function setup() {
 	em.getChannelServer().addInstanceId();
 	
 	var map = mf.getMap(921100300);//wutt
-	//Fuck this timer
+	//Timer
 	em.schedule("timeOut", 60000 * 10);
 	em.schedule("broadcastClock", 1500);
 	eim.setProperty("entryTimestamp",System.currentTimeMillis() + (10 * 60000));
@@ -69,7 +69,7 @@ function playerEntry(eim, player) {
 	player.changeMap(map, map.getPortal(0));
 	player.getClient().getSession().write(MaplePacketCreator.getClock((Long.parseLong(eim.getProperty("entryTimestamp")) - System.currentTimeMillis()) / 1000));
 	player.getClient().getSession().write(MaplePacketCreator.serverNotice(6, "Tylus is under danger. Please protect him."));
-	//THE CLOCK IS SHIT
+	//THE CLOCK SUCKS
 	//player.getClient().getSession().write(MaplePacketCreator.getClock(1800));
 }
 

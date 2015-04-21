@@ -10,7 +10,7 @@ package client;
  * @author David
  
 public class ChatLog {
-	private String fuck;
+	private String fileName;
 	
 	public static class ChatEntry {
 		private Date time;
@@ -44,7 +44,7 @@ public class ChatLog {
 	
 	public static ChatLog load(String charName) {
 		ChatLog ret = new ChatLog();
-		ret.fuck = charName;
+		ret.fileName = charName;
 		
 		try {
 			File root = new File("ChatLog/");
@@ -70,7 +70,7 @@ public class ChatLog {
 	public void save() {
 		BufferedWriter out = null;
 		try {
-			File flog = new File("ChatLog/" + fuck + ".log");
+			File flog = new File("ChatLog/" + fileName + ".log");
 			out = new BufferedWriter(new FileWriter(flog));
 			PrintWriter pw = new PrintWriter(out);
 			for (String s : chatLog) {

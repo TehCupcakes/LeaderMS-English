@@ -58,7 +58,7 @@ public class MapleMount {
         return skillid;
     }
 
-    public int getId() { //FIXME: this is a crappy way to do this, will fuck up when mounts are added to maple from new patches
+    public int getId() { //FIXME: this is a crappy way to do this, will mess up when mounts are added to maple from new patches
         switch (this.itemid) {
             case 1902000:
                 return 1;

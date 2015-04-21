@@ -252,7 +252,7 @@ public class MapleAESOFB {
 		byte[] in = { (byte) 0xf2, 0x53, (byte) 0x50, (byte) 0xc6 }; // magic
 		// ;)
 		for (int x = 0; x < 4; x++) {
-			funnyShit(oldIv[x], in);
+			funnyStuff(oldIv[x], in);
                         //funnyRamon(oldIv[x], in);
 			// System.out.println(HexTool.toString(in));
 		}
@@ -276,7 +276,7 @@ public class MapleAESOFB {
 	 * @param in Something needed for all this to occur.
 	 * @return The modified version of <code>in</code>.
 	 */
-	public static byte[] funnyShit(byte inputByte, byte[] in) {
+	public static byte[] funnyStuff(byte inputByte, byte[] in) {
 		byte elina = in[1];
 		byte anna = inputByte;
 		byte moritz = funnyBytes[(int) elina & 0xFF];

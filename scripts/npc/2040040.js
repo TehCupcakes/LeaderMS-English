@@ -72,7 +72,7 @@ function action(mode, type, selection) {
 					var qstring = "member5th" + cm.getChar().getId().toString();
 					var question = eim.getProperty(qstring);
 					if (question == null) {
-						qstring = "FUCK";
+						qstring = "CRAP";
 					}
 						cm.sendNext("Ola! Bem-vindo(a) ao 5 estagio. Aqui voce vai encontrar muitos espacos e, dentro deles, vai encontrar alguns monstros. Seu dever e coletar com o grupo #b24 #t4001022#s#k. Esta e a explicacao: Havera casos em que voce precisara ser de uma determinada profissao ou nao podera coletar #b#t4001022##k. Por isto, tenha cuidado. Aqui vai uma pista. Existe um monstro chamado #b#o9300013##k que e imbativel. Apenas um gatuno pode chegar ate o outro lado do monstro. Existe tambem uma rota que apenas os bruxos podem tomar. Descobrir e com voce. Boa sorte!");
 					

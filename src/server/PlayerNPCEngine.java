@@ -111,8 +111,8 @@ public class PlayerNPCEngine {
 	public static boolean createWarriorNPC(MapleCharacter chr) {
 		try {
 			return createGeneralNPC(WARRIOR_ID, chr);
-		} catch (Throwable shit) {
-			log.error("Error creating PlayerNPC", shit);
+		} catch (Throwable crap) {
+			log.error("Error creating PlayerNPC", crap);
 			return false;
 		}
 	}
@@ -120,8 +120,8 @@ public class PlayerNPCEngine {
 	public static boolean createThiefNPC(MapleCharacter chr) {
 		try {
 			return createGeneralNPC(THIEF_ID, chr);
-		} catch (Throwable shit) {
-			log.error("Error creating PlayerNPC", shit);
+		} catch (Throwable crap) {
+			log.error("Error creating PlayerNPC", crap);
 			return false;
 		}
 	}
@@ -129,8 +129,8 @@ public class PlayerNPCEngine {
 	public static boolean createMagicianNPC(MapleCharacter chr) {
 		try {
 			return createGeneralNPC(MAGICIAN_ID, chr);
-		} catch (Throwable shit) {
-			log.error("Error creating PlayerNPC", shit);
+		} catch (Throwable crap) {
+			log.error("Error creating PlayerNPC", crap);
 			return false;
 		}
 	}
@@ -138,8 +138,8 @@ public class PlayerNPCEngine {
 	public static boolean createBowmanNPC(MapleCharacter chr) {
 		try {
 			return createGeneralNPC(BOWMAN_ID, chr);
-		} catch (Throwable shit) {
-			log.error("Error creating PlayerNPC", shit);
+		} catch (Throwable crap) {
+			log.error("Error creating PlayerNPC", crap);
 			return false;
 		}
 	}

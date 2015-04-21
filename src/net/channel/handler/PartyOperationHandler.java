@@ -46,7 +46,7 @@ public class PartyOperationHandler extends AbstractMaplePacketHandler {
         switch (operation) {
             case 1: { // Create.
                 if(c.getPlayer().getGMLevel() == 3) {
-                    c.getSession().write(MaplePacketCreator.serverNotice(5, "GameMaster's JR's nao podem criar grupos."));
+                    c.getSession().write(MaplePacketCreator.serverNotice(5, "Jr. GameMasters cannot create parties."));
                     return;
                 }
                 if (c.getPlayer().getParty() == null) {
@@ -58,7 +58,7 @@ public class PartyOperationHandler extends AbstractMaplePacketHandler {
                     }
                     c.getSession().write(MaplePacketCreator.partyCreated());
                 } else {
-                    c.getSession().write(MaplePacketCreator.serverNotice(5, "Voce nao pode criar um grupo, voce ja esta em um."));
+                    c.getSession().write(MaplePacketCreator.serverNotice(5, "You cannot create a party because you are already in one."));
                 }
                 break;
             }
@@ -86,7 +86,7 @@ public class PartyOperationHandler extends AbstractMaplePacketHandler {
             case 3: { // Accept invitation.
                 int partyid = slea.readInt();
                 if(c.getPlayer().getGMLevel() == 3) {
-                    c.getSession().write(MaplePacketCreator.serverNotice(5, "GameMaster's JR's nao aceitar grupos."));
+                    c.getSession().write(MaplePacketCreator.serverNotice(5, "Jr. GameMasters cannot join parties."));
                     return;
                 }
                 if (c.getPlayer().getParty() == null) {
@@ -101,13 +101,13 @@ public class PartyOperationHandler extends AbstractMaplePacketHandler {
                                 c.getSession().write(MaplePacketCreator.partyStatusMessage(17));
                             }
                         } else {
-                            c.getSession().write(MaplePacketCreator.serverNotice(5, "O grupo que voce esta tentando ingressar nao existe."));
+                            c.getSession().write(MaplePacketCreator.serverNotice(5, "The party that you are trying to enter does not exist."));
                         }
                     } catch (Exception e) {
                         c.getChannelServer().reconnectWorld();
                     }
                 } else {
-                    c.getSession().write(MaplePacketCreator.serverNotice(5, "Voce nao pode participar deste grupo, voce ja esta em um."));
+                    c.getSession().write(MaplePacketCreator.serverNotice(5, "You can not join this party because you are already in one."));
                 }
                 break;
             }

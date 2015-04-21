@@ -86,7 +86,7 @@ public class SpawnMonsterCommand implements Command {
 		if (newExpRatio < oldExpRatio && newexp > 0) {
 			mc.dropMessage("The new hp/exp ratio is better than the old one. (" + newExpRatio + " < " + oldExpRatio + ")");
                         mc.dropMessage("Please consider that you're spawning a better monster than the original.");
-			//return; We don't want to quit, just want to warn the GM so he/she can do !killall if fucked up
+			//return; We don't want to quit, just want to warn the GM so he/she can do !killall if messed up
 		}
 		
 		MapleMonsterStats overrideStats = new MapleMonsterStats();

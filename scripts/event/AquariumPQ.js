@@ -80,7 +80,7 @@ function setup() {
 	mob.setOverrideStats(overrideStats);
 	mob.setHp(overrideStats.getHp());
         bossmap.spawnMonsterOnGroudBelow(mob, new java.awt.Point(568, 137));
-	//Fuck this timer
+	//Timer
 	em.schedule("timeOut", 60000 * 10 * 60);
 	em.schedule("broadcastClock", 1500);
 	eim.setProperty("entryTimestamp",System.currentTimeMillis() + (10 * 60000 * 60));

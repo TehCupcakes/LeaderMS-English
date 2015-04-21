@@ -217,7 +217,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
     private MapleGuildCharacter mgc = null;
     private boolean hasMerchant;
     private int merchantMesos;
-    private byte prefixshit, smega;
+    private byte prefixstuff, smega;
     private String chalktext, legend;
     // cash shop related information
     private int paypalnx;
@@ -4386,12 +4386,12 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
     }
 
     // Smega Stuff
-    public void setPrefixShit(int lol) {
-        this.prefixshit = (byte) lol;
+    public void setPrefixStuff(int lol) {
+        this.prefixstuff = (byte) lol;
     }
 
-    public byte getPrefixShit() {
-        return prefixshit;
+    public byte getPrefixStuff() {
+        return prefixstuff;
     }
    
     public String getLegend() {

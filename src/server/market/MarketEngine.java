@@ -131,7 +131,7 @@ public class MarketEngine {
 				names.put(charId, name);
 				return name;
 			}
-		} catch (SQLException fuckthisissofuckinggay) {
+		} catch (SQLException fail) {
 			return "SQL Error fixmepl0x";
 		}
 		return "No user";

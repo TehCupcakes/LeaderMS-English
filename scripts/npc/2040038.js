@@ -72,7 +72,7 @@ function action(mode, type, selection) {
 					var qstring = "member3rd" + cm.getChar().getId().toString();
 					var question = eim.getProperty(qstring);
 					if (question == null) {
-						qstring = "FUCK";
+						qstring = "CRAP";
 					}
 						cm.sendNext("Ola! Bem-vindo(a) ao 3 estagio. Aqui voca vera um monte de monstros e caixas. Se voce derrotar os monstros, eles vao entregar #b#t4001022##k, igual aos monstros da outra dimensao. Se voce quebrar a caixa, um monstro aparecera e ele tambem dara #b#t4001022##k.\r\nO numero de #b#t4001022#s#k que voce precisa coletar sao 32.");
 					

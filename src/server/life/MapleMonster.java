@@ -284,8 +284,8 @@ public class MapleMonster extends AbstractLoadedMapleLife {
         return this.canDamage;
     }
 
-    public void setCanDamage(boolean shit) {
-        this.canDamage = shit;
+    public void setCanDamage(boolean dmg) {
+        this.canDamage = dmg;
     }
 
     public int getDropItemPeriod() {
@@ -1446,7 +1446,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 					expMap.put(expReceiver, Integer.valueOf(iexp));
 				}
 			}
-			// FUCK we are done -.-
+			// we are done -.-
 			for (Entry<MapleCharacter, Integer> expReceiver : expMap.entrySet()) {
 				boolean white = mostDamage ? expReceiver.getKey() == highest : false;
 				giveExpToCharacter(expReceiver.getKey(), expReceiver.getValue(), white, expMap.size());

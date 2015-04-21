@@ -113,11 +113,10 @@ public class PNGMapleCanvas implements MapleCanvas {
 		try {
 			declen = dec.inflate(uc);
 		} catch ( DataFormatException ex) {
-			throw new RuntimeException("zlib fucks", ex);
+			throw new RuntimeException("zlib sucks", ex);
 		}
 
 		dec.end();
-		// fuck the format
 		if (getFormat() == 1) {
 			for ( int i = 0; i < sizeUncompressed; i++) {
 				byte low = (byte) (uc[i] & 0x0F);

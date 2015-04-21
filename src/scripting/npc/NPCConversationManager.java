@@ -869,7 +869,7 @@ getPlayer().sendServerNotice(msg);
 						}
 						ps.close();
 						rs.close();
-					} catch (SQLException fuckyoucunt) {
+					} catch (SQLException dang) {
 
 					}
 				}
@@ -1171,11 +1171,11 @@ getPlayer().sendServerNotice(msg);
 		}
 		if (leader != null) {
 			if (!leader.isChallenged()) {
-				List<MaplePartyCharacter> fuckwits = new LinkedList<>();
-				for (MaplePartyCharacter fucker : c.getPlayer().getParty().getMembers()) {
-					fuckwits.add(fucker);
+				List<MaplePartyCharacter> party = new LinkedList<>();
+				for (MaplePartyCharacter player : c.getPlayer().getParty().getMembers()) {
+					party.add(player);
 				}
-				NPCScriptManager.getInstance().start("cpqchallenge", leader.getClient(), npc, fuckwits);
+				NPCScriptManager.getInstance().start("cpqchallenge", leader.getClient(), npc, party);
 			} else {
 				sendOk("The other party is currently taking on a different challenge.");
 			}
@@ -1275,7 +1275,7 @@ getPlayer().sendServerNotice(msg);
 		if (getPlayer().getParty() == null) {
 			return null;
 		}
-		List<MapleCharacter> chars = new LinkedList<MapleCharacter>(); // creates an empty array full of shit..
+		List<MapleCharacter> chars = new LinkedList<MapleCharacter>(); // creates an empty array full of stuff..
 		for (ChannelServer channel : ChannelServer.getAllInstances()) {
 			for (MaplePartyCharacter a : getPlayer().getParty().getMembers()) {
 				MapleCharacter ch = channel.getPlayerStorage().getCharacterByName(a.getName());

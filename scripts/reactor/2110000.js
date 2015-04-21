@@ -26,6 +26,6 @@
 */
 
 function act(){
-	rm.playerMessage(5, "Uma forca desconhecida fez que voce voltasse ao ponto de partida.");
+	rm.playerMessage(5, "An unknown force made ​​you return to the starting point.");
 	rm.warp(280010000);
 }
