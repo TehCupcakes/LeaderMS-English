@@ -1,0 +1,187 @@
+1092056 - Transparent Shield
+1082246 - Flamekeeper Cordon 
+1102086 - Purple Gaia Cape
+1002728 - Rudolph's Horn
+1302100 - Lunch box (Lv90)
+1442057 - Purple Surfboard
+1372038 - Elemental Wand 4
+1372039 - Elemental Wand 5
+1372040 - Elemental Wand 6
+1372041 - Elemental Wand 7
+1082149 - Brown Work Gloves
+1372042 - Elemental Wand 8
+1442061 - Versalmas Cactus
+2340000 - White Scroll
+2049100 - Chaos Scroll 60%
+1082230 - Glitter Gloves
+2290096 - [Mastery Book] Maple Hero
+2290023 - [Mastery Book] Berserk
+2290041 - [Mastery Book] Meteor Shower
+2290047 - [Mastery Book] Blizzard
+2290049 - [Mastery Book] Genesis
+2290057 - [Mastery Book] Bow Expert
+2290085 - [Mastery Book] Triple Throw
+2290091 - [Mastery Book] Boomerang Step
+2290095 - [Mastery Book] Smokescreen
+2290075 - [Mastery Book] Snipe
+2290021 - [Mastery Book] Heaven's Hammer
+2290011 - [Mastery Book] Brandish
+2100000 - Black Sack
+1050127 - Bath Towel (Black)
+1051140 - Yellow Bath Towel
+1122002 - Bow-tie (Red)
+1122014 - Silver Deputy Star
+1472051 - Dragon Green Sleve
+1472052 - Dragon Purple Sleve
+1452044 - Dragon Shiner Bow
+1452060 - Crimson Arclancer
+1442045 - Dragon Chelbird
+1442046 - Super Snowboard
+1432038 - Dragon Faltizan
+1432018 - Sky Ski
+2040811 - Dark scroll for Gloves for ATT
+2040815 - Dark Scroll for Gloves for Magic Att.
+2040817 - Scroll for Gloves for Magic Att.
+2040914 - Scroll for Shield for Weapon Att.
+2040917 - Dark Scroll for Shield for Weapon Att.
+2040922 - Dark Scroll for Shield for Magic Att.
+2040919 - Scroll for Shield for Magic Att.
+1412026 - Dragon Battle Axe
+1402044 - Pumpkin Lantern
+1402036 - Dragon Claymore
+1382036 - Dragon Staff
+1372032 - Dragon Wand
+1332053 - Kebob
+1332047 - Dragon's Tail
+1102165 - Taru Spirit Cape
+1102040 - Yellow Adventurer Cape
+1102041 - Pink Adventurer Cape
+1102042 - Purple Adventurer Cape
+1332049 - Dragon Kanzir
+1332050 - Dragon Kreda
+1322052 - Dragon Mace
+1312031 - Dragon Axe
+2040106 - Scroll for Face Accessory for Avoidability
+2040203 - Dark Scroll for Eye Accessory for Accuracy
+2040208 - Dark Scroll for Eye Accessory for INT
+1302059 - Dragon Carabella
+2048010 - Scroll for Pet Equip. for STR 60%
+2048011 - Scroll for Pet Equip. for INT 60%
+2048012 - Scroll for Pet Equip. for DEX 60%
+2048013 - Scroll for Pet Equip. for LUK 60%
+1302026 - Black Umbrella
+1092050 - Khanjar
+1122010 - Horus's Eye
+1012058 - ??????
+1012059 - ??????
+1012060 - ??????
+1012061 - ??????
+1092049 - Dragon Khanjar
+1122005 - Bow-tie (Black)
+
+1092052 - Black Phoenix Shield
+1002675 - Antellion Miter
+1002676 - Infinity Circlet
+1452053 - Winkel
+1402045 - Tiger's Fang
+1472064 - Neva
+1472053 - Red Craven
+1472054 - Shinobi Bracer
+1472049 - Black Mamba
+1472065 - Kuma
+1472066 - Kumasuma
+1472067 - Kumamagna
+1332067 - Maku(LUK)
+1332068 - Makusuma(LUK)
+1332069 - Makumagna(LUK)
+1332070 - Maku(STR)
+1332071 - Makusuma(STR)
+1332072 - Makumagna(STR)
+1462047 - Xaru
+1462048 - Xarusuma
+1462049 - Xarumagna
+1382054 - Umaru
+1382055 - Umarusuma
+1382056 - Umarumagna
+1302106 - Crystal Blade
+1302091 - Stirge Grappler
+1302092 - Swooping Stirge
+1302093 - Frantic Strige
+1302094 - Angry Stirge
+1082145 - Yellow Work Gloves
+1082146 - Red Work Gloves
+1082147 - Blue Work Gloves
+1082148 - Purple Work Gloves
+1082150 - Grey Work Gloves
+1082153 - Red Ciara
+1050047 - Orange Calas
+1051027 - Brown Moonlight
+1060055 - Red Wild Pants
+1060056 - Green Hunter's Pants
+1092045 - Maple Magician shield
+1092046 - Maple Warrior shield
+1092047 - Maple Theif shield
+1092030 - Maple Shield
+4000010 - Slime Bubble
+4000011 - Mushroom Spore
+4000012 - Green Mushroom Cap
+4000013 - Curse Eye Tail
+4000014 - Drake Skull
+1102192 - Wrath of El Nath
+1002856 - Miner's Hat
+1002857 - Hard Hat
+1452052 - Andromeda Bow
+1302079 - Astral Blade
+1472062 - Black Hole
+1702112 - Celestial Wand
+1322059 - Cosmic Scepter
+1412032 - Crescent Moon
+1442060 - Heavenly Messenger
+1332064 - Nebula Dagger 1 (LUK)
+1332065 - Nebula Dagger 2 (STR)
+1432045 - Sunspear
+1462046 - Void Hunter
+1462053 - Night Raven's Eye
+1462054 - Dawn Raven's Eye
+1462055 - Dusk Raven's Eye
+1472073 - Night Raven's Claw
+1472074 - Dawn Raven's Claw
+1472075 - Dusk Raven's Claw
+1402049 - Night Raven's Wing
+1402050 - Dawn Raven's Wing
+1402051 - Dusk Raven's Wing
+1332078 - Night Raven's Beak
+1332079 - Dawn Raven's Beak
+1332080 - Dusk Raven's Beak
+1032042 - Maple Earring
+2012004 - Purified Honey
+2020000 - Salad
+2020001 - Fried Chicken
+2020002 - Cake
+2020003 - Pizza
+2020004 - Hamburger
+2020005 - Hot Dog
+2290079 - [Mastery Book] Venomous Star/Venomous Stab
+2290083 - [Mastery Book] Ninja Ambush
+2290091 - [Mastery Book] Boomerang Step
+2290093 - [Mastery Book] Assassinate
+2290095 - [Mastery Book] Smokescreen
+2290105 - [Mastery Book] Snatch
+2290108 - [Mastery Book] Speed Infusion
+2290088 - [Mastery Book] Shadow Claw
+2290076 - [Mastery Book] Shadow Shifter
+2290069 - [Mastery Book] Blind
+2290063 - [Mastery Book] Phoenix
+2290052 - [Mastery Book] Sharp Eyes
+2290031 - [Mastery Book] Paralyze
+2290008 - [Mastery Book] Advanced Combo Attack
+2101001 - Summoning Crimson Balrog
+2100000 - Black Sack
+2049000 - Clean Slate Scroll 1%
+2049001 - Clean Slate Scroll 3%
+2049002 - Clean Slate Scroll 5%
+2049003 - Clean Slate Scroll 20%
+2048006 - Scroll for Speed for Pet Equip.
+2048007 - Scroll for Speed for Pet Equip.
+2048008 - Scroll for jump for Pet Equip.
+2048009 - Scroll for jump for Pet Equip.

@@ -1,0 +1,130 @@
+1012101 - Maple Leaf
+1012102 - Maple Leaf
+1012103 - Maple Leaf
+1012098 - Maple Leaf
+1102082 - Ragged Black Cape
+2050004 - All Cure Potion
+1432046 - Maplemas Tree
+1002527 - Independence Day Hat
+1472074 - Dawn Raven's Claw
+1332064 - Nebula Dagger 1 (LUK)
+2101023 - Monster Sack (Slime Gold)
+1332032 - Christmas Tree
+1302062 - Pumpkin Basket (2006 SE)
+2044804 - Scroll for Knuckler for Attack 30%
+1452018 - Bow of Magical Destruction
+1012106 - Rat Mouth
+1012107 - Branch Nose
+1012108 - Smiling Mask
+1012109 - Crying Mask
+1012110 - Angry Mask
+1012111 - Sad Mask
+1022058 - Raccoon Mask
+1022060 - White Raccoon Mask
+2040011 - Dark Scroll for Helmet for HP
+02040002 - Scroll for Helmet for DEF 10% 
+02040012 -Dark Scroll for Helmet for INT 70%  
+02040024      Scroll for Helmet for INT 100%
+02040028      Scroll for Helmet for DEX 70%
+2040015 - Dark Scroll for Helmet for Accuracy
+02040304      Dark scroll for Earring for INT 70%
+02040306      Dark scroll for Earring for DEX 70%
+02040320      Scroll for Earring for LUK 70%
+02040413      Scroll for Topwear for LUK 60%
+02040418      Scroll for Topwear for STR 60% 
+1122001 - Bow-tie(Green)
+1122003 - Bow-tie (Yellow)
+02040501      Scroll for Overall Armor for DEX 60%
+02040618      Scroll for Bottomwear for Jump 60%
+02040621      Scroll for Bottomwear for HP 60%
+02040804      Scroll for Gloves for ATT 60%
+02040813      Dark scroll for Gloves for HP 30%	
+02043001      Scroll for One-Handed Sword for ATT 60% 
+02043009      Scroll for One-Handed Sword for Magic Attack 60%
+ 02043017      Scroll for One-Handed Sword for Accuracy 60%
+ 02043101      Scroll for One-Handed Axe for ATT 60% 
+ 02043201      Scroll for One-Handed BW for ATT 60%
+ 02043301      Scroll for Dagger for ATT 60% 
+ 02043701      Scroll for Wand for Magic Attack 60%
+ 02043801      Scroll for Staff for Magic Attack 60% 
+ 02044001      Scroll for Two-handed Sword for ATT 60% 
+ 02044101      Scroll for Two-handed Axe for ATT 60% 
+ 02044201      Scroll for Two-handed BW for ATT 60%
+ 02044301      Scroll for Spear for ATT 60%  
+ 02044401      Scroll for Pole Arm for ATT 60% 
+ 02044501      Scroll for Bow for ATT 60% 
+ 02044601      Scroll for Crossbow for ATT 60% 
+ 02044701      Scroll for Claw for ATT 60% 
+ 02044801      Scroll for Knuckle for Attack 60% 
+ 02044901      Scroll for Gun for Attack 60% 
+ 02100001      Monster Sack 1
+ 02000009      White Pill
+ 02001000      Watermelon 
+ 02001000      Watermelon 
+__
+2040326 - Scroll for Earring for HP 60%
+2040327 - Scroll for Earring for HP 30%
+2040421 - Scroll for Topwear for HP 60%
+2040618 - Scroll for Bottomwear for Jump 60%
+2044412 - Scroll for Pole-Arm for Accuracy 60%
+2290025 - [Mastery Book] Mana Reflection
+2290032 - [Mastery Book] Chain Lightning
+2290037 - [Mastery Book] Fire Demon
+2290081 - [Mastery Book] Taunt
+2290082 - [Mastery Book] Ninja Ambush
+3992004 - Slime Ornament
+1002272 - Blue Galaxy
+1002391 - Green Bandana
+1002393 - Pink Bandana
+1002392 - Brown Bandana
+1002395 - Purple Bandana
+1002394 - Grey Bandana
+1002508 - Maple Hat
+1002509 - Maple Hat
+1002603 - White Maple Bandana
+1102043 - Brown Adventurer Cape
+1102034 - Blue Giles Cape
+1102004 - Black Napoleon
+1102003 - White Napoleon
+1040042 - Blue Pao
+1040043 - Red Pao
+1040097 - Green China
+1082145 - Yellow Work Gloves
+1082146 - Red Work Gloves
+1082147 - Blue Work Gloves
+1082148 - Purple Work Gloves
+1082150 - Grey Work Gloves
+1082153 - Red Ciara
+1050047 - Orange Calas
+1051027 - Brown Moonlight
+1060055 - Red Wild Pants
+1060056 - Green Hunter's Pants
+1092045 - Maple Magician shield
+1092046 - Maple Warrior shield
+1092047 - Maple Theif shield
+1092030 - Maple Shield
+1072238 - Violet Snowshoes
+1302038 - Gladius
+1302041 - Red Katana
+1302056 - Sparta
+1332046 - Kandine
+1332047 - Dragon's Tail
+1382024 - Kage
+1382025 - Arc Staff
+1412008 - Chrono
+1412009 - Helios
+1432005 - Zeco
+1432006 - Holy Spear
+1442012 - Sky Snowboard
+1442013 - Aqua Snowboard
+1442014 - Silver Snowboard
+1442015 - Golden Snowboard
+1442016 - Dark Snowboard
+1442017 - Blood Snowboard
+1442018 - Frozen Tuna
+1452031 - Dark Arund
+1452032 - Ryden
+1452033 - Olympus
+1452034 - Asianic Bow
+1452035 - Golden Hinkel
+5050000 - AP Reset

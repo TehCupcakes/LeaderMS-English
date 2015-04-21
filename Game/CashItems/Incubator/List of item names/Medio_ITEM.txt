@@ -1,0 +1,109 @@
+1042142 - 1
+1092008 - 1
+1002083 - 1
+2320000 - 1
+1372035 - Elemental Wand 1
+1372036 - Elemental Wand 2
+1372037 - Elemental Wand 3
+2022181 - Victoria's Amorian Basket
+2022184 - Maple BBQ
+2000005 - Power Elixir
+2030007 - Return Scroll for Dead Mine
+1332064 - Nebula Dagger 1 (LUK)
+1122004 - Bow-tie (Pink)
+1122006 - Bow-tie (Blue)
+2022179 - Onyx Apple
+2040012 - Dark Scroll for Helmet for INT
+2040013 - Dark Scroll for Helmet for INT
+2040015 - Dark Scroll for Helmet for Accuracy
+2040025 - Scroll for Helmet for INT 60%
+2040029 - Scroll for Helmet for DEX 60%
+2040513 - Scroll for Overall Armor for INT
+2040517 - Scroll for Overall Armor for LUK
+2040519 - Dark scroll for Overall Armor for INT
+2040521 - Dark scroll for Overall Armor for LUK
+2040305 - Dark scroll for Earring for INT
+2040307 - Dark scroll for Earring for DEX
+2040315 - [4yrAnniv]Scroll for Earring for INT
+2040321 - Scroll for Earring for LUK 60%
+2040411 - Dark Scroll for Topwear for LUK
+1012071 - Chocolate Icecream Bar
+1012072 - Melon Icecream Bar
+1012073 - Watermelon Icecream Bar
+2040509 - Dark scroll for Overall Armor for DEX
+2043007 - Dark Scroll for One-Handed Sword for Magic Att.
+2043005 - Dark scroll for One-Handed Sword for ATT
+2043105 - Dark scroll for One-Handed Axe for ATT
+2043205 - Dark scroll for One-Handed BW for ATT
+2043305 - Dark scroll for Dagger for ATT
+2043705 - Dark scroll for Wand for Magic Att.
+2043805 - Dark scroll for Staff for Magic Att.
+2044005 - Dark scroll for Two-handed Sword for ATT
+2044105 - Dark scroll for Two-handed Axe for ATT
+2044205 - Dark scroll for Two-handed BW for ATT
+2044305 - Dark scroll for Spear for ATT
+2044405 - Dark scroll for Pole Arm for ATT
+2044505 - Dark scroll for Bow for ATT
+2044605 - Dark scroll for Crossbow for ATT
+2044705 - Dark scroll for Claw for ATT
+2044904 - Scroll for Gun for Attack 30%
+
+___
+
+2040008 - Dark scroll for Helmet for DEF
+2040009 - Dark Scroll for Helmet for DEF
+2040030 - Scroll for Helmet for DEX 30%
+2040508 - Dark scroll for Overall Armor for DEX
+2040509 - Dark scroll for Overall Armor for DEX
+2040518 - Dark scroll for Overall Armor for INT
+2040519 - Dark scroll for Overall Armor for INT
+2040520 - Dark scroll for Overall Armor for LUK
+2040521 - Dark scroll for Overall Armor for LUK
+2040604 - Dark scroll for Bottomwear for DEF
+2040605 - Dark scroll for Bottomwear for DEF
+2040606 - Dark scroll for Bottomwear for Jump
+2040607 - Dark scroll for Bottomwear for Jump
+2040608 - Dark scroll for Bottomwear for HP
+2040716 - Dark scroll for Shoes for Speed
+2040717 - Dark scroll for Shoes for Speed
+2040808 - Dark scroll for Gloves for DEX
+2040809 - Dark scroll for Gloves for DEX
+2040810 - Dark scroll for Gloves for ATT
+2040813 - Dark scroll for Gloves for HP
+2040823 - Scroll for Gloves for HP 100%
+2040924 - Scroll for Shield for LUK 60%
+2040931 - Scroll for Shield for STR 60%
+2043111 - Scroll for One-Handed Axe for Accuracy 70%
+2043016 - Scroll for One-Handed Sword for Accuracy 70%
+2043204 - Dark scroll for One-Handed BW for ATT
+2043304 - Dark scroll for Dagger for ATT
+2044704 - Dark Scroll for Claw for ATT
+1092052 - Black Phoenix Shield
+1002675 - Antellion Miter
+1002676 - Infinity Circlet
+1452053 - Winkel
+1402045 - Tiger's Fang
+1472064 - Neva
+1472053 - Red Craven
+1472054 - Shinobi Bracer
+1472049 - Black Mamba
+1472065 - Kuma
+1472066 - Kumasuma
+1472067 - Kumamagna
+1332067 - Maku(LUK)
+1332068 - Makusuma(LUK)
+1332069 - Makumagna(LUK)
+1332070 - Maku(STR)
+1332071 - Makusuma(STR)
+1332072 - Makumagna(STR)
+1462047 - Xaru
+1462048 - Xarusuma
+1462049 - Xarumagna
+1382054 - Umaru
+1382055 - Umarusuma
+1382056 - Umarumagna
+1302106 - Crystal Blade
+1302091 - Stirge Grappler
+1302092 - Swooping Stirge
+1302093 - Frantic Strige
+1302094 - Angry Stirge
