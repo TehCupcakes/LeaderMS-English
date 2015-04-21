@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<imgdir name="2008008.img">
+	<imgdir name="info">
+		<string name="info" value="&amp;#43690;&amp;#43691;&amp;#43692;&amp;#43693;&amp;#43694;&amp;#43695;&amp;#43696;&amp;#43697;&amp;#43698;&amp;#43699;&amp;#43700;"/>
+	</imgdir>
+	<imgdir name="0">
+		<canvas name="0" width="1" height="1">
+			<vector name="origin" x="0" y="0"/>
+		</canvas>
+	</imgdir>
+</imgdir>
