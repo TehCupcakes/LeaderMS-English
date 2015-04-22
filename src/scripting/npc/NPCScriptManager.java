@@ -7,6 +7,9 @@ import javax.script.Invocable;
 import client.MapleClient;
 import client.MapleCharacter;
 import client.ScriptDebug;
+import com.sun.org.apache.xalan.internal.utils.FeatureManager.Feature;
+import config.configuration.FeatureManager;
+import config.configuration.FeatureManager.FeatureName;
 import java.lang.reflect.UndeclaredThrowableException;
 import javax.script.ScriptException;
 import net.world.MaplePartyCharacter;
@@ -62,6 +65,7 @@ public class NPCScriptManager extends AbstractScriptManager {
        public void start(MapleClient c, int npc, String filename, MapleCharacter chr) {
         try {
             NPCConversationManager cm = new NPCConversationManager(c, npc);
+            FeatureManager fm = new FeatureManager();
             if (cms.containsKey(c)) {
                 return;
             }
@@ -71,6 +75,10 @@ public class NPCScriptManager extends AbstractScriptManager {
             if (filename != null) {
                 path = "npc/" + filename + ".js";
                 iv = getInvocable("npc/" + filename + ".js", c);
+            }
+            for(int i = 0; iv == null && i < fm.count(); i++) {
+                //Feature feat = fm.isEnabled(FeatureName.i);
+                
             }
             if (iv == null) {
                 path = "npc/" + npc + ".js";

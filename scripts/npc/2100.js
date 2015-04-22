@@ -9,8 +9,6 @@ var status = 0;
 var yes = 0;
 
 function start() {
-    if (!cm.getJob().equals(MapleJob.BEGINNER) && !cm.getChar().gmLevel() > 0)
-        cm.getC().disconnect();
     status = -1;
     action(1, 0, 0);
 }
