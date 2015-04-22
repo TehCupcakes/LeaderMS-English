@@ -18,7 +18,7 @@
 //		else
 //			status--;
 //		if (status == 0) {
-//			cm.sendSimple ("                        #e<LeaderMS Ocupacoes>#n\r\n\r\nOla #e#h ##n,\r\nEu sou o #eSistema de Ocupacao#n do LeaderMS.\r\nSua ocupacao atual e (#b#e" + cm.getPlayer().getOccupation() + "#k#n).\r\n#r#eAlem disso, por favor leia o grafico nivel de ocupacao.#n #k\r\n#L0#Eu gostaria de subir de nivel um nivel de ocupacao!\r\n#L1#Eu ainda nao tenho certeza.\r\n#L3#Veja a tabela de nivel de ocupacao!");
+//			cm.sendSimple ("                        #e<"+Configuration.Server_Name+" Ocupacoes>#n\r\n\r\nOla #e#h ##n,\r\nEu sou o #eSistema de Ocupacao#n do "+Configuration.Server_Name+".\r\nSua ocupacao atual e (#b#e" + cm.getPlayer().getOccupation() + "#k#n).\r\n#r#eAlem disso, por favor leia o grafico nivel de ocupacao.#n #k\r\n#L0#Eu gostaria de subir de nivel um nivel de ocupacao!\r\n#L1#Eu ainda nao tenho certeza.\r\n#L3#Veja a tabela de nivel de ocupacao!");
 //				 } else if (selection == 0) {
 //                 cm.sendSimple ("O seu nivel de ocupacao atual e (#b#e" + cm.getPlayer().getOccupation() + "#k#n).\r\nPara mais informacoes, leia o grafico nivel de ocupacao. Gostaria de avancar para?" +
 //                 "#k\r\n#L45#Nivel (1) - #b#eAlpha#k#n #r#e[Lvl. - 30]#k#n" +

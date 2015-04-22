@@ -3,6 +3,7 @@
 * LeaderMS MapleStory Private Server
 * Trocas
 */
+importPackage(Packages.config.configuration);
 
 var status;
 function start() {
@@ -16,7 +17,7 @@ if (mode == 1) {
        status--; 
 }
 if (status == 0) { 
-cm.sendSimple("Ola #e#h ##n, eu sou Tia a auxiliar do LeaderMS.\r\nSe voce tem alguns pontos de cash e deseja trocar, basta prosseguir com nossa conversa. \r\n\r\nSe voce ja #epossui#n estes pontos, clique em trocar, caso nao tenha, volte novamente mais tarde.\r\n\r\nVoce possui (#e" + cm.getPlayer().getCashPoints() + "#n) CashPoints.\r\n\#L0#Trocar CashPoints#l\r\n\#L1#Trocar Trofeus#l\r\n\#L2##r#eComo obter pontos?#k#l#n");
+cm.sendSimple("Ola #e#h ##n, eu sou Tia a auxiliar do "+Configuration.Server_Name+".\r\nSe voce tem alguns pontos de cash e deseja trocar, basta prosseguir com nossa conversa. \r\n\r\nSe voce ja #epossui#n estes pontos, clique em trocar, caso nao tenha, volte novamente mais tarde.\r\n\r\nVoce possui (#e" + cm.getPlayer().getCashPoints() + "#n) CashPoints.\r\n\#L0#Trocar CashPoints#l\r\n\#L1#Trocar Trofeus#l\r\n\#L2##r#eComo obter pontos?#k#l#n");
 }else if (status == 1){
 if (selection == 0) {
 cm.sendSimple("                                #e#r<CashPoints - Troca>#k#n\r\n\r\n#L20#Trocar - 1.000 (CashPoints) por 2.000 de Cash#l\r\n#L21#Trocar - 1.500 (CashPoints) por 3.000 de Cash#l\r\n#L22#Trocar - 2.000 (CashPoints) por 5.000 de Cash#l");

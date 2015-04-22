@@ -3,7 +3,7 @@
 * LeaderMS MapleStory Private Server
 * NPC/Quest CASH
 */
-
+importPackage(Packages.config.configuration);
 
 /* Variaveis */
     var status;
@@ -19,9 +19,9 @@
     var hora = tempo.getHours();
     var min = tempo.getMinutes();
     var seg = tempo.getSeconds();
-    var texto = "                  #e<LeaderMS PQ: Cash Quest>#n\r\n\r\nOla #h #, atraves deste NPC sera possivel obter pontos para a troca de Cash. Lembrando que, para poder participar da busca dos pontos e necessario verificar se voce esta no horario correto de coleta e se voce possui a ocupacao \"Alpha\".\r\n\r\n#eEm caso de duvidas#n - #bwww.leaderms.com/forum#k";
-    var texto1 = "                  #e<LeaderMS PQ: Horarios/Informacoes>#n\r\n\r\nMadrugada - 04:00 as 05:00\r\nManha - 08:00 as 09:00\r\nTarde - 14:00 as 15:00\r\nNoite - 19:00 as 20:00\r\n\r\n                               <#eHorario atual#n : " + hora + ":" + min + ">";
-    var texto2 = "                  #e<LeaderMS PQ: Horarios/Informacoes>#n\r\n\r\nPara trocar os pontos da CashPQ e necessario falar com o NPC \"Tia\", que se encontra em algum lugar por ai, boa sorte!";
+    var texto = "                  #e<"+Configuration.Server_Name+" PQ: Cash Quest>#n\r\n\r\nOla #h #, atraves deste NPC sera possivel obter pontos para a troca de Cash. Lembrando que, para poder participar da busca dos pontos e necessario verificar se voce esta no horario correto de coleta e se voce possui a ocupacao \"Alpha\".\r\n\r\n#eEm caso de duvidas#n - #bwww.leaderms.com/forum#k";
+    var texto1 = "                  #e<"+Configuration.Server_Name+" PQ: Horarios/Informacoes>#n\r\n\r\nMadrugada - 04:00 as 05:00\r\nManha - 08:00 as 09:00\r\nTarde - 14:00 as 15:00\r\nNoite - 19:00 as 20:00\r\n\r\n                               <#eHorario atual#n : " + hora + ":" + min + ">";
+    var texto2 = "                  #e<"+Configuration.Server_Name+" PQ: Horarios/Informacoes>#n\r\n\r\nPara trocar os pontos da CashPQ e necessario falar com o NPC \"Tia\", que se encontra em algum lugar por ai, boa sorte!";
 
 function start() {
     status = -1;
@@ -52,7 +52,7 @@ function action(mode, type, selection) {
                                         return;
                                  } 
                                  if (hora < 04 || hora >= 05 && hora < 8 || hora >= 9 && hora < 14 || hora >= 15 && hora < 23){ // Verifica horario de funcionamento & Ocupacao
-                                        cm.sendOk("                  #e<LeaderMS PQ: Cash Quest>#n\r\n\r\nSinto muito, mais voce chegou atrasado/antecipado ou nao possui a ocupacao Alpha.");
+                                        cm.sendOk("                  #e<"+Configuration.Server_Name+" PQ: Cash Quest>#n\r\n\r\nSinto muito, mais voce chegou atrasado/antecipado ou nao possui a ocupacao Alpha.");
 					cm.dispose();
                                 }
                                 else { 

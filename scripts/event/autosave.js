@@ -1,5 +1,7 @@
 var setupTask;
 
+importPackage(Packages.config.configuration);
+
 function init() {
     scheduleNew();
 }
@@ -23,8 +25,8 @@ function cancelSchedule() {
 function start() {
     scheduleNew();
     em.getChannelServer().saveAll();
-    var Mensagem = "AutoSave complete!"
-    em.getChannelServer().yellowWorldMessage("[LeaderMS Save] " + Mensagem);
+    var Message = "AutoSave complete!"
+    em.getChannelServer().yellowWorldMessage("["+Configuration.Server_Name+" Save] " + Message);
     var iter = em.getInstances().iterator();
     while (iter.hasNext()) {
         var eim = iter.next();

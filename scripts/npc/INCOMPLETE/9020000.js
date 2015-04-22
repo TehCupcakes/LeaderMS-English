@@ -1,3 +1,5 @@
+importPackage(Packages.config.configuration);
+
 var status = 0;
 var minLevel = 21; //arrumar
 var maxLevel = 30; //arrumar
@@ -25,7 +27,7 @@ function action(mode, type, selection) {
 			status--;
 		if (status == 0) {
 			if (cm.getParty() == null) { 
-				cm.sendOk("                                    #e<LeaderMS-PQ>#n\r\n\r\nQue tal voce e seu grupo terminarem uma missao juntos? Aqui voce vai encontrar obstaculos e problemas que so poderao ser resolvidos em equipe. Se quiser tentar, peca ao #blider do seu grupo#k para falar comigo.");
+				cm.sendOk("                                    #e<"+Configuration.Server_Name+"-PQ>#n\r\n\r\nQue tal voce e seu grupo terminarem uma missao juntos? Aqui voce vai encontrar obstaculos e problemas que so poderao ser resolvidos em equipe. Se quiser tentar, peca ao #blider do seu grupo#k para falar comigo.");
 				cm.dispose();
                                 return;
 			} if (!cm.isLeader()) { 

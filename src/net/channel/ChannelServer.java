@@ -290,10 +290,10 @@ public class ChannelServer implements Runnable, ChannelServerMBean {
             final ChannelServer serv = this;
 			tMan.schedule(new Runnable() {
 				public void run() {
-					serv.broadcastPacket(MaplePacketCreator.serverNotice(6, "[System Message] " + Configuration.botMensagens[(int) (Math.random() * Configuration.botMensagens.length)]));
+					serv.broadcastPacket(MaplePacketCreator.serverNotice(6, "[System Message] " + Configuration.botMessages[(int) (Math.random() * Configuration.botMessages.length)]));
 					tMan.schedule(new Runnable() {
 						public void run() {
-							serv.broadcastPacket(MaplePacketCreator.serverNotice(6, "[System Message] " + Configuration.botMensagens[(int) (Math.random() * Configuration.botMensagens.length)]));
+							serv.broadcastPacket(MaplePacketCreator.serverNotice(6, "[System Message] " + Configuration.botMessages[(int) (Math.random() * Configuration.botMessages.length)]));
 						}
 					}, 20 * 60000 + (int) (Math.random() * 10000));
 				}

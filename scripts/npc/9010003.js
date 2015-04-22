@@ -5,6 +5,8 @@
  * Troca de LeaderPoints
  */
 
+importPackage(Packages.config.configuration);
+
 var status;
 function start() {
 	status = -1;
@@ -18,7 +20,7 @@ function action (mode, type , selection) {
 	}
 	if(cm.getChar().getMapId() == 910000000) {
 		if (status == 0) {
-			cm.sendSimple("Hello #e#h ##n, I am Ria, a LeaderMS assistant.\r\nIf you have some cash points you want to exchange, just continue with our conversation.\r\n\r\nIf you already have points, click exchange. If not, come back later.\r\n\r\nYou have (#e" + cm.getPlayer().getCSPoints(4) + "#n) Cash / LeaderPoints (#e" + cm.getPlayer().getCSPoints(2) + "#n).\r\n\#L0#Exchange Cash#l\r\n\#L1#Exchange LeaderPoints#l\r\n\#L3#Exchange Mesos#l\r\n\#L2##r#eHow to get points?#k#l#n");
+			cm.sendSimple("Hello #e#h ##n, I am Ria, a "+Configuration.Server_Name+" assistant.\r\nIf you have some cash points you want to exchange, just continue with our conversation.\r\n\r\nIf you already have points, click exchange. If not, come back later.\r\n\r\nYou have (#e" + cm.getPlayer().getCSPoints(4) + "#n) Cash / LeaderPoints (#e" + cm.getPlayer().getCSPoints(2) + "#n).\r\n\#L0#Exchange Cash#l\r\n\#L1#Exchange LeaderPoints#l\r\n\#L3#Exchange Mesos#l\r\n\#L2##r#eHow to get points?#k#l#n");
 		} else if (status == 1) {
 			if (selection == 0) {
 				cm.sendSimple("                                #e#r<Cash - Exchange>#k#n\r\n\r\n#L20#Exchange - 1,500 (Cash) for (1) Megaphone#l");

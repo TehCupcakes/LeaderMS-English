@@ -1,3 +1,5 @@
+importPackage(Packages.config.configuration);
+
 var status = 0;
 
 function start() {
@@ -11,7 +13,7 @@ function action(mode, type, selection) {
             } else {
             cm.gainItem(3010045, 1);
             cm.sendOk("Congratulations , you have received a chair!");
-            cm.getPlayer().dropMessage("[Team LeaderMS] Merry Christmas and Happy Holidays! <3");
+            cm.getPlayer().dropMessage("[Team "+Configuration.Server_Name+"] Merry Christmas and Happy Holidays! <3");
             cm.dispose();
         }
 }

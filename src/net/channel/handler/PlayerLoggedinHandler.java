@@ -203,19 +203,19 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
                 player.checkMessenger();
 		player.checkBerserk();
                 player.expirationTask();
-                player.dropOverheadMessage(Configuration.Jogador_Logado);
+                player.dropOverheadMessage(Configuration.Player_Login);
                 if (player.getLevel() <= 8) {
-                    c.announce(MaplePacketCreator.getWhisper("[" + Configuration.Server_Name + " Information]", 1, Configuration.Jogador_Iniciante));
+                    c.announce(MaplePacketCreator.getWhisper("[" + Configuration.Server_Name + " Information]", 1, Configuration.Player_Newcomer));
                 }
                 if (c.getPlayer().getMapId() == 0 && c.getPlayer().getLevel() == 1) {
-                    c.getChannelServer().yellowWorldMessage("[" + c.getPlayer().getName() + "] " + Configuration.Novo_Jogador);
+                    c.getChannelServer().yellowWorldMessage("[" + c.getPlayer().getName() + "] " + Configuration.New_Player);
                 }
                 /* Buffs for new players... Removed because not GMS-like
 	        if (player.getLevel() <= 8) {
 			player.giveItemBuff(2022118);
                         player.giveItemBuff(4101004);
                         player.giveItemBuff(2301004);
-			c.getSession().write(MaplePacketCreator.serverNotice(5, Configuration.Jogador_Buffado));
+			c.getSession().write(MaplePacketCreator.serverNotice(5, Configuration.Player_Buffed));
 		}
                 */
              

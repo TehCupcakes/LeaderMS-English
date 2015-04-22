@@ -7,6 +7,7 @@
 ---------------------------------------------------------------------------------------------------
 **/
 importPackage(Packages.client);
+importPackage(Packages.config.configuration);
 importPackage(Packages.server);
 var status;
 var otherChar;
@@ -30,7 +31,7 @@ function action(mode, type, selection) {
     }
 	
     if (status == 0) {
-        cm.sendNext("Someone in LeaderMS wants to send you a message.");
+        cm.sendNext("Someone in "+Configuration.Server_Name+" wants to send you a message.");
     } else if (status == 1) {
         cm.sendYesNo("Do you wish to be engaged to " + otherChar.getName() + "?") ;
     } else if (status == 2) {

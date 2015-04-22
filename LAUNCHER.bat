@@ -2,8 +2,8 @@
 color b
 cls
 
-title LeaderMS Starter
-echo ############################  LeaderMS Initiated  ##############################
+title Server Starter
+echo ############################  Launcher Initiated  ##############################
 start /b launch_world.bat
 echo                            Loading World Server...
 

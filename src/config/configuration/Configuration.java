@@ -53,10 +53,10 @@ public class Configuration {
     public static final String Server_Version = "1.0";
     public static String Server_Name = "LeaderMS";
     /*   Login Messages     */
-    public static final String Jogador_Logado = "Welcome back. Don't forget to vote for our server (#r#e"+Configuration.Server_Name+"#k#n).";
-    public static final String Jogador_Iniciante = "Hello beginner, use the command @commands and enjoy the game.";
-    public static final String Jogador_Buffado = "<You have been buffed by LeaderBot>";
-    public static final String Novo_Jogador = "Joined our server!";
+    public static final String Player_Login = "Welcome back. Don't forget to vote for our server (#r#e"+Configuration.Server_Name+"#k#n).";
+    public static final String Player_Newcomer = "Hello beginner, use the command @commands and enjoy the game.";
+    public static final String Player_Buffed = "<You have been buffed by LeaderBot>";
+    public static final String New_Player = "Joined our server!";
     /*      LeaderPoints      */
     public static int LeaderPoints_1 = 1;
     public static int LeaderPoints_2 = 2;
@@ -86,7 +86,7 @@ public class Configuration {
             
     };
     /*  System messages */
-   public static final String[] botMensagens = {
+   public static final String[] botMessages = {
    "Welcome to the best server in the world!",
    "Report any bugs or errors on our community.",
    "Nostalgia is in the air. Participate in our daily events!",

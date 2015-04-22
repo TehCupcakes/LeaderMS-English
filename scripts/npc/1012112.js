@@ -4,9 +4,10 @@
 * HenesysPQ
 */
 
+importPackage(Packages.config.configuration);
 
 /* Variaveis */
-var texto = "                          #e<LeaderMS HenesysPQ>#n\r\n\r\nThis is the #rPrimrose Hill#k. When there is a full moon the moon bunny comes to make rice cakes. Growlie wants rice cakes so you better go help him or he\'ll eat you.\r\n\r\n";
+var texto = "                          #e<"+Configuration.Server_Name+" HenesysPQ>#n\r\n\r\nThis is the #rPrimrose Hill#k. When there is a full moon the moon bunny comes to make rice cakes. Growlie wants rice cakes so you better go help him or he\'ll eat you.\r\n\r\n";
 var map = 390009999;
 var status = 0;
 var minLevel = 10;

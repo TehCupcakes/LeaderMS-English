@@ -1,3 +1,4 @@
+importPackage(Packages.config.configuration);
 importPackage(Packages.server);
 
 var status;
@@ -8,7 +9,7 @@ function start() {
 	action(1, 0, 0);
 } 
 
-var texto = "                          #e<LeaderMS Merchants>#n\r\n\r\nHello #e#h ##n,\r\nMy name is  Fredrick, and I take care of storing items/mesos in #eLeaderMS#n.\r\n";
+var texto = "                          #e<"+Configuration.Server_Name+" Merchant>#n\r\n\r\nHello #e#h ##n,\r\nMy name is  Fredrick, and I take care of storing items/mesos in #e"+Configuration.Server_Name+"#n.\r\n";
 
 
 function action(mode, type, selection) {

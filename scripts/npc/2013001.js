@@ -22,6 +22,7 @@
 /* Chamberlain Eak
  *@author Jvlaple 
 */
+importPackage(Packages.config.configuration);
 importPackage(Packages.tools);
 importPackage(Packages.server.life);
 importPackage(java.awt);
@@ -259,7 +260,7 @@ function action(mode, type, selection) {
                 premable = eim.getProperty("leader5thpremable");
                 if (premable == null) {
                     cm.sendNext("This is the lobby of the Tower of Goddess. This is the place Minerva the Goddess preferred to listen to music. She loved listening to different kinds of music, depending on what day of the week it was. If you play that music you played before, the spirit of Minerva the Goddess may react to it and ... something curious may happen.\r\n#eMake sure you drop the right CD first time. There is NO backup.#n\r\n\r\nToday is:\r\n" + dayTxt);
-                    cm.getPlayer().dropMessage("[LeaderMS Quest] Today is " + dayTxt + ".")
+                    cm.getPlayer().dropMessage("["+Configuration.Server_Name+" Quest] Today is " + dayTxt + ".")
                     eim.setProperty("leader5thpremable", "done");
                     cm.dispose();
                 } else {
