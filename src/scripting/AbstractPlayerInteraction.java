@@ -16,6 +16,7 @@ import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MaplePet;
 import client.MapleQuestStatus;
+import config.configuration.Configuration;
 import net.MaplePacket;
 import net.channel.ChannelServer;
 import net.world.MapleParty;
@@ -250,7 +251,7 @@ public class AbstractPlayerInteraction {
         public void givePartyQPoints(int amount, List<MapleCharacter> party) {
 		for (MapleCharacter chr : party) {
 			chr.gainpqPoints(amount);
-                        chr.dropMessage("[LeaderMS Quest] Completed quest successfully. You now have (" + chr.getpqPoints() + ") Q.Points!");
+                        chr.dropMessage("["+Configuration.Server_Name+" Quest] Completed quest successfully. You now have (" + chr.getpqPoints() + ") Q.Points!");
 		}
 	}
 	//remove all items of type from party

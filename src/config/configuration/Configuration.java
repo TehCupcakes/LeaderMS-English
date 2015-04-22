@@ -17,11 +17,9 @@ import net.world.WorldServer;
 import server.maps.MapleMapObjectType;
 
 public class Configuration {
-    /* Correcoes p/ possivel bug */
     private static final Properties server;
     public static final byte getChannelLimit;
-
-
+    
     static {
         server = WorldServer.getInstance().getWorldProp();
         getChannelLimit = Byte.parseByte(server.getProperty("ChannelCount", "6"));
@@ -31,34 +29,31 @@ public class Configuration {
         if (server.containsKey(name)) {
             return server.getProperty(name);
         } else {
-            System.out.println("Error locating the properties forz: " + name + ".");
+            System.out.println("Error locating the properties for: " + name + ".");
             return null;
         }
     }
-   
 
     public static Properties worldServerProperties() {
         return server;
     }
-        public static final List<MapleMapObjectType> rangedMapobjectTypes = Arrays.asList(
-	    MapleMapObjectType.ITEM,
-	    MapleMapObjectType.MONSTER,
-	    MapleMapObjectType.DOOR,
-	    MapleMapObjectType.REACTOR,
-	    MapleMapObjectType.SUMMON,
-	    MapleMapObjectType.NPC,
-	    MapleMapObjectType.MIST);
+    
+    public static final List<MapleMapObjectType> rangedMapobjectTypes = Arrays.asList(
+        MapleMapObjectType.ITEM,
+        MapleMapObjectType.MONSTER,
+        MapleMapObjectType.DOOR,
+        MapleMapObjectType.REACTOR,
+        MapleMapObjectType.SUMMON,
+        MapleMapObjectType.NPC,
+        MapleMapObjectType.MIST);
     
     
-    
-    /* Fim/*
-    
-    
-    /*    Mensagens     */
-    public static final short Leader_versao = 62;
-    public static String Nome_Server = "LeaderMS";
-    /*   Jogandor login     */
-    public static final String Jogador_Logado = "Welcome back. Don't forget to vote for our server (#r#eLeaderMS#k#n).";
+    /*    Server Information     */
+    public static final String MS_Version = ".62";
+    public static final String Server_Version = "1.0";
+    public static String Server_Name = "LeaderMS";
+    /*   Login Messages     */
+    public static final String Jogador_Logado = "Welcome back. Don't forget to vote for our server (#r#e"+Configuration.Server_Name+"#k#n).";
     public static final String Jogador_Iniciante = "Hello beginner, use the command @commands and enjoy the game.";
     public static final String Jogador_Buffado = "<You have been buffed by LeaderBot>";
     public static final String Novo_Jogador = "Joined our server!";
@@ -90,18 +85,17 @@ public class Configuration {
         5281000
             
     };
-    /*  Mensagem do Sistema */
+    /*  System messages */
    public static final String[] botMensagens = {
    "Welcome to the best server in the world!",
    "Report any bugs or errors on our community.",
    "Nostalgia is in the air. Participate in our daily events!",
-   "Remember to register on our forums - leaderms.com.br/forum",
-   "Have an idea to improve the game? Leave your suggestions on our community!",
-   "[Attention] Player's without respawns/drops must leave quests.",
+   "Remember to register on our forums.",
+   "Have an idea to improve the game? Leave your suggestions on our community!"
    };
 
     
-    /* Outros ajustes */   
+    /* Other adjustments */   
     public static MapleInventoryType getInventoryType(final int itemId) {
         final byte type = (byte) (itemId / 1000000);
         if (type < 1 || type > 5) {

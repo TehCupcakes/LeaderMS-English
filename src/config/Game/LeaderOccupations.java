@@ -12,6 +12,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
+import config.configuration.Configuration;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
@@ -68,7 +69,7 @@ public enum LeaderOccupations {
     }
     
     /* Mensagem ao pegar item */
-    public static String Message = "#e<LeaderMS Occupations>#n You received a prize for advancement!";
+    public static String Message = "#e<"+Configuration.Server_Name+" Occupations>#n You received a prize for advancement!";
     /* Definições de Hora */
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     private static final SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");

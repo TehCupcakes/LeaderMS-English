@@ -29,6 +29,7 @@ import client.messages.Command;
 import client.messages.CommandDefinition;
 import client.messages.IllegalCommandSyntaxException;
 import client.messages.MessageCallback;
+import config.configuration.Configuration;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.life.MapleMonsterStats;
@@ -43,12 +44,12 @@ public class SpawnMonsterCommand implements Command {
 		int num = Math.min(getOptionalIntArg(splitted, 2, 1), 500);
                 
                 if(c.getPlayer().getGMLevel() <= 3 && c.getChannelServer().eventOn != true) {
-                    c.getSession().write(MaplePacketCreator.serverNotice(5, "O comando esta disponivel somente em eventos."));
+                    c.getSession().write(MaplePacketCreator.serverNotice(5, "This command is only available during events."));
                     return;
                  }
                 
 		if (splitted.length > 3 && !c.getPlayer().isInvincible()) {
-			mc.dropMessage("LeaderMS owns you.");
+			mc.dropMessage(Configuration.Server_Name + " owns you.");
 			return;
 		}
 

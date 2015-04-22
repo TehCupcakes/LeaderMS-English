@@ -277,7 +277,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
     private HiredMerchant hiredMerchant = null;
     private int job1;
     private static List<Pair<Byte, Integer>> inventorySlots = new ArrayList<Pair<Byte, Integer>>();
-    // PQ's LeaderMS
+    // PQ's
     private int LeaderPoints;
     private int votePoints;
     private int pqPoints;
@@ -1237,7 +1237,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
             }
 
             for (IItem item : toberemove) {
-                dropMessage("[Item de Cash] Um item atingiu o seu prazo de validade, portanto foi removido de seu inventario.");
+                dropMessage("[Cash Item] An item reached its expiration date, so it was removed from your inventory.");
                 MapleInventoryManipulator.removeFromSlot(client, inv.getType(), item.getPosition(), item.getQuantity(), true);
             }
 

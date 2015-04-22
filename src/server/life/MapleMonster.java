@@ -580,10 +580,10 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 //            if (attacker.getMapId() == 107000200) {
 //            if(attacker.getClient().getChannelServer().doublecash == true) {
 //                attacker.gainCashPoints(cashpointsdouble);
-//                attacker.dropMessage("[LeaderMS CashPQ] Voce tem um total de (" + attacker.getCashPoints() + ") CashPoints."); // CashPoints
+//                attacker.dropMessage("["+Configuration.Server_Name+" CashPQ] Voce tem um total de (" + attacker.getCashPoints() + ") CashPoints."); // CashPoints
 //            } else {
 //                attacker.gainCashPoints(cashpoints);
-//                attacker.dropMessage("[LeaderMS CashPQ] Voce tem um total de (" + attacker.getCashPoints() + ") CashPoints."); // CashPoints      
+//                attacker.dropMessage("["+Configuration.Server_Name+" CashPQ] Voce tem um total de (" + attacker.getCashPoints() + ") CashPoints."); // CashPoints      
 //        }
 //     }
    }
@@ -647,9 +647,9 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                     for (MapleCharacter currmap : killer.getMap().getCharacters()) { 
                         currmap.addBossPoints(this.getId() == mobs[0] ? 1 : this.getId() == mobs[1] ? 2 : this.getId() == mobs[2] ? 3 : this.getId() == mobs[3] ? 4 : this.getId() == mobs[4] ? 5 : this.getId() == mobs[5] ? 6 : this.getId() == mobs[6] ? 7 : this.getId() == mobs[7] ? 8 : this.getId() == mobs[8] ? 9 : this.getId() == mobs[9] ? 10 : this.getId() == mobs[10] ? 11 : this.getId() == mobs[11] ? 12 : this.getId() == mobs[12] ? 13 : this.getId() == mobs[13] ? 14 : this.getId() == mobs[14] ? 15 : this.getId() == mobs[15] ? 16 : this.getId() == mobs[16] ? 17 : this.getId() == mobs[17] ? 18 : this.getId() == mobs[18] ? 19 : 20); 
                         currmap.getClient().announce(MaplePacketCreator.getClock(15)); // 15 seconds 
-                        currmap.dropMessage("[LeaderMS BPQ] Congratulations, you killed " + getMobName(false) + ".");
-                        currmap.dropMessage("[LeaderMS BPQ] You now have (" + currmap.getBossPoints() + ") Boss Points.");
-                        currmap.dropMessage("[LeaderMS BPQ] The next monster is: " + getMobName(true) + "."); 
+                        currmap.dropMessage("["+Configuration.Server_Name+" BPQ] Congratulations, you killed " + getMobName(false) + ".");
+                        currmap.dropMessage("["+Configuration.Server_Name+" BPQ] You now have (" + currmap.getBossPoints() + ") Boss Points.");
+                        currmap.dropMessage("["+Configuration.Server_Name+" BPQ] The next monster is: " + getMobName(true) + "."); 
                     } 
                    final int x = i; 
                    TimerManager.getInstance().schedule(new Runnable() { 
@@ -657,8 +657,8 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                         public void run() { 
                             if (MapleMonster.this.getId() == 9400300) { 
                                 for (MapleCharacter party : killer.getPartyMembers()) { 
-                                    party.dropMessage("[LeaderMS BPQ] You managed to complete the BPQ. ");
-                                    party.dropMessage("[LeaderMS BPQ] You currently have (" + party.getBossPoints() + ") Boss Points!");
+                                    party.dropMessage("["+Configuration.Server_Name+" BPQ] You managed to complete the BPQ. ");
+                                    party.dropMessage("["+Configuration.Server_Name+" BPQ] You currently have (" + party.getBossPoints() + ") Boss Points!");
                                     party.changeMap(103000000); 
                                 } 
                             } else { 

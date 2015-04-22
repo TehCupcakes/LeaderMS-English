@@ -43,6 +43,7 @@ import client.MapleInventory;
 import client.MapleInventoryType;
 import client.MapleJob;
 import client.SkillFactory;
+import config.configuration.Configuration;
 import scripting.AbstractPlayerInteraction;
 import scripting.event.EventManager;
 import server.MapleInventoryManipulator;
@@ -1023,7 +1024,7 @@ getPlayer().sendServerNotice(msg);
 
     public void gainPQPoints(int gain){
         getPlayer().gainpqPoints(gain);
-        getPlayer().dropMessage("[LeaderMS Quest] Quest complete successfully. You now have (" + getPlayer().getpqPoints() + ") Q.Points!");    }
+        getPlayer().dropMessage("["+Configuration.Server_Name+" Quest] Quest complete successfully. You now have (" + getPlayer().getpqPoints() + ") Q.Points!");    }
 	
  
 	

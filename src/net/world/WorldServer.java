@@ -27,7 +27,7 @@ public class WorldServer {
             is.close();
             DatabaseConnection.setProps(dbProp);
             DatabaseConnection.getConnection();
-            is = new FileReader("Game/Configuration/LeaderMS.properties");
+            is = new FileReader("Game/Configuration/world.properties");
             worldProp.load(is);
             is.close();
         } catch (Exception e) {

@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import client.MapleCharacter;
 import client.MapleClient;
 import client.messages.CommandProcessor;
+import config.configuration.Configuration;
 import net.AbstractMaplePacketHandler;
 import server.AutobanManager;
 import tools.MaplePacketCreator;
@@ -22,7 +23,7 @@ public class PartychatHandler extends AbstractMaplePacketHandler {
         }
         String chattext = slea.readMapleAsciiString();
         if (!(c.getPlayer().isGM())&& chattext.length() > 100) { // 70 = max text for client. remove this if u have edit the client
-            AutobanManager.getInstance().autoban(c.getPlayer().getClient(),"LeaderMS | " + c.getPlayer().getName() + " had infinite text with a text length of " + chattext.length() + ".");
+            AutobanManager.getInstance().autoban(c.getPlayer().getClient(), Configuration.Server_Name + " | " + c.getPlayer().getName() + " had infinite text with a text length of " + chattext.length() + ".");
         } else {
             if (!CommandProcessor.getInstance().processCommand(c, chattext)) {
                 MapleCharacter player = c.getPlayer();

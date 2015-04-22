@@ -41,6 +41,7 @@ import client.messages.Command;
 import client.messages.CommandDefinition;
 import client.messages.IllegalCommandSyntaxException;
 import client.messages.MessageCallback;
+import config.configuration.Configuration;
 import database.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -94,7 +95,7 @@ public class PlayerCommand implements Command {
                     FilePrinter.printBug("Bugs.rtf", "Bug reported: " + StringUtil.joinStringFrom(splitted, 1) + "\r\nOn day: " + sdf.format(Calendar.getInstance().getTime()) + " at " + sdf2.format(Calendar.getInstance().getTime()) + ".\r\nPlayer: " + player.getName() + " (" + player.getAccountID() + ")");
                     mc.dropMessage("Sending your report...");
           } else if (splitted[0].equalsIgnoreCase("@commands") || splitted[0].equalsIgnoreCase("!commands")) {
-            mc.dropMessage(" - LeaderMS v.62 -");
+            mc.dropMessage(" - "+Configuration.Server_Name+" v"+Configuration.Server_Version+" -");
             for (CommandDefinition cd : getDefinition()) {
                 if (!cd.getCommand().equalsIgnoreCase("help")) {
                     mc.dropMessage("@" + cd.getCommand() + " - " + cd.getHelp());

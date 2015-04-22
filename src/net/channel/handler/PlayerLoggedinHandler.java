@@ -133,6 +133,7 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
             se.printStackTrace();
         }
             if (player.isGM()) {
+            //GMs hide when logged in. Uncomment to enable.
             //player.Hide(true, true);
             //SkillFactory.getSkill(9101004).getEffect(1).applyTo(player, true, true);
             player.setChatMode(1);
@@ -204,17 +205,19 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
                 player.expirationTask();
                 player.dropOverheadMessage(Configuration.Jogador_Logado);
                 if (player.getLevel() <= 8) {
-                 c.announce(MaplePacketCreator.getWhisper("[LeaderMS Information]", 1, Configuration.Jogador_Iniciante));
+                    c.announce(MaplePacketCreator.getWhisper("[" + Configuration.Server_Name + " Information]", 1, Configuration.Jogador_Iniciante));
                 }
                 if (c.getPlayer().getMapId() == 0 && c.getPlayer().getLevel() == 1) {
-                c.getChannelServer().yellowWorldMessage("[" + c.getPlayer().getName() + "] " + Configuration.Novo_Jogador);
-               }
-	       if (player.getLevel() <= 8) {
+                    c.getChannelServer().yellowWorldMessage("[" + c.getPlayer().getName() + "] " + Configuration.Novo_Jogador);
+                }
+                /* Buffs for new players... Removed because not GMS-like
+	        if (player.getLevel() <= 8) {
 			player.giveItemBuff(2022118);
                         player.giveItemBuff(4101004);
                         player.giveItemBuff(2301004);
 			c.getSession().write(MaplePacketCreator.serverNotice(5, Configuration.Jogador_Buffado));
 		}
+                */
              
        MaplePet[] petz = PetStorage.getPetz(player.getId());
         if (petz != null) {

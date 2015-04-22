@@ -61,6 +61,7 @@ import client.MapleJob;
 import client.MapleRing;
 import client.SkillMacro;
 import client.status.MonsterStatus;
+import config.configuration.Configuration;
 import database.DatabaseConnection;
 import net.ByteArrayMaplePacket;
 import net.LongValueHolder;
@@ -6904,7 +6905,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
             mplew.writeMapleAsciiString(ips.getOwnerName());
         } else {
             mplew.writeInt(((HiredMerchant) ips).getItemId());
-            mplew.writeMapleAsciiString("Comerciante LeaderMS");
+            mplew.writeMapleAsciiString(Configuration.Server_Name + " Merchant");
         }
         for (int i = 0; i < 3; i++) {
             if (ips.getVisitors()[i] != null) {
@@ -7442,7 +7443,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.write(item.getType()); // 1 show / 0 disapear ? o________o
         mplew.writeShort(item.getPosition()); // update this slot ?
         addItemInfo(mplew, item, true, true);
-        mplew.writeMapleAsciiString("LeaderMS");
+        mplew.writeMapleAsciiString(Configuration.Server_Name);
         return mplew.getPacket();
     }
 

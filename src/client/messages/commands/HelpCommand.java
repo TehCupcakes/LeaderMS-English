@@ -35,6 +35,7 @@ import client.messages.CommandProcessor;
 import static client.messages.CommandProcessor.getOptionalIntArg;
 import client.messages.IllegalCommandSyntaxException;
 import client.messages.MessageCallback;
+import config.configuration.Configuration;
 import net.MaplePacket;
 import net.channel.ChannelServer;
 import net.world.remote.WorldChannelInterface;
@@ -192,15 +193,15 @@ public class HelpCommand implements Command {
 					c.getChannelServer().reconnectWorld();
 				}
 			} else {
-				mc.dropMessage("Syntax: !say <mensagem>");
+				mc.dropMessage("Syntax: !say <message>");
 			} 
 		} else if (splittedLineLineLine[0].equalsIgnoreCase("!commands")) {
-			mc.dropMessage("== LeaderMS Comandos ==");
+			mc.dropMessage("== "+Configuration.Server_Name+" Commands ==");
 		int page = CommandProcessor.getOptionalIntArg(splittedLineLineLine, 1, 1);
 		CommandProcessor.getInstance().dropHelp(c.getPlayer(), mc, page);
 		}
 		else {
-			mc.dropMessage("(GM-3) Comando " + splittedLineLineLine[0] + " nao existe!");
+			mc.dropMessage("(GM-3) Command " + splittedLineLineLine[0] + " does not exist!");
         }
     }
 

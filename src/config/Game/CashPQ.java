@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import client.MapleClient;
 import client.MapleInventory;
 import client.MapleInventoryType;
+import config.configuration.Configuration;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.FilePrinter;
@@ -24,7 +25,7 @@ import tools.MaplePacketCreator;
 
 public class CashPQ {
     /* Mensagem ao pegar item */
-    public static String Message = "<LeaderMS CashPQ> You just won an item!";
+    public static String Message = "<"+Configuration.Server_Name+" CashPQ> You just won an item!";
     /* Definições de Hora */
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     private static final SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");

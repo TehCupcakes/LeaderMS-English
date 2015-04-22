@@ -2,6 +2,7 @@ package net.channel.handler;
 
 import client.MapleClient;
 import client.MapleInventoryType;
+import config.configuration.Configuration;
 import net.AbstractMaplePacketHandler;
 import server.AutobanManager;
 import server.MapleInventoryManipulator;
@@ -28,7 +29,7 @@ public class ItemMoveHandler extends AbstractMaplePacketHandler {
         } else if (dst == 0) {
             if (c.getPlayer().getInventory(type).getItem(src) == null) return;
             if (checkq > 4000 || checkq < 1) {
-                AutobanManager.getInstance().autoban(c, "LeaderMS| Drop-dupe ("+c.getPlayer().getInventory(type).getItem(src).getItemId()+").");
+                AutobanManager.getInstance().autoban(c, Configuration.Server_Name + " | Drop-dupe ("+c.getPlayer().getInventory(type).getItem(src).getItemId()+").");
                 return;
             }
             MapleInventoryManipulator.drop(c, type, src, quantity);

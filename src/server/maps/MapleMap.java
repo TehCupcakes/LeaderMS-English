@@ -2804,7 +2804,7 @@ public class MapleMap {
                 monster.setHp(0);
                 broadcastMessage(MaplePacketCreator.killMonster(monster.getObjectId(), true), monster.getPosition());
                 removeMapObject(monster);
-                /* GuildPQ Rev - LeaderMS */
+                /* GuildPQ Rev - "+Configuration.Server_Name+" */
                 if (monster.getId() == 9300025 && this.mapid == 990000630) {
                 this.spawnMonsterOnGroundBelow(9300024, -83, 155);
                 this.spawnMonsterOnGroundBelow(9300024, -83, 155);
@@ -2815,7 +2815,7 @@ public class MapleMap {
                 this.spawnMonsterOnGroundBelow(9300024, -83, 155);
                 this.spawnMonsterOnGroundBelow(9300024, -83, 155);
                 }
-                /*Ludibrium PQ Rev - LeaderMS */
+                /*Ludibrium PQ Rev - "+Configuration.Server_Name+" */
                 if (monster.getId() == 9300170 && this.mapid == 922010700) {
                 this.broadcastMessage(MaplePacketCreator.serverNotice(5, "Rombot foi convocado em algum lugar do mapa."));
                 this.spawnMonsterOnGroundBelow(9300010, 1, -211);

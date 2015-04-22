@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import client.MapleCharacter;
 import client.MapleClient;
 import client.messages.CommandProcessor;
+import config.configuration.Configuration;
 import net.AbstractMaplePacketHandler;
 import net.channel.ChannelServer;
 import server.AutobanManager;
@@ -29,7 +30,7 @@ public class WhisperHandler extends AbstractMaplePacketHandler {
             if (mode == 6) { // Whisper
                 String text = slea.readMapleAsciiString();
                 if (!(c.getPlayer().isGM()) && text.length() > 100) { // 70 = max text for client. remove this if u have edit the client
-                    AutobanManager.getInstance().autoban(c.getPlayer().getClient(), "LeaderMS | " + c.getPlayer().getName() + " tinha texto infinito, com um comprimento de texto (" + text.length() + ").");
+                    AutobanManager.getInstance().autoban(c.getPlayer().getClient(), Configuration.Server_Name + " | " + c.getPlayer().getName() + " exceeded text length limit with a text length of " + text.length() + ".");
                 } else {
                     if (!CommandProcessor.getInstance().processCommand(c, text)) {
                         ChannelServer pserv = ChannelServer.getInstance(channel);

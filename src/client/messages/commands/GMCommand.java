@@ -42,6 +42,7 @@ import client.messages.IllegalCommandSyntaxException;
 import client.messages.MessageCallback;
 import client.MapleCharacter;
 import client.messages.CommandProcessor;
+import config.configuration.Configuration;
 import net.MaplePacket;
 import net.channel.ChannelServer;
 import net.world.remote.CheaterData;
@@ -406,7 +407,7 @@ public class GMCommand implements Command {
         } else if (splitted[0].equalsIgnoreCase("!fh")) {
 			mc.dropMessage("" + c.getPlayer().getMap().getFootholds().findBelow(c.getPlayer().getPosition()).getId());
 		} else if (splitted[0].equalsIgnoreCase("!commands")) {
-			mc.dropMessage("==LeaderMS Commands");
+			mc.dropMessage("=="+Configuration.Server_Name+" Commands");
 		int page = CommandProcessor.getOptionalIntArg(splitted, 1, 1);
 		CommandProcessor.getInstance().dropHelp(c.getPlayer(), mc, page);
 		}

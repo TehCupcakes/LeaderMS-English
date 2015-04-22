@@ -6,6 +6,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import client.MapleInventoryType;
 import client.messages.CommandProcessor;
+import config.configuration.Configuration;
 import net.AbstractMaplePacketHandler;
 import server.AutobanManager;
 import server.MapleInventoryManipulator;
@@ -134,7 +135,7 @@ public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
                         c.getPlayer().setInteraction(shop);
                         c.getSession().write(MaplePacketCreator.getInteraction(c.getPlayer(), true));
                     } else {
-                        AutobanManager.getInstance().autoban(c, "LeaderMS | Merchant Shop: Tried opening a store without a merchant item.");
+                        AutobanManager.getInstance().autoban(c, Configuration.Server_Name + " | Merchant Shop: Tried opening a store without a merchant item.");
                         return;
                     }
                 } else {
@@ -319,7 +320,7 @@ public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
             byte targetSlot = slea.readByte();
             if (c.getPlayer().getTrade() != null && item != null) {
                 if (checkq > 4000) {
-                    AutobanManager.getInstance().autoban(c, "LeaderMS| Some kind of cheats went on.");
+                    AutobanManager.getInstance().autoban(c, Configuration.Server_Name + " | Some kind of cheats went on.");
                 }
                if ((quantity <= item.getQuantity() && quantity >= 0) || ii.isThrowingStar(item.getItemId()) || ii.isBullet(item.getItemId())) {
                     if (!c.getChannelServer().allowUndroppablesDrop() && ii.isDropRestricted(item.getItemId())) {
@@ -358,11 +359,11 @@ public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
             if (shop != null && shop.isOwner(c.getPlayer())) {
                 if (ivItem != null && ivItem.getQuantity() >= bundles * perBundle) {
                     if (price < 0) {
-                        AutobanManager.getInstance().autoban(c, "LeaderMS| Tried to add an item with a negative price.");
+                        AutobanManager.getInstance().autoban(c, Configuration.Server_Name + " | Tried to add an item with a negative price.");
                         return;
                     }
                     if (bundles <= 0 || perBundle <= 0 || checkquantity > 20000 || checksmquantity < 0 || checkiquantity < 0 || checkiquantity > 20000) {
-                        AutobanManager.getInstance().autoban(c, "LeaderMS| Item ID: " + sellItem.getItemId());
+                        AutobanManager.getInstance().autoban(c, Configuration.Server_Name + " | Item ID: " + sellItem.getItemId());
                         return;
                     }
                     if (bundles > 10 || perBundle > 4000) return;
@@ -386,7 +387,7 @@ public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
             int slot = slea.readShort();
             IPlayerInteractionManager shop = c.getPlayer().getInteraction();
             if (!shop.isOwner(c.getPlayer())) {
-                AutobanManager.getInstance().autoban(c, "LeaderMS | Tried to remove item: " + shop.getOwnerName());
+                AutobanManager.getInstance().autoban(c, Configuration.Server_Name + " | Tried to remove item: " + shop.getOwnerName());
                 return;
             }
             if (shop != null && shop.isOwner(c.getPlayer())) {
