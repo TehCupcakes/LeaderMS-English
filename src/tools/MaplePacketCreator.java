@@ -3598,12 +3598,20 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 	public static MaplePacket showJobChange(int cid) {
 		return showForeignEffect(cid, 8);
 	}
+        
+        public static MaplePacket showForeignEffect(int effect) {
+            return showForeignEffect(-1, effect);
+        }
 
 	public static MaplePacket showForeignEffect(int cid, int effect) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		mplew.writeShort(SendPacketOpcode.SHOW_FOREIGN_EFFECT.getValue());
-		mplew.writeInt(cid); // ?
+                if(cid != -1) {
+                    mplew.writeShort(SendPacketOpcode.SHOW_SPECIAL_EFFECT.getValue());
+                } else {
+                    mplew.writeShort(SendPacketOpcode.SHOW_FOREIGN_EFFECT.getValue());
+                    mplew.writeInt(cid); // ?
+                }
 		mplew.write(effect);
 
 		return mplew.getPacket();
@@ -4479,6 +4487,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 
 		mplew.writeInt(characterid);
 		mplew.writeInt(itemid);
+                
 
 		return mplew.getPacket();
 	}

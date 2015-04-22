@@ -131,7 +131,7 @@ public class NPCScriptManager extends AbstractScriptManager {
      
         private void notice(MapleClient c, int id) {
         if (c != null) {
-            c.getPlayer().dropMessage(1, "Ocorreu um erro desconhecido durante a execucao deste NPC. Por favor reporte para um dos Admins! ID: " + id);
+            c.getPlayer().dropMessage(1, "An unknown error occurred during the execution of this NPC. Please report this to one of the Admins! ID: " + id);
         }
     }
 

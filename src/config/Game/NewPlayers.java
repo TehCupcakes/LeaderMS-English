@@ -34,8 +34,6 @@ public class NewPlayers {
          "Remember that these requirements are mandatory. LeaderMS appologizes for any inconvenience this may cause. Thank you.\r\nUse @commands if you have other question. Enjoy the game!";
     
    public static String EventoDeNatal = "Hello #e#h ##n,\r\nThis is a small explanation of the LeaderMS Christmas Quest. Some of the items that you will need on your journey for this quest will be activated with the @dropnatal command. Que ativara o drop de Peliculas de Neve pelo Mundo Maple. You will need to speak with " + NPCNATAL + " in Happy Village!";
-   
-   public static String Doacoes = "";
 
 }
 

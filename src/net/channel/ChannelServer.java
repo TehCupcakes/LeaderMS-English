@@ -284,7 +284,7 @@ public class ChannelServer implements Runnable, ChannelServerMBean {
         try {
             final MapleServerHandler serverHandler = new MapleServerHandler(PacketProcessor.getProcessor(PacketProcessor.Mode.CHANNELSERVER), channel);
             acceptor.bind(new InetSocketAddress(port), serverHandler, cfg);
-            System.out.println("[INFO] Channel (" + getChannel() + ") Bound to port (" + port + ").");
+            System.out.println("[INFO] Channel (" + getChannel() + ") listening on port (" + port + ").");
             wci.serverReady();
             eventSM.init();
             final ChannelServer serv = this;

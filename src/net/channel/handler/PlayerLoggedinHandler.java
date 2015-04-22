@@ -133,8 +133,8 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
             se.printStackTrace();
         }
             if (player.isGM()) {
-            player.Hide(true, true);
-            SkillFactory.getSkill(9101004).getEffect(1).applyTo(player, true, true);
+            //player.Hide(true, true);
+            //SkillFactory.getSkill(9101004).getEffect(1).applyTo(player, true, true);
             player.setChatMode(1);
                }
 		player.getMap().addPlayer(player);
@@ -204,7 +204,7 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
                 player.expirationTask();
                 player.dropOverheadMessage(Configuration.Jogador_Logado);
                 if (player.getLevel() <= 8) {
-                 c.announce(MaplePacketCreator.getWhisper("[Leader Informa]", 1, Configuration.Jogador_Iniciante));
+                 c.announce(MaplePacketCreator.getWhisper("[LeaderMS Information]", 1, Configuration.Jogador_Iniciante));
                 }
                 if (c.getPlayer().getMapId() == 0 && c.getPlayer().getLevel() == 1) {
                 c.getChannelServer().yellowWorldMessage("[" + c.getPlayer().getName() + "] " + Configuration.Novo_Jogador);

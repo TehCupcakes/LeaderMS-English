@@ -1348,12 +1348,12 @@ getPlayer().sendServerNotice(msg);
         }
     }
     
-     public void removeDoacaoItem(boolean tempItem, int itemId) {
+     public void removeDonationItem(boolean tempItem, int itemId) {
         String Table = "";
         if (tempItem) Table = "temp";
         Connection con = DatabaseConnection.getConnection();
         try {
-            PreparedStatement ps = con.prepareStatement("DELETE FROM doacoes" + Table + " WHERE itemid = ? AND ownerid = ? LIMIT 1");
+            PreparedStatement ps = con.prepareStatement("DELETE FROM donationitems" + Table + " WHERE itemid = ? AND ownerid = ? LIMIT 1");
             ps.setInt(1, itemId);
             ps.setInt(2, getPlayer().getId());
             ps.executeUpdate();
@@ -1429,7 +1429,7 @@ getPlayer().sendServerNotice(msg);
     }
     
     
-    public boolean getDoacaoItems(boolean tempTable) {
+    public boolean getDonationItems(boolean tempTable) {
         boolean temp = false, compleated = false;
         String Table = "";
         if (tempTable) {
@@ -1438,15 +1438,15 @@ getPlayer().sendServerNotice(msg);
         }
         Connection con = DatabaseConnection.getConnection();
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM doacoes" + Table + " WHERE ownerid = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM donationitems" + Table + " WHERE ownerid = ?");
             ps.setInt(1, getPlayer().getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                      Equip spItem = new Equip(rs.getInt("itemid"), (byte) 0, -1);
                      MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
                     if (!getPlayer().getInventory(MapleInventoryType.EQUIP).isFull()) {
-                        MapleInventoryManipulator.addFromDrop(c, ii.randomizeStats((Equip) spItem), "Item de Doacao");; 
-                        removeDoacaoItem(temp, spItem.getItemId());
+                        MapleInventoryManipulator.addFromDrop(c, ii.randomizeStats((Equip) spItem), "Donation Item");; 
+                        removeDonationItem(temp, spItem.getItemId());
                     } else {
                         rs.close();
                         ps.close();

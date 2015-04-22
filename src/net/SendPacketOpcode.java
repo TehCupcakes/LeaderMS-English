@@ -98,6 +98,7 @@ public enum SendPacketOpcode implements WritableIntValueHolder {
 	CANCEL_BUFF, //0x1d
 	PLAYER_INTERACTION, // 0xEF
 	UPDATE_CHAR_BOX, // 0x69
+        SHOW_SPECIAL_EFFECT,
 	NPC_TALK,
 	KEYMAP,
 	SHOW_MONSTER_HP,

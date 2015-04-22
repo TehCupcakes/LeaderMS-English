@@ -384,10 +384,10 @@ CREATE TABLE `cooldowns` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `doacoes`
+-- Table structure for `donationitems`
 -- ----------------------------
-DROP TABLE IF EXISTS `doacoes`;
-CREATE TABLE `doacoes` (
+DROP TABLE IF EXISTS `donationitems`;
+CREATE TABLE `donationitems` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ownerid` int(11) DEFAULT '0',
   `itemid` int(10) unsigned NOT NULL DEFAULT '0',
@@ -415,7 +415,7 @@ CREATE TABLE `doacoes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
--- Records of doacoes
+-- Records of donationitems
 -- ----------------------------
 
 -- ----------------------------

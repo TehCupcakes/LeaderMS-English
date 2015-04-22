@@ -185,7 +185,7 @@ public class CommandProcessor implements CommandProcessorMBean {
 	  public String processCommandJMX(int cserver, int mapid, String command) {
         ChannelServer cserv = ChannelServer.getInstance(cserver);
         if (cserv == null) {
-            return "The specified channel Server does not exist in this serverprocess";
+            return "The specified ChannelServer does not exist in this server process";
         }
         MapleClient c = new MapleClient(null, null, new MockIOSession());
         MapleCharacter chr = MapleCharacter.getDefault(c, 26023);
@@ -193,7 +193,7 @@ public class CommandProcessor implements CommandProcessorMBean {
         MapleMap map = cserv.getMapFactory().getMap(mapid);
         if (map != null) {
             chr.setMap(map);
-            SkillFactory.getSkill(9101004).getEffect(1).applyTo(chr);
+            //SkillFactory.getSkill(9101004).getEffect(1).applyTo(chr);
             map.addPlayer(chr);
         }
         cserv.addPlayer(chr);

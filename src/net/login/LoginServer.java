@@ -214,10 +214,10 @@ public class LoginServer implements Runnable, LoginServerMBean {
         tMan.register(new RankingWorker(), rankingInterval);
         try {
             acceptor.bind(new InetSocketAddress(PORT), new MapleServerHandler(PacketProcessor.getProcessor(PacketProcessor.Mode.LOGINSERVER)), cfg);
-        System.out.println("Server binding to port (" + PORT + ")");
+        System.out.println("Server listening on port (" + PORT + ")");
         
         } catch (IOException e) {
-            System.out.println("Binding to port " + PORT + " failed: " + e);
+            System.out.println("Binding on port " + PORT + " failed: " + e);
         }
     }
 	

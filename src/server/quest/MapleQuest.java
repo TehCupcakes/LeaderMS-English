@@ -44,6 +44,7 @@ import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
 import tools.FilePrinter;
+import tools.MaplePacketCreator;
 
 /**
  *
@@ -196,10 +197,13 @@ public class MapleQuest {
                     return;
                 }
             }
+            forceComplete(c, npc);
             for (MapleQuestAction a : completeActs) {
                 a.run(c, selection);
             }
-            forceComplete(c, npc);
+            
+            c.getClient().getSession().write(MaplePacketCreator.showForeignEffect(12));
+            c.getMap().broadcastMessage(c, MaplePacketCreator.showForeignEffect(c.getId(), 12), false);
         }
     }
 
