@@ -141,7 +141,7 @@ public class MapleTrade {
                 partner.getChr().getClient().getSession().write(MaplePacketCreator.getTradeMesoSet((byte) 1, this.meso));
             }
         } else {
-            AutobanManager.getInstance().addPoints(chr.getClient(), 1000, 0, "Tentando negociar mais mesos que possui.");
+            AutobanManager.getInstance().addPoints(chr.getClient(), 1000, 0, "Trying to trade more mesos than you have.");
         }
     }
 

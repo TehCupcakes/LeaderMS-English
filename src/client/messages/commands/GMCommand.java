@@ -360,7 +360,7 @@ public class GMCommand implements Command {
 					return;
 				}
 				cserv.setDropRate(drop);
-				MaplePacket packet = MaplePacketCreator.serverNotice(6, "Drop rate foi alterado para " + drop + "x.");
+				MaplePacket packet = MaplePacketCreator.serverNotice(6, "Drop rate was changed to " + drop + "x.");
 				ChannelServer.getInstance(c.getChannel()).broadcastPacket(packet);
 			} else {
 				mc.dropMessage("Syntax: !droprate <number>");
@@ -373,7 +373,7 @@ public class GMCommand implements Command {
 					return;
 				}
 				cserv.setBossDropRate(bossdrop);
-				MaplePacket packet = MaplePacketCreator.serverNotice(6, "Boss rate foi alterado para " + bossdrop + "x.");
+				MaplePacket packet = MaplePacketCreator.serverNotice(6, "Boss drop rate was changed to " + bossdrop + "x.");
 				ChannelServer.getInstance(c.getChannel()).broadcastPacket(packet);
 			} else {
 				mc.dropMessage("Syntax: !bossdroprate <number>");
@@ -386,7 +386,7 @@ public class GMCommand implements Command {
 					return;
 				}
 				cserv.setExpRate(exp);
-				MaplePacket packet = MaplePacketCreator.serverNotice(6, "Experiencia foi alterada para " + exp + "x.");
+				MaplePacket packet = MaplePacketCreator.serverNotice(6, "Expeerience rate was changed to " + exp + "x.");
 				ChannelServer.getInstance(c.getChannel()).broadcastPacket(packet);
 			} else {
 				mc.dropMessage("Syntax: !bossdroprate <number>");

@@ -46,7 +46,7 @@ public class UseCashItemHandler extends AbstractMaplePacketHandler {
         MapleCharacter player = c.getPlayer();
         ServernoticeMapleClientMessageCallback cm = new ServernoticeMapleClientMessageCallback(1, c);
         boolean whisper;
-        boolean apReduced = true; //Variavel que auxilia se houve reducao de AP para permitir aumento de AP
+        boolean apReduced = true; //Variable that helps if there was reduction of AP to allow increase in AP
         byte slot = (byte) slea.readShort();
         boolean used = false;
         int itemId = slea.readInt();

@@ -3148,8 +3148,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
             }
         }
          if (level == 5) {
-            /* Envia mensagem de Ajuda de nivel */
-            getClient().getSession().write(MaplePacketCreator.getNPCTalk(9200000, (byte) 0, NewPlayers.Nivel, "00 00"));  
+            /* Send help message upon reaching level 5 */
+            getClient().getSession().write(MaplePacketCreator.getNPCTalk(9200000, (byte) 0, NewPlayers.Level, "00 00"));  
         }
         maxhp = Math.min(30000, maxhp);
         maxmp = Math.min(30000, maxmp);
@@ -3400,7 +3400,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
         for (MapleCharacter party : getPartyMembers()) { 
             party.changeMap(map); 
             party.getClient().announce(MaplePacketCreator.getClock(time / 1000)); 
-            party.dropMessage("Prepare-se para lutar, comecaremos em " + (time / 1000) + " segundos."); 
+            party.dropMessage("Get ready to fight! We will begin in " + (time / 1000) + " seconds."); 
         } 
         TimerManager.getInstance().schedule(new Runnable() { 
 

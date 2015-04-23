@@ -25,9 +25,9 @@ import tools.FilePrinter;
 import tools.MaplePacketCreator;
 
 public class Incubator {
-    /* Mensagem ao usar incubadora */
+    /* Message when using Incubator */
     public static String Message = "You just won an item, thank you for supporting us!";
-    /* Definições de Hora */
+    /* Time Settings */
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     private static final SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
     

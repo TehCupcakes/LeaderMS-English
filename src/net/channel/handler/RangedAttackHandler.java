@@ -43,7 +43,7 @@ public class RangedAttackHandler extends AbstractDealDamageHandler {
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         if(c.getPlayer().getMap().getDisableDamage() && !c.getPlayer().isGM())
         {
-            c.getSession().write(MaplePacketCreator.serverNotice(5, "Ataque esta desabilitado."));
+            c.getSession().write(MaplePacketCreator.serverNotice(5, "Attacking here is disabled."));
             c.getSession().write(MaplePacketCreator.enableActions());
             return;
         }
@@ -62,14 +62,14 @@ public class RangedAttackHandler extends AbstractDealDamageHandler {
 		}
                 
                if (attack.skill == 5221003 && attack.skill == 2121007 && attack.skill == 1311006 && attack.skill == 2221007 || attack.skill == 2321008 && player.getMapId() == 107000200) {
-                player.getClient().getSession().write(MaplePacketCreator.serverNotice(5, "[CashPQ] Esta habilidade esta desativada neste mapa!"));
+                player.getClient().getSession().write(MaplePacketCreator.serverNotice(5, "[CashPQ] This skill is disabled on this map!"));
                 return;
                }
  
 		IItem weapon = player.getInventory(MapleInventoryType.EQUIPPED).getItem((byte) -11);
 		MapleItemInformationProvider mii = MapleItemInformationProvider.getInstance();
 		MapleWeaponType type = mii.getWeaponType(weapon.getItemId());
-		if (type == MapleWeaponType.NOT_A_WEAPON) throw new RuntimeException("Jogador " + player.getName() + " esta atacando com algo que nao e uma arma.");
+		if (type == MapleWeaponType.NOT_A_WEAPON) throw new RuntimeException("Player " + player.getName() + " is attacking with something that is not a weapon.");
 
 		int projectile = 0;
 		int bulletCount = 1;

@@ -68,9 +68,9 @@ public enum LeaderOccupations {
         return getId() >= basejob.getId() && getId() / 10 == basejob.getId() / 10;
     }
     
-    /* Mensagem ao pegar item */
+    /* Message when getting item */
     public static String Message = "#e<"+Configuration.Server_Name+" Occupations>#n You received a prize for advancement!";
-    /* Definições de Hora */
+    /* Time Settings */
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     private static final SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
     

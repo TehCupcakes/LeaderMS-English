@@ -23,12 +23,12 @@ public class DisconnectHandler extends AbstractMaplePacketHandler {
     
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         try {
-            c.getPlayer().getClient().getChannelServer().getWorldInterface().broadcastGMMessage("", MaplePacketCreator.serverNotice(5, c.getPlayer().getName() + " esta atacando usando itemvac.").getBytes());
-             FilePrinter.printHackerItemVac(c.getPlayer().getName() + ".rtf", "O jogador estava usando ItemVAC.");
+            c.getPlayer().getClient().getChannelServer().getWorldInterface().broadcastGMMessage("", MaplePacketCreator.serverNotice(5, c.getPlayer().getName() + " is using item vac.").getBytes());
+             FilePrinter.printHackerItemVac(c.getPlayer().getName() + ".rtf", "The player is using item vac.");
         } catch (RemoteException ex) {
             c.getPlayer().getClient().getChannelServer().reconnectWorld();
         }
-        log.warn(c.getPlayer().getName() + " foi desconectado!");
+        log.warn(c.getPlayer().getName() + " has been disconnected!");
         c.disconnect();
     }
 }

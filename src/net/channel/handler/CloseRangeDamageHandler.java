@@ -43,7 +43,7 @@ public class CloseRangeDamageHandler extends AbstractDealDamageHandler {
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         if(c.getPlayer().getMap().getDisableDamage() && !c.getPlayer().isGM())
         {
-            c.getSession().write(MaplePacketCreator.serverNotice(5, "Ataque esta desabilitado."));
+            c.getSession().write(MaplePacketCreator.serverNotice(5, "Attacking here is disabled."));
             c.getSession().write(MaplePacketCreator.enableActions());
             return;
         }

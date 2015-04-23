@@ -113,7 +113,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
             player.getCheatTracker().registerOffense(CheatingOffense.MISMATCHING_BULLETCOUNT, attack.numDamage + "/" + attackCount);
         }
         if (attack.skill == 5221003 && attack.skill == 2121007 && attack.skill == 1311006 && attack.skill == 2221007 && attack.skill == 2321008 && player.getMapId() == 107000200) {
-            player.getClient().getSession().write(MaplePacketCreator.serverNotice(5, "[CashPQ] Esta habilidade esta desativada neste mapa!"));
+            player.getClient().getSession().write(MaplePacketCreator.serverNotice(5, "[CashPQ] This skill is disabled on this map!"));
             return;
         }
         int totDamage = 0;
@@ -374,9 +374,9 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
                         if (damageToMonster > elementalMaxDamagePerMonster * multiplyer) {
                                 player.getCheatTracker().registerOffense(CheatingOffense.HIGH_DAMAGE);
                                 if (damageToMonster > elementalMaxDamagePerMonster * multiplyer) { 
-                                                                        FilePrinter.printHacker(player.getName() + ".rtf", "O jogador esta hitando " + damageToMonster + ".\r\nNome do Monstro - " + monster.getName() + "\r\nNivel do Jogador: " + player.getLevel() + "\r\nNivel do Monstro: " + monster.getLevel() + "");
+                                                                        FilePrinter.printHacker(player.getName() + ".rtf", "Player is damaging " + damageToMonster + ".\r\nMonster Name - " + monster.getName() + "\r\nLevel of Player: " + player.getLevel() + "\r\nLevel of Monster: " + monster.getLevel() + "");
 									try {
-										player.getClient().getChannelServer().getWorldInterface().broadcastGMMessage("", MaplePacketCreator.serverNotice(5, player.getName() + " esta com a DMG (" + damageToMonster + ") no monstro " + monster.getName()).getBytes());
+										player.getClient().getChannelServer().getWorldInterface().broadcastGMMessage("", MaplePacketCreator.serverNotice(5, player.getName() + " has dealt " + damageToMonster + " damage to monster " + monster.getName()).getBytes());
 									} catch (RemoteException ex) {
 										player.getClient().getChannelServer().reconnectWorld();
 									}

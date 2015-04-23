@@ -26,7 +26,7 @@ import tools.MaplePacketCreator;
 public class CashPQ {
     /* Mensagem ao pegar item */
     public static String Message = "<"+Configuration.Server_Name+" CashPQ> You just won an item!";
-    /* Definições de Hora */
+    /* Time Settings */
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     private static final SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
     

@@ -82,9 +82,9 @@ public class SilverBox extends AbstractMaplePacketHandler {
             c.getPlayer().gainItem(5490000, (short) -1, false, false); 
             /* Remove Box */
             c.getPlayer().gainItem(itemid, (short) -1, false, false); 
-            /* Ganha Item */
+            /* Gain Item */
             c.getPlayer().gainItem(prizeid, (short) 1, true, true); 
-            /* Mostra Efeito de que o Box foi aberto */
+            /* Shows Effect of the Box being opened */
             c.getSession().write(MaplePacketCreator.sendSilverBoxOpened(itemid)); 
         }
     }
