@@ -37,6 +37,7 @@ import scripting.AbstractScriptManager;
 import server.life.MapleMonsterInformationProvider.DropEntry;
 import server.life.MapleMonsterQuestInformationProvider.QuestDropEntry;
 import server.maps.MapleReactor;
+import server.maps.ReactorDropEntry;
 import tools.FilePrinter;
 
 /**
@@ -45,8 +46,7 @@ import tools.FilePrinter;
 
 public class ReactorScriptManager extends AbstractScriptManager {
 	private static ReactorScriptManager instance = new ReactorScriptManager();
-	private Map<Integer, List<DropEntry>> drops = new HashMap<Integer, List<DropEntry>>();
-	private Map<Integer, List<QuestDropEntry>> questDrops = new HashMap<Integer, List<QuestDropEntry>>();
+	private Map<Integer, List<ReactorDropEntry>> drops = new HashMap<Integer, List<ReactorDropEntry>>();
 
 	public synchronized static ReactorScriptManager getInstance() {
 		return instance;
@@ -68,17 +68,17 @@ public class ReactorScriptManager extends AbstractScriptManager {
 		}
 	}
 
-	public List<DropEntry> getDrops(int rid) {
-		List<DropEntry> ret = drops.get(rid);
+	public List<ReactorDropEntry> getDrops(int rid) {
+		List<ReactorDropEntry> ret = drops.get(rid);
 		if (ret == null) {
-			ret = new LinkedList<DropEntry>();
+			ret = new LinkedList<ReactorDropEntry>();
 			try {
 				Connection con = DatabaseConnection.getConnection();
-				PreparedStatement ps = con.prepareStatement("SELECT itemid, chance FROM reactordrops WHERE reactorid = ? AND chance >= 0");
+				PreparedStatement ps = con.prepareStatement("SELECT itemid, chance, questid FROM reactordrops WHERE reactorid = ? AND chance >= 0");
 				ps.setInt(1, rid);
 				ResultSet rs = ps.executeQuery();
 				while (rs.next()) {
-					ret.add(new DropEntry(rs.getInt("itemid"), rs.getInt("chance")));
+					ret.add(new ReactorDropEntry(rs.getInt("itemid"), rs.getInt("chance"), rs.getInt("questid")));
 				}
 				rs.close();
 				ps.close();
@@ -86,29 +86,6 @@ public class ReactorScriptManager extends AbstractScriptManager {
 				log.error("Could not retrieve drops for reactor " + rid, e);
 			}
 			drops.put(rid, ret);
-		}
-		return ret;
-	}
-	
-	public List<QuestDropEntry> getQuestDrops(int rid) {
-		List<QuestDropEntry> ret = questDrops.get(rid);
-		if (ret == null) {
-			ret = new LinkedList<QuestDropEntry>();
-			try {
-				Connection con = DatabaseConnection.getConnection();
-				PreparedStatement ps = con.prepareStatement("SELECT itemid, chance, reactorid, questid FROM reactorquestdrops " +
-				"WHERE (reactorid = ? AND chance >= 0) OR (reactorid <= 0)");
-				ps.setInt(1, rid);
-				ResultSet rs = ps.executeQuery();
-				while (rs.next()) {
-					ret.add(new QuestDropEntry(rs.getInt("itemid"), rs.getInt("chance"), rs.getInt("questid")));
-				}
-				rs.close();
-				ps.close();
-			} catch (Exception e) {
-				log.error("Could not retrieve drops for reactor " + rid, e);
-			}
-			questDrops.put(rid, ret);
 		}
 		return ret;
 	}

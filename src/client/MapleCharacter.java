@@ -1188,8 +1188,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
         ps.executeUpdate();
         ps.close();
     }
-
-   
+    
     public MapleQuestStatus getQuest(MapleQuest quest) {
         if (!quests.containsKey(quest)) {
             return new MapleQuestStatus(quest, MapleQuestStatus.Status.NOT_STARTED);
@@ -1218,9 +1217,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
         }
         return quests.get(quest);
     }
-    
      
-        public void expirationTask() {
+    public void expirationTask() {
         long expiration, currenttime = System.currentTimeMillis();
 
         List<IItem> toberemove = new ArrayList<>(); 
@@ -1840,21 +1838,6 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
             ps.setInt(1, accountid);
             ps.setInt(2, id);
             ps.setString(3, bossid);
-            ps.executeUpdate();
-            ps.close();
-        } catch (Exception Ex) {
-        }
-    }
-    
-    
-    //setBossLog module
-    public void setEventoSite(String nome) {
-        Connection con1 = DatabaseConnection.getConnection();
-        try {
-            PreparedStatement ps;
-            ps = con1.prepareStatement("insert into eventos (accountid, nome) values (?,?)");
-            ps.setInt(1, accountid);
-            ps.setString(2, nome);
             ps.executeUpdate();
             ps.close();
         } catch (Exception Ex) {

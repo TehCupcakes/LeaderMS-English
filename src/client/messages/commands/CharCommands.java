@@ -407,20 +407,9 @@ public class CharCommands implements Command {
                     players++;
                 }
             }
-            mc.dropMessage("[Mensagem] O total de " + players + " jogadores estao com HP zerado.");
+            mc.dropMessage("[Message] " + players + " players have been killed.");
         }
-                
-           if (splitted[0].equalsIgnoreCase("!sitemsg")) {
-            if (splitted.length == 1) {
-                mc.dropMessage("Tipo : @sitemsg <mensagem>");
-                return;
-            } else {
-                    mc.dropMessage("Enviando mensagem ..");
-                    FilePrinter.printGM("SiteMsg.rtf", "Mensagem que foi enviada: " + StringUtil.joinStringFrom(splitted, 1) + "\r\nNo dia: " + sdf.format(Calendar.getInstance().getTime()) + " as " + sdf2.format(Calendar.getInstance().getTime()) + ".\r\nSolicitante: " + player.getName() + " (" + player.getAccountID() + ")");
-                    player.setEventoSite(StringUtil.joinStringFrom(splitted, 1));
-            }
-           }  
-        }
+    }
 
 	@Override
 	public CommandDefinition[] getDefinition() {
@@ -461,7 +450,6 @@ public class CharCommands implements Command {
                                 new CommandDefinition("doublecash", "", "", 4),
                                 new CommandDefinition("checarstats", "", "", 4),
                                 new CommandDefinition("reloadmapspawns", "", "", 4),
-                                new CommandDefinition("sitemsg", "", "", 4),
 		};
 	}
 }
