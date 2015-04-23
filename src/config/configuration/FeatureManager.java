@@ -5,9 +5,6 @@
  */
 package config.configuration;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * 
  * @author TehCupcakes
@@ -20,16 +17,16 @@ public class FeatureManager {
     
     
     
-    private final List<Feature> featureList = Arrays.asList(
+    public final Feature[] featureList = {
         //This is "create" features and mark them on ar off.
         //You can also set a "priority" for what features should override others.
         new Feature(FeatureName.Test, true, 1)
-    );
+    };
     
-    public Feature findFeature(FeatureName f) {
-        for(int i = 0; i < this.featureList.size(); i++) {
-            if(this.featureList.get(i).equals(f))
-                return this.featureList.get(i);
+    private Feature findFeature(FeatureName f) {
+        for(int i = 0; i < this.featureList.length; i++) {
+            if(this.featureList[i].getId().equals(f))
+                return this.featureList[i];
         }
         return null;
     }
@@ -39,14 +36,14 @@ public class FeatureManager {
     }
     
     public int count() {
-        return featureList.size();
+        return featureList.length;
     }
     
     public FeatureManager() { }
     
     
     
-    class Feature {
+    public class Feature {
         private FeatureName _id;
         private boolean _enabled;
         private int _priority;
@@ -70,8 +67,25 @@ public class FeatureManager {
             _priority = priority;
         }
         
-        protected boolean isEnabled() {
+        public FeatureName getId() {
+            return _id;
+        }
+        
+        public boolean isEnabled() {
             return _enabled;
+        }
+        
+        public int getPriority() {
+            return _priority;
+        }
+        
+        public String getName() {
+            return this.toString();
+        }
+        
+        @Override
+        public String toString() {
+            return Feature.this._id.name();
         }
     }
 }

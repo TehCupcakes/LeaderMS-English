@@ -34,6 +34,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 import client.MapleClient;
+import config.configuration.FeatureManager;
+import config.configuration.FeatureManager.Feature;
 
 /**
  *
@@ -52,18 +54,29 @@ public abstract class AbstractScriptManager {
 	
 	protected Invocable getInvocable(String path, MapleClient c) {
 		try {
-			path = "scripts/" + path;
+			String scriptPath = "scripts/" + path;
+                        int prior = 0;  //Used for priority of features
 			engine = null;
 			if (c != null) {
-				engine = c.getScriptEngine(path);
+				engine = c.getScriptEngine(scriptPath);
 			}
 			if (engine == null) {
-				File scriptFile = new File(path);
+				File scriptFile = new File(scriptPath);
+                                FeatureManager fm = new FeatureManager();
+                                for(int i = 0; i < fm.count(); i++) {
+                                    Feature feat = fm.featureList[i];
+                                    if(feat.isEnabled() && feat.getPriority() > prior) {
+                                        scriptPath = "scripts/feature/" + feat.toString() + "/" + path;
+                                        File tmpScriptFile = new File(scriptPath);
+                                        if(tmpScriptFile.exists())
+                                            scriptFile = tmpScriptFile;
+                                    }
+                                }
 				if (!scriptFile.exists())
 					return null;
 				engine = sem.getEngineByName("javascript");
 				if (c != null) {
-					c.setScriptEngine(path, engine);
+					c.setScriptEngine(scriptPath, engine);
 				}
 				FileReader fr = new FileReader(scriptFile);
 				engine.eval(fr);
