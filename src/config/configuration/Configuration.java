@@ -137,6 +137,4 @@ public class Configuration {
      public static final int maxViewRangeSq() {
 	return 800000; // 800 * 800
     }
-     
-     
 }

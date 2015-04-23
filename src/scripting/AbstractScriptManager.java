@@ -34,7 +34,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 import client.MapleClient;
-import config.configuration.FeatureManager;
+import config.configuration.*;
 import config.configuration.FeatureManager.Feature;
 
 /**
@@ -43,54 +43,66 @@ import config.configuration.FeatureManager.Feature;
  */
 public abstract class AbstractScriptManager {
 
-	protected ScriptEngine engine;
-	private ScriptEngineManager sem;
-	
-	protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractScriptManager.class);
-	
-	protected AbstractScriptManager() {
-		sem = new ScriptEngineManager();
-	}
-	
-	protected Invocable getInvocable(String path, MapleClient c) {
-		try {
-			String scriptPath = "scripts/" + path;
-                        int prior = 0;  //Used for priority of features
-			engine = null;
-			if (c != null) {
-				engine = c.getScriptEngine(scriptPath);
-			}
-			if (engine == null) {
-				File scriptFile = new File(scriptPath);
-                                FeatureManager fm = new FeatureManager();
-                                for(int i = 0; i < fm.count(); i++) {
-                                    Feature feat = fm.featureList[i];
-                                    if(feat.isEnabled() && feat.getPriority() > prior) {
-                                        scriptPath = "scripts/feature/" + feat.toString() + "/" + path;
-                                        File tmpScriptFile = new File(scriptPath);
-                                        if(tmpScriptFile.exists())
-                                            scriptFile = tmpScriptFile;
-                                    }
+    protected ScriptEngine engine;
+    private ScriptEngineManager sem;
+
+    protected static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractScriptManager.class);
+
+    protected AbstractScriptManager() {
+            sem = new ScriptEngineManager();
+    }
+
+    protected Invocable getInvocable(String path, MapleClient c) {
+            try {
+                    String scriptPath = "scripts/" + path;
+                    int prior = 0;  //Used for priority of features
+                    engine = null;
+                    if (c != null) {
+                            engine = c.getScriptEngine(scriptPath);
+                    }
+                    if (engine == null) {
+                            File scriptFile = new File(scriptPath);
+                            FeatureManager fm = new FeatureManager();
+                            for(int i = 0; i < fm.count(); i++) {
+                                Feature feat = fm.featureList[i];
+                                if(feat.isEnabled() && feat.getPriority() > prior) {
+                                    scriptPath = "scripts/feature/" + feat.toString() + "/" + path;
+                                    File tmpScriptFile = new File(scriptPath);
+                                    if(tmpScriptFile.exists())
+                                        scriptFile = tmpScriptFile;
                                 }
-				if (!scriptFile.exists())
-					return null;
-				engine = sem.getEngineByName("javascript");
-				if (c != null) {
-					c.setScriptEngine(scriptPath, engine);
-				}
-				FileReader fr = new FileReader(scriptFile);
-				engine.eval(fr);
-				fr.close();
-			}		
-			return (Invocable) engine;
-		} catch (Exception e) {
-			log.error("Error executing script.", e);
-			return null;
-		}
-	}
-	 
-	protected void resetContext(String path, MapleClient c) {
-		path = "scripts/" + path;
-		c.removeScriptEngine(path);
-	}
+                            }
+                            if (!scriptFile.exists())
+                                    return null;
+                            engine = sem.getEngineByName("javascript");
+                            if (c != null) {
+                                    c.setScriptEngine(scriptPath, engine);
+                            }
+                            FileReader fr = new FileReader(scriptFile);
+                            engine.eval(fr);
+                            fr.close();
+                    }		
+                    return (Invocable) engine;
+            } catch (Exception e) {
+                    log.error("Error executing script.", e);
+                    return null;
+            }
+    }
+
+    protected void resetContext(String path, MapleClient c) {
+            path = "scripts/" + path;
+            c.removeScriptEngine(path);
+    }
+        
+    protected String getServerName() {
+        return Configuration.Server_Name;
+    }
+    
+    protected String getMapleVersion() {
+        return Configuration.MS_Version;
+    }
+    
+    protected String getServerVersion() {
+        return Configuration.Server_Version;
+    }
 }

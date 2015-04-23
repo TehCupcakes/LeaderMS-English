@@ -2,7 +2,6 @@
 Made By bahadirtje Ragezone- YarakMS
 Pf, best nomes de cadeiras by Ank 
 */
-importPackage(Packages.config.configuration);
 
 function start() {
     status = -1;
@@ -18,7 +17,7 @@ function action(mode, type, selection) {
         return;
     }
     if (status == 0) {
-            cm.sendSimple("                          #e<"+Configuration.Server_Name+" - Cadeiras>#n            \r\n\r\nOla #e#h ##n.\r\nAqui voce pode adquirir diversas Cadeiras.\r\n\Voce tem algum presente para mim?#b\r\n\#L1#Trocar Presentes");
+            cm.sendSimple("                          #e<"+cm.getServerName()+" - Cadeiras>#n            \r\n\r\nOla #e#h ##n.\r\nAqui voce pode adquirir diversas Cadeiras.\r\n\Voce tem algum presente para mim?#b\r\n\#L1#Trocar Presentes");
         }  else if (selection == 0) {
             cm.sendSimple("So you want to hunt for them? Okay I'll warp you to the map.#b\r\n#L2#Warp me pl0x :D#b\r\n#L3#No Ty I changed my mind");
         }  else if (selection == 3) {

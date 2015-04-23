@@ -3,7 +3,6 @@
   *@author Jvlaple
   */
 
-importPackage(Packages.config.configuration);
 importPackage(Packages.tools);
 importPackage(Packages.server.life);
 importPackage(java.awt);
@@ -176,7 +175,7 @@ map.broadcastMessage(packetglow);
 var mf = eim.getMapFactory();
 map = mf.getMap(922010100 + stage * 100);
 cm.givePartyExp(300, party);
-cm.mapMessage("["+Configuration.Server_Name+" Quest] O portal que leva para o proximo estagio esta aberto.");
+cm.mapMessage("["+cm.getServerName()+" Quest] O portal que leva para o proximo estagio esta aberto.");
 }
 
 function failstage(eim, cm) {

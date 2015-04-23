@@ -84,7 +84,6 @@
 //    }
 //   }   
 // }
-importPackage(Packages.config.configuration);
 
 var status;
 function start() {
@@ -93,6 +92,6 @@ action( 1, 0, 0);
 }
 
 function action (mode, type , selection) {
-cm.sendOk("Ola, seja bem-vindo ao "+Configuration.Server_Name+"!\r\nEm breve teremos novidades por aqui, aguarde!");
-cm.dispose();
+    cm.sendOk("Ola, seja bem-vindo ao "+cm.getServerName()+"!\r\nEm breve teremos novidades por aqui, aguarde!");
+    cm.dispose();
 }

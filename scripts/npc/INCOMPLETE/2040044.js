@@ -3,7 +3,6 @@
   *@author Jvlaple
   */
 
-importPackage(Packages.config.configuration);
 importPackage(Packages.tools);
 importPackage(Packages.server.life);
 importPackage(java.awt);
@@ -125,5 +124,5 @@ map.broadcastMessage(packetsnd);
 var mf = eim.getMapFactory();
 map = mf.getMap(922010100 + stage * 100);
 cm.givePartyExp(300, party);
-cm.mapMessage("["+Configuration.Server_Name+" Quest] Parabens por concluir esta missao com sucesso!");
+cm.mapMessage("["+cm.getServerName()+" Quest] Parabens por concluir esta missao com sucesso!");
 }

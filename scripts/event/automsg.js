@@ -3,8 +3,6 @@
  */
 var setupTask;
 
-importPackage(Packages.config.configuration);
-
 function init() {
     scheduleNew();
 }
@@ -26,6 +24,6 @@ function cancelSchedule() {
 
 function start() {
     scheduleNew();
-    var Message = new Array("Welcome to "+Configuration.Server_Name+"!" ,"Please refrain from using profane language in the game.", "Verbal abuse or any other form of abuse will not be tolerated in this game. Users who break the rules may be blocked from the game.","Report any errors/bugs using the @bug command.","Use @command to see a list of available commands!");
-    em.getChannelServer().yellowWorldMessage("["+Configuration.Server_Name+" Tip] " + Message[Math.floor(Math.random() * Message.length)]);
+    var Message = new Array("Welcome to "+em.getServerName()+"!" ,"Please refrain from using profane language in the game.", "Verbal abuse or any other form of abuse will not be tolerated in this game. Users who break the rules may be blocked from the game.","Report any errors/bugs using the @bug command.","Use @command to see a list of available commands!");
+    em.getChannelServer().yellowWorldMessage("["+em.getServerName()+" Tip] " + Message[Math.floor(Math.random() * Message.length)]);
 }

@@ -4,8 +4,6 @@
 * Armas Maple
 */
 
-importPackage(Packages.config.configuration);
-
 function start() {
     status = -1;
     action(1, 0, 0);
@@ -20,11 +18,11 @@ function action(mode, type, selection) {
         return;
     }
     if (status == 0) {
-            cm.sendSimple("                          #e<"+Configuration.Server_Name+" - Armas Maple>#n            \r\n\r\nOla #e#h ##n.\r\nAqui voce pode adquirir Armas Maple.\r\n\Voce tem algumas folhas Maple?#b\r\n\#L1#Trocar Folhas");
+            cm.sendSimple("                          #e<"+cm.getServerName()+" - Armas Maple>#n            \r\n\r\nOla #e#h ##n.\r\nAqui voce pode adquirir Armas Maple.\r\n\Voce tem algumas folhas Maple?#b\r\n\#L1#Trocar Folhas");
         }  else if (selection == 0) {
             cm.sendSimple("So you want to hunt for them? Okay I'll warp you to the map.#b\r\n#L2#Warp me pl0x :D#b\r\n#L3#No Ty I changed my mind");
         }  else if (selection == 3) {
-            cm.sendOk("Okay nub");
+            cm.sendOk("Okay.");
             cm.dispose();
         }  else if (selection == 2) {
             cm.warp(6830000);

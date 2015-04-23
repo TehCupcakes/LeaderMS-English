@@ -4,10 +4,7 @@
 * HenesysPQ
 */
 
-importPackage(Packages.config.configuration);
-
 /* Variaveis */
-var texto = "                          #e<"+Configuration.Server_Name+" HenesysPQ>#n\r\n\r\nThis is the #rPrimrose Hill#k. When there is a full moon the moon bunny comes to make rice cakes. Growlie wants rice cakes so you better go help him or he\'ll eat you.\r\n\r\n";
 var map = 390009999;
 var status = 0;
 var minLevel = 10;
@@ -38,7 +35,7 @@ function action(mode, type, selection) {
 			status--;
 		if(cm.getChar().getMapId()==100000200){
 			if (status == 0) {
-				cm.sendNext(texto);
+				cm.sendNext("#e<"+cm.getServerName()+" HenesysPQ>#n\r\n\r\nThis is the #rPrimrose Hill#k. When there is a full moon the moon bunny comes to make rice cakes. Growlie wants rice cakes so you better go help him or he\'ll eat you.\r\n\r\n");
 			} else if (status == 1) {
 				cm.sendSimple("Would you like to go help Growlie?#b\r\n#L0#Yes, I will go.#l#k");
 			} else if (status == 2) {

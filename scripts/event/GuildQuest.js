@@ -29,7 +29,6 @@ var exitMap;
  
 importPackage(Packages.world);
 importPackage(Packages.client);
-importPackage(Packages.config.configuration);
 importPackage(Packages.server.maps);
 importPackage(Packages.tools);
 importPackage(java.lang);
@@ -68,7 +67,7 @@ function begin(eim) {
         var party = eim.getPlayers();
 		var iter = party.iterator();
                 while (iter.hasNext()) {
-                        iter.next().getClient().getSession().write(MaplePacketCreator.serverNotice(6,"["+Configuration.Server_Name+" Quest] The quest has begun!"));
+                        iter.next().getClient().getSession().write(MaplePacketCreator.serverNotice(6,"["+eim.getServerName()+" Quest] The quest has begun!"));
 		}
 }
 
@@ -98,7 +97,7 @@ function playerDisconnected(eim, player) {
 		var iter = party.iterator();
                 while (iter.hasNext()) {
 			var pl = iter.next();
-                        pl.getClient().getSession().write(MaplePacketCreator.serverNotice(6,"["+Configuration.Server_Name+" Quest] The leader of the group was disconnected, and the remaining players will be warped out."));
+                        pl.getClient().getSession().write(MaplePacketCreator.serverNotice(6,"["+eim.getServerName()+" Quest] The leader of the group was disconnected, and the remaining players will be warped out."));
 			if (pl.equals(player)) {
 				removePlayer(eim, pl);
 			}			
@@ -112,7 +111,7 @@ function playerDisconnected(eim, player) {
 	else { 
 		removePlayer(eim, player);
                 if (party.size() < 6) { 
-                        end(eim,"["+Configuration.Server_Name+" Quest] There are not enough players to continue. The remaining players will be warped out.");
+                        end(eim,"["+eim.getServerName()+" Quest] There are not enough players to continue. The remaining players will be warped out.");
                 }
 	}
 }
@@ -150,7 +149,7 @@ function playerExit(eim, player) {
 	player.changeMap(exitMap, exitMap.getPortal(0));
         var party = eim.getPlayers();
         if (party.size() < 6) { 
-                end(eim,"["+Configuration.Server_Name+" Quest] There are not enough players to continue. The remaining players will be warped out.");
+                end(eim,"["+eim.getServerName()+" Quest] There are not enough players to continue. The remaining players will be warped out.");
         }
 }
 
@@ -208,7 +207,7 @@ function earringcheck(eim, player) {
 		var pl = iter.next();
                 if (pl.getHp() > 0 && pl.getMapId() > 990000200 && pl.getInventory(MapleInventoryType.EQUIPPED).countById(1032033) == 0) {
 			pl.addHP(-30000);
-			pl.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6,"["+Configuration.Server_Name+" Quest] " + pl.getName() + " died for not using the earrings!"));
+			pl.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6,"["+eim.getServerName()+" Quest] " + pl.getName() + " died for not using the earrings!"));
                 }
         }
         eim.schedule("earringcheck", 15000);

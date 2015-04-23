@@ -1,4 +1,3 @@
-importPackage(Packages.config.configuration);
 importPackage(Packages.server);
 
 var status;
@@ -7,10 +6,7 @@ var choice;
 function start() {
 	status = -1;
 	action(1, 0, 0);
-} 
-
-var texto = "                          #e<"+Configuration.Server_Name+" Merchant>#n\r\n\r\nHello #e#h ##n,\r\nMy name is  Fredrick, and I take care of storing items/mesos in #e"+Configuration.Server_Name+"#n.\r\n";
-
+}
 
 function action(mode, type, selection) {
 	if (mode == 1)
@@ -20,7 +16,7 @@ function action(mode, type, selection) {
 		return;
 	}
 	if (status == 0)
-		cm.sendNext(texto);
+		cm.sendNext("#e<"+cm.getServerName()+" Merchant>#n\r\n\r\nHello #e#h ##n,\r\nMy name is  Fredrick, and I take care of storing items/mesos in #e"+cm.getServerName()+"#n.\r\n");
 	else if (status == 1)
 		if (cm.hasTemp()) {
 			if (cm.getHiredMerchantItems(true)) {

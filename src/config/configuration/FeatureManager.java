@@ -20,7 +20,7 @@ public class FeatureManager {
     public final Feature[] featureList = {
         //This is "create" features and mark them on ar off.
         //You can also set a "priority" for what features should override others.
-        new Feature(FeatureName.Test, true, 1)
+        new Feature(FeatureName.Test, false, 1)
     };
     
     private Feature findFeature(FeatureName f) {

@@ -14,10 +14,11 @@ function action(mode, type, selection) {
 	if (mode == -1) {
 		cm.dispose();
 	} else {
-		if (mode == 1)
+		if (mode == 1) {
 			status++;
-		else
+		} else {
 			status--;
+		}
 		if (status == 0) {
 			cm.sendNext("Great job, you finished all your training! You seem to be ready to start the journey. Well, I'll let you go to the next place.");
 		} else if (status == 1) {

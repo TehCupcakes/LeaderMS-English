@@ -5,7 +5,6 @@
  */
 
 importPackage(Packages.client);
-importPackage(Packages.config.configuration);
 
 var status = -1;
 
@@ -26,7 +25,7 @@ function action(mode, type, selection) {
     } 
     var p = cm.getPlayer();
     if (status == 0) {
-        cm.sendNext("                                  <#e"+Configuration.Server_Name+" 4.JOB#n>             \r\n\r\nOla #e#h ##n, eu sou a Carta a auxiliar do "+Configuration.Server_Name+".\r\nEstou precisando de sua ajuda para #bcoletar#k alguns items preciosos, me ajudando eu te ajudarei a crescer, pode me ajudar? Tudo bem, os items que preciso sao:\r\n\r\n#i4005000# #t4005000# - Qntd. 5\r\n#i4005001# #t4005001# - Qntd. 5\r\n#i4005002# #t4005002# - Qntd. 5\r\n#i4005003# #t4005003# - Qntd. 5\r\n#i4005004# #t4005004# - Qntd. 5 \r\n#i4001126# #t4001126# - Qntd. 5.000\r\n#i4000238# #t4000238# - Qntd. 200\r\n#i4000243# #t4000243# - Qntd. 1\r\n#i4000235# #t4000235# - Qntd. 1\r\n\r\nQuantia em Mesos - #e25m#n  \r\n\r\nSe voce ja #epossui#n estes items, clique em continuar, caso nao tenha, volte novamente mais tarde.");
+        cm.sendNext("                                  <#e"+cm.getServerName()+" 4.JOB#n>             \r\n\r\nOla #e#h ##n, eu sou a Carta a auxiliar do "+cm.getServerName()+".\r\nEstou precisando de sua ajuda para #bcoletar#k alguns items preciosos, me ajudando eu te ajudarei a crescer, pode me ajudar? Tudo bem, os items que preciso sao:\r\n\r\n#i4005000# #t4005000# - Qntd. 5\r\n#i4005001# #t4005001# - Qntd. 5\r\n#i4005002# #t4005002# - Qntd. 5\r\n#i4005003# #t4005003# - Qntd. 5\r\n#i4005004# #t4005004# - Qntd. 5 \r\n#i4001126# #t4001126# - Qntd. 5.000\r\n#i4000238# #t4000238# - Qntd. 200\r\n#i4000243# #t4000243# - Qntd. 1\r\n#i4000235# #t4000235# - Qntd. 1\r\n\r\nQuantia em Mesos - #e25m#n  \r\n\r\nSe voce ja #epossui#n estes items, clique em continuar, caso nao tenha, volte novamente mais tarde.");
     } else if (status == 1) {
         cm.sendSimple("Em qual classe gostaria de liberar as skills:" 
                 + "\r\n\r\n#L0#Skills nv. 10 para #eHERO#l#n" //dn

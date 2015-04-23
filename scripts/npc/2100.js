@@ -15,9 +15,9 @@ function start() {
 
 function action(mode, type, selection) {
     if (cm.getChar().getMapId() == 0 || cm.getChar().getMapId() == 3) {
-        if (mode == -1)
+        if (mode == -1) {
             cm.dispose();
-        else {
+        } else {
             if (status == -1 && mode == 0) {
                 cm.sendNext("Please talk to me again when you finally made your decision.");
                 cm.dispose();
@@ -36,9 +36,9 @@ function action(mode, type, selection) {
                     cm.sendNext("It seems like you want to start your journey without taking the training program. Then, I will let you move on to the training ground. Be careful.");
                 } else
                     cm.sendYesNo("Welcome to the world of MapleStory. The purpose of this training camp is to help beginners. Would you like to enter this training camp? Some people start their journey without taking the training program. But I strongly recommend you take the training program first.");
-            } else if (status == 1)
+            } else if (status == 1) {
                 cm.sendNext("Ok then, I will let you enter the training camp. Please follow your instructor's lead.");
-            else if (status == 2) {
+            } else if (status == 2) {
                 cm.warp(1, 0);
                 cm.dispose();
             } else if (status == 3) {
@@ -47,9 +47,9 @@ function action(mode, type, selection) {
             }
         }
     } else {
-        if (mode < 1)
+        if (mode < 1) {
             cm.dispose();
-        else {
+        } else {
             status++;
             if (status == 0) 
                 cm.sendNext("This is the image room where your first training program begins. In this room, you will have an advance look into the job of your choice.");

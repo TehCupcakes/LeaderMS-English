@@ -4,7 +4,6 @@
 * APQ
 */
 
-importPackage(Packages.config.configuration);
 importPackage(Packages.server.maps); 
 
 var status = 0; 
@@ -15,7 +14,7 @@ function start() {
 
 function action(mode, type, selection) { 
     if (status == 0) { 
-        cm.sendYesNo("                          #e<"+Configuration.Server_Name+" AriantPQ>#n\r\n\r\nWould you like to go to the #bAriant Coliseum#k?\r\nYou should be level #e20-30#n to participate."); 
+        cm.sendYesNo("                          #e<"+cm.getServerName()+" AriantPQ>#n\r\n\r\nWould you like to go to the #bAriant Coliseum#k?\r\nYou should be level #e20-30#n to participate."); 
         status++; 
     } else { 
         if ((status == 1 && type == 1 && selection == -1 && mode == 0) || mode == -1) { 

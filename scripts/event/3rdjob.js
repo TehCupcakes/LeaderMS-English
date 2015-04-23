@@ -108,7 +108,7 @@ function allMonstersDead(eim) {
     map.spawnItemDrop(winner, winner, price, winner.getPosition(), true, false);
     eim.schedule("warpOut", 120000);
     var mob = MapleLifeFactory.getMonster(monsterId);
-    em.getChannelServer().broadcastPacket(MaplePacketCreator.serverNotice(6, "[Evento] " + winner.getName() + " derrotou" + mob.getName() + "!"));
+    em.getChannelServer().broadcastPacket(MaplePacketCreator.serverNotice(6, "[Event] " + winner.getName() + " defeated " + mob.getName() + "!"));
 }
 
 

@@ -1464,30 +1464,30 @@ getPlayer().sendServerNotice(msg);
         return compleated;
     }
 	
-	public boolean createPlayerNPC() {
-		try {
-			if (this.getPlayer().getLevel() < 200) return false;
-			int type = 0;
-			if (this.getPlayer().getJob().isA(MapleJob.WARRIOR)) {
-				type = PlayerNPCEngine.WARRIOR_ID;
-			} else if (this.getPlayer().getJob().isA(MapleJob.MAGICIAN)) {
-				type = PlayerNPCEngine.MAGICIAN_ID;
-			} else if (this.getPlayer().getJob().isA(MapleJob.BOWMAN)) {
-				type = PlayerNPCEngine.BOWMAN_ID;
-			} else if (this.getPlayer().getJob().isA(MapleJob.THIEF)) {
-				type = PlayerNPCEngine.THIEF_ID;
-			} else {
-				return false;
-			}
-			try {
-				return PlayerNPCEngine.createGeneralNPC(type, this.getPlayer());
-			} catch (Throwable ex) {
-				Logger.getLogger(NPCConversationManager.class.getName()).log(Level.SEVERE, null, ex);
-				return false;
-			}
-		} catch (Exception ex) {
-			Logger.getLogger(NPCConversationManager.class.getName()).log(Level.SEVERE, null, ex);
-			return false;		
-		}
-	}
+    public boolean createPlayerNPC() {
+            try {
+                    if (this.getPlayer().getLevel() < 200) return false;
+                    int type = 0;
+                    if (this.getPlayer().getJob().isA(MapleJob.WARRIOR)) {
+                            type = PlayerNPCEngine.WARRIOR_ID;
+                    } else if (this.getPlayer().getJob().isA(MapleJob.MAGICIAN)) {
+                            type = PlayerNPCEngine.MAGICIAN_ID;
+                    } else if (this.getPlayer().getJob().isA(MapleJob.BOWMAN)) {
+                            type = PlayerNPCEngine.BOWMAN_ID;
+                    } else if (this.getPlayer().getJob().isA(MapleJob.THIEF)) {
+                            type = PlayerNPCEngine.THIEF_ID;
+                    } else {
+                            return false;
+                    }
+                    try {
+                            return PlayerNPCEngine.createGeneralNPC(type, this.getPlayer());
+                    } catch (Throwable ex) {
+                            Logger.getLogger(NPCConversationManager.class.getName()).log(Level.SEVERE, null, ex);
+                            return false;
+                    }
+            } catch (Exception ex) {
+                    Logger.getLogger(NPCConversationManager.class.getName()).log(Level.SEVERE, null, ex);
+                    return false;		
+            }
+    }
 }
