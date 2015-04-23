@@ -1,43 +1,47 @@
-/*
-	This file is part of the OdinMS Maple Story Server
-    Copyright (C) 2008 Patrick Huy <patrick.huy@frz.cc> 
-                       Matthias Butz <matze@odinms.de>
-                       Jan Christian Meyer <vimes@odinms.de>
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Affero General Public License version 3
-    as published by the Free Software Foundation. You may not use, modify
-    or distribute this program under any other version of the
-    GNU Affero General Public License.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Affero General Public License for more details.
-
-    You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/*Kyrin -  Pirate Test room 108000500-108000503
+    Made by Cygnus
 */
-
-/*
-@ AUTHOR : EcoReck of Valhalla Dev Forums
-@ NPC: Kryin (ID - 1090000)
-@ FUNCTION : Pirate job advancer.
-*/
-
-importPackage(Packages.client);
 
 
 var status = 0;
-var job;
 
-function start() 
-{
+
+function start() {
     status = -1;
     action(1, 0, 0);
 }
 
+
 function action(mode, type, selection) {
-    cm.sendOk("This NPC is disabled, sorry!");
-    cm.dispose();
+    if (mode == -1) {
+        cm.dispose();
+    } else {
+        if (mode == 1)
+            status++;
+        else
+            status--;
+        if (status == 0) {
+            if ((cm.getPlayer().getMapId() == 108000502) && cm.haveItem(4031856,15)) {
+                cm.sendNext("Ohhh... So you managed to gather up #r15 Potent Power Crystals#k! Wasn't it tough? That's amazing... Alright then, now let's talk about The Nautilus.");
+            } else if ((cm.getPlayer().getMapId() == 108000502) && !(cm.haveItem(4031856,15))) {
+                cm.sendNext("You will have to collect me #v4031856##r15 Potent Power Crystals#k. Good luck.");
+                status = 5
+            } else if ((cm.getPlayer().getMapId() == 108000500) && cm.haveItem(4031857,15))
+               cm.sendNext("Ohhh... So you managed to gather up #b15 Potent Wind Crystal#k! Wasn't it tough? That's amazing... Alright then, now let's talk about The Nautilus.");
+                else if ((cm.getPlayer().getMapId() == 108000500) && !(cm.haveItem(4031857,15))){
+               cm.sendNext("You will have to collect me #v4031857##b15 Potent Wind Crystal#k. Good luck.");
+                  status = 5
+            } else {
+                cm.sendOk("Something went wrong.")
+                cm.dispose();
+            }
+        } else if (status == 1) {
+             cm.sendNextPrev("These crystals can only be used here, so I'll just take them back.");
+        } else if (status == 2) {
+            cm.warp(120000101, 0);
+            cm.dispose();
+        } else if (status == 6) {
+            cm.dispose
+        }
+    }
 }
