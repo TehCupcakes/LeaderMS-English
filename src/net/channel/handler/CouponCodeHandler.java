@@ -83,7 +83,7 @@ public class CouponCodeHandler extends AbstractMaplePacketHandler {
 				c.getPlayer().modifyCSPoints(2, (item/5000));
 				break;
 			    case 4:
-                                MapleInventoryManipulator.addById(c, item, (short) 1, "Um item foi obtido a partir de um cupom.", null, -1);
+                                MapleInventoryManipulator.addById(c, item, (short) 1, "An item was obtained from a coupon.", null, -1);
                                 
 				c.getSession().write(MaplePacketCreator.showCouponRedeemedItem(item));
 				break;
@@ -91,7 +91,7 @@ public class CouponCodeHandler extends AbstractMaplePacketHandler {
 				c.getPlayer().modifyCSPoints(0, item);
 				break;
                             case 6:
-                                MapleInventoryManipulator.addById(c, item, (short) 1, "Um item foi obtido a partir de um cupom.", null, -1);
+                                MapleInventoryManipulator.addById(c, item, (short) 1, "An item was obtained from a coupon.", null, -1);
                                 break;
 			}
 			c.getSession().write(MaplePacketCreator.showNXMapleTokens(c.getPlayer()));

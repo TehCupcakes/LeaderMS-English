@@ -50,7 +50,7 @@ public class UseMountFoodHandler extends AbstractMaplePacketHandler {
                 c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.updateMount(c.getPlayer().getId(), c.getPlayer().getMount(), levelup));
                 MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemid, 1, true, false);
             } else
-                c.getPlayer().dropMessage("Favor montar em sua montaria antes de usar a comida.");
+                c.getPlayer().dropMessage("Please ride on mount before using food.");
         }
     }
 }

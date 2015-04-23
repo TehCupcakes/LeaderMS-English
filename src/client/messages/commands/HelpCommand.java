@@ -58,14 +58,14 @@ public class HelpCommand implements Command {
                 player.getClient().getChannelServer().eventOn = true;
                 player.getClient().getChannelServer().eventMap = mapid;
                 try {
-                    ChannelServer.getInstance(c.getChannel()).getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, c.getChannel(), "[Evento] O evento foi iniciado no canal (" + c.getChannel() + "). Use @evento para participar.").getBytes()); 
+                    ChannelServer.getInstance(c.getChannel()).getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, c.getChannel(), "[Event] An event has started in Channel " + c.getChannel() + ". Use @event to participate.").getBytes()); 
                 } catch (RemoteException e) {
                     ChannelServer.getInstance(c.getChannel()).reconnectWorld();
                 }
             } else {
                 player.getClient().getChannelServer().eventOn = false;
                 try {
-                     ChannelServer.getInstance(c.getChannel()).getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, c.getChannel(), "[Evento] O evento terminou, obrigado aqueles que participaram.").getBytes());  
+                     ChannelServer.getInstance(c.getChannel()).getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, c.getChannel(), "[Event] The event ended. Thank you to all who participated.").getBytes());  
                 } catch (RemoteException e) {
                     ChannelServer.getInstance(c.getChannel()).reconnectWorld();
                 }
@@ -212,7 +212,7 @@ public class HelpCommand implements Command {
 	@Override
 	public CommandDefinition[] getDefinition() {
 		return new CommandDefinition[] {
-			new CommandDefinition("startev", "Inicia evento", "", 1),
+			new CommandDefinition("startev", "Start event", "", 1),
                         new CommandDefinition("setall", "", "", 1),
                         new CommandDefinition("online", "", "", 1),
                         new CommandDefinition("job", "", "", 1),

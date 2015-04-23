@@ -127,7 +127,7 @@ public class EnterMTSHandler extends AbstractMaplePacketHandler {
             c.getSession().write(MaplePacketCreator.NotYetSoldInv(getNotYetSold(c.getPlayer().getId())));
                         c.getPlayer().saveToDB(true, true);
                 } else {
-                        new ServernoticeMapleClientMessageCallback(5, c).dropMessage("O Sistema de Comercio nao esta disponivel no momento.");
+                        new ServernoticeMapleClientMessageCallback(5, c).dropMessage("The Maple Trade Service is not available at this time.");
             c.getSession().write(MaplePacketCreator.enableActions());
                 }
         }

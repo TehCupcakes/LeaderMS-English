@@ -168,7 +168,7 @@ public class MoveLifeHandler extends AbstractMovementPacketHandler {
 
         if (monster.getId() == 9300061 && monster.getHp() < monster.getMaxHp() / 2 && Math.random() < 0.6) {
             if (monster.getShouldDrop() == true) {
-                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(0, "O Coelhinho da Lua esta se sentindo doente. Por favor, protege-lo para que ele possa fazer deliciosos bolinhos de arroz!"));
+                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(0, "The Moon Bunny is feeling sick. Please protect him so he can make delicious rice cakes!"));
                 monster.setShouldDrop(false);
                 monster.scheduleCanDrop(4000);
             }
@@ -178,7 +178,7 @@ public class MoveLifeHandler extends AbstractMovementPacketHandler {
             if (monster.getJustSpawned() == true) {
                 monster.setJustSpawned(false);
                 monster.setDropped(1);
-                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(0, "O Coelhinho da Lua fez 1 bolinho de arroz."));
+                monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(0, "The Moon Bunny made ​​1 rice cake."));
                 IItem Item = new Item(4001101, (byte) 0, (short) 1);
                 try {
                     monster.getMap().spawnItemDrop(monster, monster.getEventInstance().getPlayers().get(0), Item, monster.getPosition(), false, false);
@@ -188,7 +188,7 @@ public class MoveLifeHandler extends AbstractMovementPacketHandler {
             } else {
                 if (monster.getShouldDrop() == true) {
                     int d = monster.getDropped() + 1;
-                    monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(0, "O Coelhinho da Lua fez " + d + " bolinhos de arroz."));
+                    monster.getMap().broadcastMessage(MaplePacketCreator.serverNotice(0, "The Moon Bunny made  " + d + " rice cakes."));
                     monster.setDropped(d);
                     monster.setShouldDrop(false);
                     monster.scheduleCanDrop(6000);

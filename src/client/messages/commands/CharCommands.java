@@ -132,29 +132,29 @@ public class CharCommands implements Command {
                 c.getChannelServer().eventOn = true;
                 c.getChannelServer().eventMap = mapid;
                 try {
-                    c.getChannelServer().getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, c.getChannel(), "[Evento] O evento foi iniciado no canal (" + c.getChannel() + "). Use @evento para participar.").getBytes());
+                    c.getChannelServer().getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, c.getChannel(), "[Event] An event has started in Channel " + c.getChannel() + ". Use @event to participate.").getBytes());
                 } catch (RemoteException e) {
                     c.getChannelServer().reconnectWorld();
                 }
             } else {
                 c.getChannelServer().eventOn = false;
                 try {
-                    c.getChannelServer().getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, c.getChannel(), "[Evento] O evento terminou, obrigado aqueles que participaram.").getBytes());
+                    c.getChannelServer().getWorldInterface().broadcastMessage(null, MaplePacketCreator.serverNotice(6, c.getChannel(), "[Event] The event ended. Thank you to all who participated.").getBytes());
                 } catch (RemoteException e) {
                     c.getChannelServer().reconnectWorld();
                 }
             }
-        } else if (splitted[0].equalsIgnoreCase("checarstats")) {
+        } else if (splitted[0].equalsIgnoreCase("!chekcharstats")) {
                 MapleCharacter victim = cserva.getPlayerStorage().getCharacterByName(splitted[1]);
-                cserva.broadcastPacket(MaplePacketCreator.serverNotice(6,"Status do personagem <" + splitted[1] +">"));
-                player.dropMessage("For: " + victim.getStr());
-                player.dropMessage("Des: " + victim.getDex());
+                cserva.broadcastPacket(MaplePacketCreator.serverNotice(6,"Character Status <" + splitted[1] +">"));
+                player.dropMessage("Str: " + victim.getStr());
+                player.dropMessage("Dex: " + victim.getDex());
                 player.dropMessage("Int: " + victim.getInt());
-                player.dropMessage("Sorte: " + victim.getLuk());
+                player.dropMessage("Luck: " + victim.getLuk());
                 player.dropMessage("Mesos: " + victim.getMeso());
                 player.dropMessage("LeaderPoints: " + victim.getCSPoints(2));
-                player.dropMessage("AP Disponivel: " + victim.getRemainingAp());
-                player.dropMessage("SP Disponivel: " + victim.getRemainingSp());
+                player.dropMessage("AP Available: " + victim.getRemainingAp());
+                player.dropMessage("SP Available: " + victim.getRemainingSp());
        } else if (splitted[0].equals("!item")) {
 			MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
 			short quantity = (short) getOptionalIntArg(splitted, 2, 1);
@@ -238,7 +238,7 @@ public class CharCommands implements Command {
 				player.levelUp();
 			}
 		} else if (splitted[0].equals("!closemerchants")) {
-            mc.dropMessage("Fechando e salvando os comerciantes, por favor aguarde ...");
+            mc.dropMessage("Closing and saving merchants, please wait...");
             for (ChannelServer channel : ChannelServer.getAllInstances()) {
                 for (MapleCharacter players : channel.getPlayerStorage().getAllCharacters()) {
                     players.getInteraction().closeShop(true);
@@ -352,27 +352,27 @@ public class CharCommands implements Command {
 			player.getMap().broadcastMessage(MaplePacketCreator.showAriantScoreBoard());
 		}  else if (splitted[0].equals("!votepoints")) {
             cserva.getPlayerStorage().getCharacterByName(splitted[1]).gainvotePoints(Integer.parseInt(splitted[2]));
-            player.dropMessage(6, "Feito, foi enviado para " + splitted[1] + " a quantia de " + splitted[2] + ".");
+            player.dropMessage(6, "Done. Sent " + splitted[2] + " points to " + splitted[1] + ".");
         } else if (splitted[0].equals("!leaderpoints")) {
             cserva.getPlayerStorage().getCharacterByName(splitted[1]).gainLeaderPoints(Integer.parseInt(splitted[2]));
-            player.dropMessage(6, "Feito, foi enviado para " + splitted[1] + " a quantia de " + splitted[2] + ".");
+            player.dropMessage(6, "Done. Sent " + splitted[2] + " points to " + splitted[1] + ".");
         } else if (splitted[0].equals("!betapoints")) {
             cserva.getPlayerStorage().getCharacterByName(splitted[1]).modifyCSPoints(5, Integer.parseInt(splitted[2]));
-            player.dropMessage(6, "Feito, foi enviado para " + splitted[1] + " a quantia de " + splitted[2] + ".");
+            player.dropMessage(6, "Done. Sent " + splitted[2] + " points to " + splitted[1] + ".");
         } else if (splitted[0].equals("!jqpoints")) {
             cserva.getPlayerStorage().getCharacterByName(splitted[1]).addjqpoints(Integer.parseInt(splitted[2]));
-            player.dropMessage(6, "Feito, foi enviado para " + splitted[1] + " a quantia de " + splitted[2] + ".");
+            player.dropMessage(6, "Done. Sent " + splitted[2] + " points to " + splitted[1] + ".");
         } else if (splitted[0].equals("!pqpoints")) {
             cserva.getPlayerStorage().getCharacterByName(splitted[1]).gainpqPoints(Integer.parseInt(splitted[2]));
-            player.dropMessage(6, "Feito, foi enviado para " + splitted[1] + " a quantia de " + splitted[2] + ".");
+            player.dropMessage(6, "Done. Sent " + splitted[2] + " points to " + splitted[1] + ".");
         } else if (splitted[0].equals("!givepresent")) {
             cserva.getPlayerStorage().getCharacterByName(splitted[1]).gainItem();
-            player.dropMessage(6, "Feito, foi enviado um presente para " + splitted[1] + ".");
+            player.dropMessage(6, "Done. Sent a present to " + splitted[1] + ".");
         } else if (splitted[0].equals("!giftnx")) {
             for (int i = 1; i < 5; i *= 2) {
                 cserva.getPlayerStorage().getCharacterByName(splitted[1]).modifyCSPoints(i, Integer.parseInt(splitted[2]));
             }
-            player.dropMessage(6, "Feito, foi enviado para " + splitted[1] + " a quantia de " + splitted[2] + ".");
+            player.dropMessage(6, "Done. Sent " + splitted[2] + " NX Points to " + splitted[1] + ".");
         } else if (splitted[0].equals("!conectados")) {
             try {
                 Map<Integer, Integer> connected = cserva.getWorldInterface().getConnected();
@@ -448,7 +448,7 @@ public class CharCommands implements Command {
                                 new CommandDefinition("killmap", "", "", 4),
                                 new CommandDefinition("buffme", "", "", 4),
                                 new CommandDefinition("doublecash", "", "", 4),
-                                new CommandDefinition("checarstats", "", "", 4),
+                                new CommandDefinition("chekcharstats", "", "", 4),
                                 new CommandDefinition("reloadmapspawns", "", "", 4),
 		};
 	}

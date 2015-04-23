@@ -436,8 +436,8 @@ public class GMCommand implements Command {
 			new CommandDefinition("cleardrops", "", "", 2),
 			new CommandDefinition("exprate", "", "", 2),
 			new CommandDefinition("commands", "[page defaults to 1]", "", 2),
-                        new CommandDefinition("expireitem", "nenhum", "", 2),
-                        new CommandDefinition("evento", "nenhum", "", 2),
+                        new CommandDefinition("expireitem", "", "", 2),
+                        new CommandDefinition("event", "", "", 2),
 		};
 	}
 }

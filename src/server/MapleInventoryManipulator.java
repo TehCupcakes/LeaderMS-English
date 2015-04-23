@@ -221,7 +221,7 @@ public class MapleInventoryManipulator {
                         quantity -= newQ;
                         Item nItem = new Item(itemId, (byte) 0, newQ, petid);
                         if (petid != -1) {
-                            System.out.println("[INFO PET] Foi criado um pet com id <" + petid + ">");
+                            System.out.println("[PET INFO] Created a pet with id <" + petid + ">");
                         }
                         byte newSlot = c.getPlayer().getInventory(type).addItem(nItem);
                         if (newSlot == -1) {
@@ -385,7 +385,7 @@ public class MapleInventoryManipulator {
                 numSlotsNeeded = 1;
             } else {
                 numSlotsNeeded = 1;
-                log.error("[INFO INV.] Checagem de Espaco - 0 slotMax");
+                log.error("[INV INFO] Checking space - 0 slotMax");
             }
             return !c.getPlayer().getInventory(type).isFull(numSlotsNeeded - 1);
         } else {

@@ -2473,7 +2473,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
             getEventInstance().playerKilled(this);
         }
         if (getClient().getChannelServer().eventOn == true) {
-          getClient().getSession().write(MaplePacketCreator.serverNotice(5, "Sua experiencia nao foi reduzida, pelo fato de estar havendo evento no momento!"));  
+          getClient().getSession().write(MaplePacketCreator.serverNotice(5, "Your experience was not reduced due to the ongoing event."));  
           return;
         }
          if (this.getMap().isCPQMap()) {
@@ -3465,7 +3465,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
    public void gainItem(){
       short quantity = 1;
       int itemid = 4031442;
-      MapleInventoryManipulator.addById(getClient(), itemid, quantity, "Item de Evento");
+      MapleInventoryManipulator.addById(getClient(), itemid, quantity, "Event Item");
     }
 
     public int getpqPoints(){
@@ -4396,11 +4396,11 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
         String readableTargetName = MapleCharacterUtil.makeMapleReadable(getName());
         sb.append("[Alerta] ");
         sb.append("(").append(readableTargetName).append(")");
-        sb.append(" acaba de comecar o JQ: ");
+        sb.append(" Started a JQ: ");
         sb.append(jq);
         sb.append(".");
         jqStart = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new java.util.Date(System.currentTimeMillis()));
-        sb.append(" Iniciado em : ").append(jqStart).append(". ");
+        sb.append(" Started at: ").append(jqStart).append(". ");
         try {
             getClient().getChannelServer().broadcastGMPacket(MaplePacketCreator.serverNotice(5, sb.toString()));
             FilePrinter.JumpQuest(readableTargetName + ".txt", sb.toString(), true);
@@ -6017,7 +6017,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
                     }
                 } else {
 
-                    dropMessage(1, "Seu inventario esta cheio. Por favor, remover um item do seu " + type.name().toLowerCase() + ".");
+                    dropMessage(1, "Your inventory is full. Please remove an item from your " + type.name().toLowerCase() + ".");
                     return false;
                 }
             } else if (MapleInventoryManipulator.checkSpace(getClient(), id, quantity, "")) {
@@ -6026,7 +6026,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
                         quantity = 1;
                     }
                     int petId = MaplePet.createPet(id);
-                    MapleInventoryManipulator.addById(getClient(), id, (short) 1, "O item de Cash foi comprado!", null, petId);
+                    MapleInventoryManipulator.addById(getClient(), id, (short) 1, "Cash item purchased!", null, petId);
                     if (show) {
                         this.getClient().getSession().write(MaplePacketCreator.getShowItemGain(id, quantity));
                     }
@@ -6035,7 +6035,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
                 }
             } else {
 
-                dropMessage(1, "Seu inventario esta cheio. Por favor, remover um item do seu " + type.name().toLowerCase() + ".");
+                dropMessage(1, "Your inventory is full. Please remove an item from your " + type.name().toLowerCase() + ".");
                 return false;
             }
             if (show) {

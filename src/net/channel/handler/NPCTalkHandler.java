@@ -59,7 +59,7 @@ public class NPCTalkHandler extends AbstractMaplePacketHandler {
 		}
 		c.getPlayer().setLastNpcTalk(System.currentTimeMillis());
                 if (npc.getId() == 9010009) {
-                    c.getPlayer().getClient().getSession().write(MaplePacketCreator.getNPCTalk(9010009, (byte) 0, "Ola " + c.getPlayer().getName() + ", este NPC esta desativado!", "00 00"));
+                    c.getPlayer().getClient().getSession().write(MaplePacketCreator.getNPCTalk(9010009, (byte) 0, "Hello " + c.getPlayer().getName() + ", this NPC is disabled!", "00 00"));
                     return;
                 }
                 c.getSession().write(MaplePacketCreator.enableActions());
@@ -72,7 +72,7 @@ public class NPCTalkHandler extends AbstractMaplePacketHandler {
 			for (MapleMapObject o : c.getPlayer().getMap().getAllPlayer()) {
 				((MapleCharacter)o).changeMap(c.getChannelServer().getMapFactory().getMap(980000000),
 						c.getChannelServer().getMapFactory().getMap(980000000).getPortal(0));
-				((MapleCharacter)o).getClient().getSession().write(MaplePacketCreator.serverNotice(5, "[Carnaval de Monstros] " + c.getPlayer().getName() + " clicou no NPC de saida."));	
+				((MapleCharacter)o).getClient().getSession().write(MaplePacketCreator.serverNotice(5, "[Monster Carnival] " + c.getPlayer().getName() + " clicked the warp NPC."));	
 			}
 			return;
 		}

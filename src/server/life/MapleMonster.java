@@ -322,7 +322,7 @@ public class MapleMonster extends AbstractLoadedMapleLife {
                     if (mob.getId() == 9300061) {
                         int d = mob.getDropped() + 1;
                         mob.setDropped(d);
-                        mob.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "[Sactualize] O coelhinho da Lua fez número bolo de arroz " + d + "."));
+                        mob.getMap().broadcastMessage(MaplePacketCreator.serverNotice(6, "The Easter Moon made " + d + " rice cakes."));
                     }
                     mob.setShouldDrop(true);
                     mob.scheduleDrop(6000, itemidX);
@@ -580,10 +580,10 @@ public class MapleMonster extends AbstractLoadedMapleLife {
 //            if (attacker.getMapId() == 107000200) {
 //            if(attacker.getClient().getChannelServer().doublecash == true) {
 //                attacker.gainCashPoints(cashpointsdouble);
-//                attacker.dropMessage("["+Configuration.Server_Name+" CashPQ] Voce tem um total de (" + attacker.getCashPoints() + ") CashPoints."); // CashPoints
+//                attacker.dropMessage("["+Configuration.Server_Name+" CashPQ] You have a total of (" + attacker.getCashPoints() + ") CashPoints."); // CashPoints
 //            } else {
 //                attacker.gainCashPoints(cashpoints);
-//                attacker.dropMessage("["+Configuration.Server_Name+" CashPQ] Voce tem um total de (" + attacker.getCashPoints() + ") CashPoints."); // CashPoints      
+//                attacker.dropMessage("["+Configuration.Server_Name+" CashPQ] You have a total of (" + attacker.getCashPoints() + ") CashPoints."); // CashPoints      
 //        }
 //     }
    }

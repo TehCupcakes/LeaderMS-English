@@ -171,7 +171,7 @@ public abstract class AbstractDealDamageHandler extends AbstractMaplePacketHandl
 //                                        player.getCheatTracker().registerOffense(CheatingOffense.ATTACK_FARAWAY_MONSTER, Double.toString(Math.sqrt(distance)));
 //                                        if (player.getCheatTracker().getPoints() > 20) {
 //                                            try {
-//                                                player.getClient().getChannelServer().getWorldInterface().broadcastGMMessage("", MaplePacketCreator.serverNotice(5, player.getName() + " esta atacando um monstro muito distante.").getBytes());
+//                                                player.getClient().getChannelServer().getWorldInterface().broadcastGMMessage("", MaplePacketCreator.serverNotice(5, player.getName() + " is attacking a distant monster.").getBytes());
 //                                            } catch (RemoteException ex) {
 //                                                player.getClient().getChannelServer().reconnectWorld();
 //                                            }
