@@ -49,48 +49,48 @@ public class ReactorScriptManager extends AbstractScriptManager {
 	private Map<Integer, List<ReactorDropEntry>> drops = new HashMap<Integer, List<ReactorDropEntry>>();
 
 	public synchronized static ReactorScriptManager getInstance() {
-		return instance;
+            return instance;
 	}
 
 	public void act(MapleClient c, MapleReactor reactor) {
-		try {
-			ReactorActionManager rm = new ReactorActionManager(c, reactor);
+            try {
+                ReactorActionManager rm = new ReactorActionManager(c, reactor);
 
-			Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);
-			if (iv == null) {
-				return;
-			}
-			engine.put("rm", rm);
-			ReactorScript rs = iv.getInterface(ReactorScript.class);
-			rs.act();
-		} catch (Exception e) {
-                        FilePrinter.printError(FilePrinter.REACTOR, "Error executing reactor script. ReactorID: " + reactor.getReactorId() + ", ReactorName: " + reactor.getName() + ":" + e);
-		}
+                Invocable iv = getInvocable("reactor/" + reactor.getId() + ".js", c);
+                if (iv == null) {
+                        return;
+                }
+                engine.put("rm", rm);
+                ReactorScript rs = iv.getInterface(ReactorScript.class);
+                rs.act();
+            } catch (Exception e) {
+                FilePrinter.printError(FilePrinter.REACTOR, "Error executing reactor script. ReactorID: " + reactor.getReactorId() + ", ReactorName: " + reactor.getName() + ":" + e);
+            }
 	}
 
 	public List<ReactorDropEntry> getDrops(int rid) {
-		List<ReactorDropEntry> ret = drops.get(rid);
-		if (ret == null) {
-			ret = new LinkedList<ReactorDropEntry>();
-			try {
-				Connection con = DatabaseConnection.getConnection();
-				PreparedStatement ps = con.prepareStatement("SELECT itemid, chance, questid FROM reactordrops WHERE reactorid = ? AND chance >= 0");
-				ps.setInt(1, rid);
-				ResultSet rs = ps.executeQuery();
-				while (rs.next()) {
-					ret.add(new ReactorDropEntry(rs.getInt("itemid"), rs.getInt("chance"), rs.getInt("questid")));
-				}
-				rs.close();
-				ps.close();
-			} catch (Exception e) {
-				log.error("Could not retrieve drops for reactor " + rid, e);
-			}
-			drops.put(rid, ret);
-		}
-		return ret;
+            List<ReactorDropEntry> ret = drops.get(rid);
+            if (ret == null) {
+                ret = new LinkedList<ReactorDropEntry>();
+                try {
+                    Connection con = DatabaseConnection.getConnection();
+                    PreparedStatement ps = con.prepareStatement("SELECT itemid, chance, questid FROM reactordrops WHERE reactorid = ? AND chance >= 0");
+                    ps.setInt(1, rid);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        ret.add(new ReactorDropEntry(rs.getInt("itemid"), rs.getInt("chance"), rs.getInt("questid")));
+                    }
+                    rs.close();
+                    ps.close();
+                } catch (Exception e) {
+                    log.error("Could not retrieve drops for reactor " + rid, e);
+                }
+                drops.put(rid, ret);
+            }
+            return ret;
 	}
 	
 	public void clearDrops() {
-		drops.clear();
+            drops.clear();
 	}
 }

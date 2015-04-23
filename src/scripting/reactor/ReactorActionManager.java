@@ -76,7 +76,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
         List<ReactorDropEntry> items = new LinkedList<>();
         int numItems = 0;
 
-        if (meso && Math.random() < (1 / (double) mesoChance)) {
+        if (meso && Math.random() < (1.0D / mesoChance)) {
                 items.add(new ReactorDropEntry(0, mesoChance, -1));
         }
 
@@ -85,7 +85,7 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
         // for (DropEntry d : chances){
         while (iter.hasNext()) {
                 ReactorDropEntry d = (ReactorDropEntry) iter.next();
-                if (Math.random() < (1 / (double) d.chance) && ((d.questid <= 0) || (getPlayer().getQuest(MapleQuest.getInstance(d.questid)).getStatus() == MapleQuestStatus.Status.STARTED))) {
+                if (Math.random() < (1.0D / d.chance) && ((d.questid <= 0) || (getPlayer().getQuest(MapleQuest.getInstance(d.questid)).getStatus() == MapleQuestStatus.Status.STARTED))) {
                         numItems++;
                         items.add(d);
                 }
@@ -105,34 +105,29 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
         dropPos.x -= (12 * numItems);
 
         for (ReactorDropEntry d : items) {
-                if (d.itemId == 0) {
-                        int range = maxMeso - minMeso;
-                        int displayDrop = (int) (Math.random() * range) + minMeso;
-                        int mesoDrop = (int) (displayDrop * ChannelServer.getInstance(getClient().getChannel()).getMesoRate());
-                        reactor.getMap().spawnMesoDrop(mesoDrop, displayDrop, dropPos, reactor, getPlayer(), meso);
-                } else {
-                        IItem drop;
-                        MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-                        if (ii.getInventoryType(d.itemId) != MapleInventoryType.EQUIP) {
-                                drop = new Item(d.itemId, (byte) 0, (short) 1);
-                        }
-                        else {
-                                drop = ii.randomizeStats((Equip) ii.getEquipById(d.itemId));
-                        }
-                        reactor.getMap().spawnItemDrop(reactor, getPlayer(), drop, dropPos, false, true);
-                }
-                dropPos.x += 25;
-
+            if (d.itemId == 0) {
+                    int range = maxMeso - minMeso;
+                    int displayDrop = (int) (Math.random() * range) + minMeso;
+                    int mesoDrop = (int) (displayDrop * ChannelServer.getInstance(getClient().getChannel()).getMesoRate());
+                    reactor.getMap().spawnMesoDrop(mesoDrop, displayDrop, dropPos, reactor, getPlayer(), meso);
+            } else {
+                    IItem drop;
+                    MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
+                    if (ii.getInventoryType(d.itemId) != MapleInventoryType.EQUIP) {
+                            drop = new Item(d.itemId, (byte) 0, (short) 1);
+                    }
+                    else {
+                            drop = ii.randomizeStats((Equip) ii.getEquipById(d.itemId));
+                    }
+                    reactor.getMap().spawnItemDrop(reactor, getPlayer(), drop, dropPos, false, true);
+            }
+            dropPos.x += 25;
         }
     }
     
     public EventManager getEventManager(String event) {
 		return getClient().getChannelServer().getEventSM().getEventManager(event);
     }
-
-//    private List<DropEntry> getDropChances() {
-//        return ReactorScriptManager.getInstance().getDrops(reactor.getId());
-//    }
     
     public void spawnMonster(int id) {
         spawnMonster(id, 1, getPosition());
@@ -187,69 +182,67 @@ public class ReactorActionManager extends AbstractPlayerInteraction {
      * @param [Point] pos
      */
     public void spawnNpc(int npcId, Point pos) {
-            MapleNPC npc = MapleLifeFactory.getNPC(npcId);
-            if (npc != null && !npc.getName().equals("MISSINGNO")) {
-                    npc.setPosition(pos);
-                    npc.setCy(pos.y);
-                    npc.setRx0(pos.x + 50);
-                    npc.setRx1(pos.x - 50);
-                    npc.setFh(reactor.getMap().getFootholds().findBelow(pos).getId());
-                    npc.setCustom(true);
-                    reactor.getMap().addMapObject(npc);  
-                    reactor.getMap().broadcastMessage(MaplePacketCreator.spawnNPC(npc));
-            }
+        MapleNPC npc = MapleLifeFactory.getNPC(npcId);
+        if (npc != null && !npc.getName().equals("MISSINGNO")) {
+            npc.setPosition(pos);
+            npc.setCy(pos.y);
+            npc.setRx0(pos.x + 50);
+            npc.setRx1(pos.x - 50);
+            npc.setFh(reactor.getMap().getFootholds().findBelow(pos).getId());
+            npc.setCustom(true);
+            reactor.getMap().addMapObject(npc);  
+            reactor.getMap().broadcastMessage(MaplePacketCreator.spawnNPC(npc));
+        }
     }
 
     public MapleReactor getReactor() {
-            return reactor;
+        return reactor;
     }
 
     public void spawnFakeMonster(int id) {
-            spawnFakeMonster(id, 1, getPosition());
+        spawnFakeMonster(id, 1, getPosition());
     }
 
     // summon one monster, remote location
     public void spawnFakeMonster(int id, int x, int y) {
-            spawnFakeMonster(id, 1, new Point(x, y));
+        spawnFakeMonster(id, 1, new Point(x, y));
     }
 
     // multiple monsters, reactor location
     public void spawnFakeMonster(int id, int qty) {
-            spawnFakeMonster(id, qty, getPosition());
+        spawnFakeMonster(id, qty, getPosition());
     }
 
     // multiple monsters, remote location
     public void spawnFakeMonster(int id, int qty, int x, int y) {
-            spawnFakeMonster(id, qty, new Point(x, y));
+        spawnFakeMonster(id, qty, new Point(x, y));
     }
 
     // handler for all spawnFakeMonster
     private void spawnFakeMonster(int id, int qty, Point pos) {
-            for (int i = 0; i < qty; i++) {
-                    MapleMonster mob = MapleLifeFactory.getMonster(id);
-                    reactor.getMap().spawnFakeMonsterOnGroundBelow(mob, pos);
-            }
+        for (int i = 0; i < qty; i++) {
+            MapleMonster mob = MapleLifeFactory.getMonster(id);
+            reactor.getMap().spawnFakeMonsterOnGroundBelow(mob, pos);
+        }
     }
 
     public void killAll() {
-            reactor.getMap().killAllMonsters(false);
+        reactor.getMap().killAllMonsters(false);
     }
 
     public void killMonster(int monsId) {
-            reactor.getMap().killMonster(monsId);
+        reactor.getMap().killMonster(monsId);
     }
 
     protected MapleClient getClient() {
-            return c;
+        return c;
     }
 	
-   public void closeDoor(int mapid)
-   {
-	   getClient().getChannelServer().getMapFactory().getMap(mapid).setReactorState();
+   public void closeDoor(int mapid) {
+       getClient().getChannelServer().getMapFactory().getMap(mapid).setReactorState();
    }
 
-   public void openDoor(int mapid)
-   {
-	   getClient().getChannelServer().getMapFactory().getMap(mapid).resetReactors();
+   public void openDoor(int mapid) {
+       getClient().getChannelServer().getMapFactory().getMap(mapid).resetReactors();
    }
 }
