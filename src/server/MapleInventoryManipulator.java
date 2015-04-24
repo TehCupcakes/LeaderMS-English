@@ -31,14 +31,14 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
 
-import client.Equip;
+import client.inventory.Equip;
 import client.IItem;
-import client.InventoryException;
-import client.Item;
+import client.inventory.InventoryException;
+import client.inventory.Item;
 import client.MapleBuffStat;
 import client.MapleCharacter;
 import client.MapleClient;
-import client.MapleInventoryType;
+import client.inventory.MapleInventoryType;
 import config.configuration.Configuration;
 import tools.MaplePacketCreator;
 import org.slf4j.Logger;
@@ -423,7 +423,7 @@ public class MapleInventoryManipulator {
             }
         }
         if (remremove > 0) {
-            throw new RuntimeException("[INFO INV.] Itens nao disponiveis (" + itemId + ", " + (quantity - remremove) + "/" + quantity + ")");
+            throw new RuntimeException("[INV INFO] Unavailable items (" + itemId + ", " + (quantity - remremove) + "/" + quantity + ")");
         }
     }
 
@@ -586,7 +586,7 @@ public class MapleInventoryManipulator {
             type = MapleInventoryType.EQUIPPED;
         }
        if(c.getPlayer().getGMLevel() == 3) {
-            c.getSession().write(MaplePacketCreator.serverNotice(5, "GameMasters JR's nao podem dropar itens."));
+            c.getSession().write(MaplePacketCreator.serverNotice(5, "Jr. GameMasters cannot drop items."));
             return;
        }
         IItem source = c.getPlayer().getInventory(type).getItem(src);

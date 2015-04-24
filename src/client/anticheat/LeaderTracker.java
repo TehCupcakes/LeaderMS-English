@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import client.MapleCharacter;
 import client.MapleClient;
 import database.DatabaseConnection;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import tools.MaplePacketCreator;
 
 

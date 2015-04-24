@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import client.LoginCrypto;
-import net.login.LoginServer;
+import handling.login.LoginServer;
 import database.DatabaseConnection;
 
 public class AutoRegister {

@@ -23,7 +23,7 @@ package tools;
 
 import java.net.SocketAddress;
 
-import net.MaplePacket;
+import handling.MaplePacket;
 
 import org.apache.mina.common.CloseFuture;
 import org.apache.mina.common.IoFilterChain;

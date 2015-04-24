@@ -28,7 +28,7 @@ import client.ISkill;
 import client.MapleCharacter;
 import client.MapleClient;
 import client.SkillFactory;
-import net.MaplePacket;
+import handling.MaplePacket;
 import server.MapleStatEffect;
 import tools.MaplePacketCreator;
 

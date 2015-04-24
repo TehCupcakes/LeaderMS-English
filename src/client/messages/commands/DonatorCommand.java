@@ -24,7 +24,7 @@ package client.messages.commands;
 
 import client.MapleCharacter;
 import server.maps.MapleMap;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import client.MapleClient;
 import client.messages.Command;
 import client.messages.CommandDefinition;

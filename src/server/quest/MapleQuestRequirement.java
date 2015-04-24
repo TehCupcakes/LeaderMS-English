@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 import client.MapleCharacter;
-import client.MapleInventoryType;
+import client.inventory.MapleInventoryType;
 import client.MapleJob;
 import client.MapleQuestStatus;
 import provider.MapleData;

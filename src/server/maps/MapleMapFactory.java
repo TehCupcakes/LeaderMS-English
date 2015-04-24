@@ -37,7 +37,7 @@ import java.util.concurrent.ScheduledFuture;
 import client.MapleCharacter;
 import client.MapleClient;
 import database.DatabaseConnection;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import provider.MapleData;
 import provider.MapleDataProvider;
 import provider.MapleDataTool;

@@ -7,21 +7,21 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import client.Equip;
+import client.inventory.Equip;
 import client.IItem;
-import client.Item;
+import client.inventory.Item;
 import client.MapleCharacter;
 import client.MapleClient;
-import client.MapleInventory;
-import client.MapleInventoryType;
-import client.MaplePet;
+import client.inventory.MapleInventory;
+import client.inventory.MapleInventoryType;
+import client.inventory.MaplePet;
 import client.MapleQuestStatus;
 import config.configuration.Configuration;
-import net.MaplePacket;
-import net.channel.ChannelServer;
-import net.world.MapleParty;
-import net.world.MaplePartyCharacter;
-import net.world.guild.MapleGuild;
+import handling.MaplePacket;
+import handling.channel.ChannelServer;
+import handling.world.MapleParty;
+import handling.world.MaplePartyCharacter;
+import handling.world.guild.MapleGuild;
 import server.MaplePortal;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
@@ -355,7 +355,7 @@ public class AbstractPlayerInteraction {
 	}
         
 	public void worldMessage(int type, String message) {
-		net.MaplePacket packet = MaplePacketCreator.serverNotice(type, message);
+		handling.MaplePacket packet = MaplePacketCreator.serverNotice(type, message);
 		MapleCharacter chr = c.getPlayer();
 		try {
 			ChannelServer.getInstance(chr.getClient().getChannel()).getWorldInterface().broadcastMessage(chr.getName(), packet.getBytes());

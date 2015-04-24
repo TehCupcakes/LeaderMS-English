@@ -10,10 +10,10 @@
 package config.configuration;
 
 import java.util.Properties;
-import client.MapleInventoryType;
+import client.inventory.MapleInventoryType;
 import java.util.Arrays;
 import java.util.List;
-import net.world.WorldServer;
+import handling.world.WorldServer;
 import server.maps.MapleMapObjectType;
 
 public class Configuration {

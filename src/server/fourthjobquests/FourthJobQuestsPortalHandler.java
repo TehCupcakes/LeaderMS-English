@@ -4,9 +4,9 @@ import java.util.Collection;
 import client.MapleCharacter;
 import client.MapleJob;
 import client.messages.ServernoticeMapleClientMessageCallback;
-import net.StringValueHolder;
-import net.world.MapleParty;
-import net.world.MaplePartyCharacter;
+import handling.StringValueHolder;
+import handling.world.MapleParty;
+import handling.world.MaplePartyCharacter;
 import tools.MaplePacketCreator;
 
 /**

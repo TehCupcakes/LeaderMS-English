@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import client.MapleCharacter;
 import database.DatabaseConnection;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 
 /**
  *

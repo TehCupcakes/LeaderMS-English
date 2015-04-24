@@ -26,7 +26,7 @@ import java.awt.Point;
 import client.MapleCharacter;
 import client.MapleClient;
 import client.anticheat.CheatingOffense;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import scripting.portal.PortalScriptManager;
 import server.MaplePortal;
 import server.fourthjobquests.FourthJobQuestsPortalHandler;

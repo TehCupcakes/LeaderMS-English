@@ -38,12 +38,12 @@ import java.util.List;
 import java.util.Set;
 
 import client.IItem;
-import client.Item;
+import client.inventory.Item;
 import client.MapleClient;
-import client.MapleInventoryType;
-import client.MaplePet;
+import client.inventory.MapleInventoryType;
+import client.inventory.MaplePet;
 import database.DatabaseConnection;
-import net.PacketProcessor;
+import handling.PacketProcessor;
 import tools.MaplePacketCreator;
 
 /**

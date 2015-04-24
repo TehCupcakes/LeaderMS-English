@@ -2,8 +2,8 @@ package tools.data.output;
 
 import java.awt.Point;
 import java.io.ByteArrayOutputStream;
-import net.ByteArrayMaplePacket;
-import net.MaplePacket;
+import handling.ByteArrayMaplePacket;
+import handling.MaplePacket;
 import tools.HexTool;
 
 public class MaplePacketLittleEndianWriter extends GenericLittleEndianWriter {

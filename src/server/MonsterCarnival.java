@@ -7,9 +7,9 @@ package server;
 
 import java.util.concurrent.ScheduledFuture;
 import client.MapleCharacter;
-import net.world.MapleParty;
-import net.channel.ChannelServer;
-import net.world.MaplePartyCharacter;
+import handling.world.MapleParty;
+import handling.channel.ChannelServer;
+import handling.world.MaplePartyCharacter;
 import server.maps.MapleMap;
 import tools.MaplePacketCreator;
 

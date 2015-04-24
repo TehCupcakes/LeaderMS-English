@@ -13,8 +13,8 @@ package server.maps;
 
 import client.MapleCharacter;
 import client.MapleClient;
-import client.MapleInventory;
-import client.MapleInventoryType;
+import client.inventory.MapleInventory;
+import client.inventory.MapleInventoryType;
 import server.life.MapleLifeFactory;
 import server.life.MapleNPC;
 import tools.MaplePacketCreator;

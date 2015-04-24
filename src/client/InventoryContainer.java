@@ -21,6 +21,7 @@
 
 package client;
 
+import client.inventory.MapleInventory;
 import java.util.Collection;
 
 public interface InventoryContainer {

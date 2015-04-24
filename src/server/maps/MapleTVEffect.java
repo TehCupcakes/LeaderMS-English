@@ -3,9 +3,9 @@ package server.maps;
 import java.rmi.RemoteException;
 import java.util.List;
 import client.MapleCharacter;
-import net.MaplePacket;
+import handling.MaplePacket;
 import server.TimerManager;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import tools.MaplePacketCreator;
 
 public class MapleTVEffect {

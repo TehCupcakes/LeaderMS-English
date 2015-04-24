@@ -32,15 +32,15 @@ import java.util.Map;
 import java.util.Random;
 
 import client.ISkill;
-import client.InventoryException;
+import client.inventory.InventoryException;
 import client.MapleCharacter;
-import client.MapleInventoryType;
+import client.inventory.MapleInventoryType;
 import client.MapleJob;
 import client.MapleQuestStatus;
 import client.MapleStat;
 import client.SkillFactory;
 import client.messages.ServernoticeMapleClientMessageCallback;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import provider.MapleData;
 import provider.MapleDataTool;
 import server.MapleInventoryManipulator;

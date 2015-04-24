@@ -32,7 +32,7 @@ import client.messages.CommandDefinition;
 import client.messages.IllegalCommandSyntaxException;
 import client.messages.MessageCallback;
 import client.status.MonsterStatus;
-import net.MaplePacket;
+import handling.MaplePacket;
 import server.MaplePortal;
 import server.TimerManager;
 import server.life.MapleLifeFactory;

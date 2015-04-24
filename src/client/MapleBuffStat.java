@@ -22,7 +22,7 @@
 package client;
 
 import java.io.Serializable;
-import net.LongValueHolder;
+import handling.LongValueHolder;
 
 public enum MapleBuffStat implements LongValueHolder, Serializable {
 	MORPH(0x2),

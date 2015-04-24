@@ -9,7 +9,7 @@ import client.MapleCharacter;
 import client.ScriptDebug;
 import java.lang.reflect.UndeclaredThrowableException;
 import javax.script.ScriptException;
-import net.world.MaplePartyCharacter;
+import handling.world.MaplePartyCharacter;
 import scripting.AbstractScriptManager;
 import tools.FilePrinter;
 

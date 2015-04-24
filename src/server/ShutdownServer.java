@@ -29,7 +29,7 @@ package server;
 import java.sql.SQLException;
 
 import database.DatabaseConnection;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 
 /**
  *

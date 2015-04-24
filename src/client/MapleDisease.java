@@ -21,7 +21,7 @@
 
 package client;
 
-import net.LongValueHolder;
+import handling.LongValueHolder;
 
 public enum MapleDisease implements LongValueHolder {
 

@@ -28,7 +28,7 @@ package scripting.npc;
 
 import java.util.List;
 import client.MapleCharacter;
-import net.world.MaplePartyCharacter;
+import handling.world.MaplePartyCharacter;
 /**
  *
  * @author Matze

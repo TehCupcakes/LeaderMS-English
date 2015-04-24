@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import client.MapleCharacter;
-import net.MaplePacket;
+import handling.MaplePacket;
 import tools.MaplePacketCreator;
 
 /**

@@ -33,11 +33,11 @@ import java.util.Random;
 import java.util.Map.Entry;
 import java.util.TimeZone;
 
-import client.Equip;
+import client.inventory.Equip;
 import client.IItem;
 import client.MapleClient;
-import client.MapleInventoryType;
-import client.MapleWeaponType;
+import client.inventory.MapleInventoryType;
+import client.inventory.MapleWeaponType;
 import client.SkillFactory;
 import java.util.WeakHashMap;
 import provider.MapleData;

@@ -10,8 +10,8 @@ package config.Game;
 
 import java.util.Random;
 import client.MapleClient;
-import client.MapleInventoryType;
-import net.AbstractMaplePacketHandler;
+import client.inventory.MapleInventoryType;
+import handling.AbstractMaplePacketHandler;
 import tools.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 

@@ -22,7 +22,7 @@
 package client.status;
 
 import java.io.Serializable;
-import net.IntValueHolder;
+import handling.IntValueHolder;
 
 public enum MonsterStatus implements IntValueHolder, Serializable {
         NEUTRALISE(0x02),

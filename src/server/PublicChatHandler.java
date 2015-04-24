@@ -5,7 +5,7 @@ import java.util.Map;
 import client.MapleCharacter;
 import client.MapleClient;
 import client.messages.WhisperMapleClientMessageCallback;
-import net.channel.ChannelServer;
+import handling.channel.ChannelServer;
 import tools.MaplePacketCreator;
 import tools.StringUtil;
 

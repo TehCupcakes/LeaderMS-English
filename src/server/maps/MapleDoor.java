@@ -33,7 +33,7 @@ import java.util.Comparator;
 import java.util.List;
 import client.MapleCharacter;
 import client.MapleClient;
-import net.world.MaplePartyCharacter;
+import handling.world.MaplePartyCharacter;
 import server.MaplePortal;
 import tools.MaplePacketCreator;
 

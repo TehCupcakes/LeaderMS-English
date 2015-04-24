@@ -10,8 +10,8 @@ package config.Game;
 
 import client.MapleCharacter;
 import client.MapleClient;
-import client.MapleInventory;
-import client.MapleInventoryType;
+import client.inventory.MapleInventory;
+import client.inventory.MapleInventoryType;
 import config.configuration.Configuration;
 import java.io.BufferedReader;
 import java.io.FileReader;

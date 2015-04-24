@@ -3,7 +3,7 @@ package server.PlayerInteraction;
 import java.util.List;
 import client.MapleCharacter;
 import client.MapleClient;
-import net.MaplePacket;
+import handling.MaplePacket;
 
 public interface IPlayerInteractionManager {
 

@@ -21,7 +21,7 @@
 
 package server.maps;
 
-import net.IntValueHolder;
+import handling.IntValueHolder;
 
 public enum SummonMovementType implements IntValueHolder {
 	STATIONARY(0), FOLLOW(1), CIRCLE_FOLLOW(3);
