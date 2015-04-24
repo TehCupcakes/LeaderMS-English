@@ -25,7 +25,7 @@ import client.MapleDisease;
 import java.util.ArrayList;
 import java.util.List;
 import handling.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class CancelDebuffHandler extends AbstractMaplePacketHandler {

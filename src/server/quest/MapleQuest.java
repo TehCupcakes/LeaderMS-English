@@ -44,7 +44,7 @@ import provider.MapleDataProvider;
 import provider.MapleDataProviderFactory;
 import provider.MapleDataTool;
 import tools.FilePrinter;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

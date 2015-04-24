@@ -44,7 +44,7 @@ import client.inventory.MapleInventoryType;
 import database.DatabaseConnection;
 import database.DatabaseException;
 import tools.FilePrinter;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.StringUtil;
 
 /**

@@ -67,7 +67,7 @@ import server.PlayerInteraction.MaplePlayerShopItem;
 import server.TimerManager;
 import tools.IPAddressTool;
 import tools.MapleAESOFB;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 import tools.Pair;
 
 import org.apache.mina.common.IoSession;
@@ -146,7 +146,7 @@ public class MapleClient {
 	}
 
 	public void sendCharList(int server) {
-		this.session.write(MaplePacketCreator.getCharList(this, server));
+		this.session.write(PacketHelper.getCharList(this, server));
 	}
 
 	public List<MapleCharacter> loadCharacters(int serverId) { // TODO make this less costly zZz

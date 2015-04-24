@@ -37,7 +37,7 @@ import handling.MaplePacket;
 import handling.channel.ChannelServer;
 import handling.channel.handler.OXHandler;
 import server.MapleOxQuiz;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 import tools.StringUtil;
 
 public class OtherCommands implements Command {
@@ -174,14 +174,14 @@ public class OtherCommands implements Command {
            mc.dropMessage("You can also use it as !setteam <red or blue>");
        }
 	} else if (splitted[0].equals("startcpq")) {
-            c.getSession().write(MaplePacketCreator.startCPQ());
+            c.getSession().write(MonsterCarnivalPacket.startCPQ());
 	} else if (splitted[0].equals("gaincp")) {
 		if (splitted.length != 4) {
 			mc.dropMessage("Please use !gaincp <team> <amount> <newamount>");
 		} else {
-			c.getSession().write(MaplePacketCreator.obtainCP(Integer.parseInt(splitted[2]), Integer.parseInt(splitted[3])));
-			c.getSession().write(MaplePacketCreator.updateCP(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[2]), Integer.parseInt(splitted[3])));
-			c.getSession().write(MaplePacketCreator.showCPQMobs());
+			c.getSession().write(MonsterCarnivalPacket.obtainCP(Integer.parseInt(splitted[2]), Integer.parseInt(splitted[3])));
+			c.getSession().write(MonsterCarnivalPacket.updateCP(Integer.parseInt(splitted[1]), Integer.parseInt(splitted[2]), Integer.parseInt(splitted[3])));
+			c.getSession().write(MonsterCarnivalPacket.showCPQMobs());
 		}
 	}
 }

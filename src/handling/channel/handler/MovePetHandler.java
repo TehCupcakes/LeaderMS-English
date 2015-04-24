@@ -5,7 +5,7 @@ import java.util.List;
 import client.MapleCharacter;
 import client.MapleClient;
 import server.movement.LifeMovementFragment;
-import tools.MaplePacketCreator;
+import tools.packet.PetPacket;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.data.input.StreamUtil;
 
@@ -27,6 +27,6 @@ import tools.data.input.StreamUtil;
             return;
         }
         player.getPet(slot).updatePosition(res);
-        player.getMap().broadcastMessage(player, MaplePacketCreator.movePet(player.getId(), petId, slot, res), false);
+        player.getMap().broadcastMessage(player, PetPacket.movePet(player.getId(), petId, slot, res), false);
     }
 }

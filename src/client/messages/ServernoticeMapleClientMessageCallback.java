@@ -22,7 +22,7 @@
 package client.messages;
 
 import client.MapleClient;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class ServernoticeMapleClientMessageCallback implements MessageCallback {
 	private MapleClient client;

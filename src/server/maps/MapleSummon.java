@@ -5,7 +5,7 @@ import java.awt.Point;
 import client.MapleCharacter;
 import client.MapleClient;
 import client.SkillFactory;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

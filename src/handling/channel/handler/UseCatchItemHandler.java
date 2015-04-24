@@ -6,7 +6,7 @@ import handling.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.life.MapleMonster;
 import server.maps.MapleMap;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**

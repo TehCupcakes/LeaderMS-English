@@ -43,7 +43,7 @@ import handling.world.remote.WorldLocation;
 import server.MaplePortal;
 import server.MapleTrade;
 import server.maps.MapleMap;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.StringUtil;
 
 public class HelpCommand implements Command {

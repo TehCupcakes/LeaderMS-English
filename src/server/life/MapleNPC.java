@@ -24,7 +24,7 @@ package server.life;
 import client.MapleClient;
 import server.MapleShopFactory;
 import server.maps.MapleMapObjectType;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class MapleNPC extends AbstractLoadedMapleLife {
 	private MapleNPCStats stats;

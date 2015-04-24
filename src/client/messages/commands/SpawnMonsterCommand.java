@@ -33,7 +33,7 @@ import config.configuration.Configuration;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.life.MapleMonsterStats;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 public class SpawnMonsterCommand implements Command {
 	private static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SpawnMonsterCommand.class);
 

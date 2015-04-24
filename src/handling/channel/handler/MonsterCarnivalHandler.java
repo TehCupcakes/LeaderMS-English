@@ -29,7 +29,8 @@ import handling.AbstractMaplePacketHandler;
 import server.life.MapleLifeFactory;
 import server.life.MapleMonster;
 import server.life.MobSkillFactory;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
+import tools.packet.MonsterCarnivalPacket;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class MonsterCarnivalHandler extends AbstractMaplePacketHandler {
@@ -191,7 +192,7 @@ public class MonsterCarnivalHandler extends AbstractMaplePacketHandler {
 			c.getSession().write(MaplePacketCreator.enableActions());
 		}
 		c.getPlayer().gainCP(-neededCP);
-		c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.playerSummoned(c.getPlayer().getName(), tab, num));
+		c.getPlayer().getMap().broadcastMessage(MonsterCarnivalPacket.playerSummoned(c.getPlayer().getName(), tab, num));
     }
 
     public int getMonsterIdByNum(int num) {

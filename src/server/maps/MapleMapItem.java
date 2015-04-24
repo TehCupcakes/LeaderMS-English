@@ -4,7 +4,7 @@ import java.awt.Point;
 import client.IItem;
 import client.MapleCharacter;
 import client.MapleClient;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class MapleMapItem extends AbstractMapleMapObject {
     protected IItem item;

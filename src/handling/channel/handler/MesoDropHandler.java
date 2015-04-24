@@ -30,7 +30,7 @@ package handling.channel.handler;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
 import server.AutobanManager;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**

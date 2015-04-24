@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import server.MapleInventoryManipulator;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

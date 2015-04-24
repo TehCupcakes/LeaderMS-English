@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
 import client.SkillFactory;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class SkillEffectHandler extends AbstractMaplePacketHandler {

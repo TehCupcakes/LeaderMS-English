@@ -25,7 +25,7 @@ import handling.channel.ChannelServer;
 import server.DueyPackages;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

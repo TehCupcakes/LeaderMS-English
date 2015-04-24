@@ -25,7 +25,7 @@ import java.util.Calendar;
 
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public final class DeleteCharHandler extends AbstractMaplePacketHandler {

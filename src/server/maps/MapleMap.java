@@ -39,6 +39,14 @@ import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.Calendar;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import client.inventory.Equip;
 import client.IItem;
@@ -54,14 +62,6 @@ import client.status.MonsterStatus;
 import client.status.MonsterStatusEffect;
 import config.configuration.Configuration;
 import database.DatabaseConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import handling.MaplePacket;
 import handling.channel.ChannelServer;
 import handling.channel.pvp.MaplePvp;
@@ -83,9 +83,9 @@ import server.life.MapleNPC;
 import server.life.MobSkill;
 import server.life.MobSkillFactory;
 import server.life.SpawnPoint;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
+import tools.packet.PetPacket;
 import tools.Pair;
-import tools.Randomizer;
 
 public class MapleMap {
 
@@ -4031,7 +4031,7 @@ public class MapleMap {
                 MaplePet[] pets = chr.getPets();
                 for (int i = 0; i < 3; i++) {
                     if (pets[i] != null) {
-                        broadcastMessage(chr, MaplePacketCreator.showPet(chr, pets[i], false, false), false);
+                        broadcastMessage(chr, PetPacket.showPet(chr, pets[i], false, false), false);
                     }
                 }
                 if (chr.getChalkboard() != null) {
@@ -4042,7 +4042,7 @@ public class MapleMap {
                 MaplePet[] pets = chr.getPets();
                 for (int i = 0; i < 3; i++) {
                     if (pets[i] != null) {
-                        broadcastGMMessage(chr, MaplePacketCreator.showPet(chr, pets[i], false, false), false);
+                        broadcastGMMessage(chr, PetPacket.showPet(chr, pets[i], false, false), false);
                     }
                 }
                 if (chr.getChalkboard() != null) {
@@ -4060,7 +4060,7 @@ public class MapleMap {
             MaplePet[] pets = chr.getPets();
             for (int i = 0; i < 3; i++) {
                 if (pets[i] != null) {
-                    chr.getClient().getSession().write(MaplePacketCreator.showPet(chr, pets[i], false, false));
+                    chr.getClient().getSession().write(PetPacket.showPet(chr, pets[i], false, false));
                 }
             }
             this.mapobjects.put(Integer.valueOf(chr.getObjectId()), chr);

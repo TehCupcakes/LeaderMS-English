@@ -31,7 +31,7 @@ import client.MapleCharacter;
 import client.MapleJob;
 import database.DatabaseConnection;
 import handling.channel.ChannelServer;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

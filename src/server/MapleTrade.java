@@ -28,7 +28,7 @@ import java.util.Map;
 import client.IItem;
 import client.MapleCharacter;
 import client.inventory.MapleInventoryType;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

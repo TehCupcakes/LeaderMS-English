@@ -19,7 +19,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package tools;
+package tools.packet;
 
 import handling.world.guild.MapleGuild;
 import handling.world.guild.MapleGuildSummary;
@@ -33,12 +33,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,7 +45,6 @@ import java.sql.SQLException;
 import client.BuddylistEntry;
 import client.IEquip;
 import client.IItem;
-import client.ISkill;
 import client.inventory.Item;
 import client.MapleBuffStat;
 import client.MapleCharacter;
@@ -61,7 +58,6 @@ import client.MapleQuestStatus;
 import client.MapleStat;
 import client.IEquip.ScrollResult;
 import client.MapleDisease;
-import client.MapleJob;
 import client.inventory.MapleRing;
 import client.SkillMacro;
 import client.status.MonsterStatus;
@@ -76,7 +72,6 @@ import handling.login.LoginServer;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
 import handling.world.PartyOperation;
-import handling.world.PlayerCoolDownValueHolder;
 import server.MapleItemInformationProvider;
 import server.PlayerInteraction.MaplePlayerShopItem;
 import server.MapleShopItem;
@@ -90,7 +85,6 @@ import server.movement.LifeMovementFragment;
 import tools.data.output.LittleEndianWriter;
 import tools.data.output.MaplePacketLittleEndianWriter;
 import server.DueyPackages;
-import server.MTSItemInfo;
 import server.PlayerInteraction.HiredMerchant;
 import server.PlayerInteraction.IPlayerInteractionManager;
 import server.PlayerInteraction.MapleMiniGame;
@@ -99,6 +93,11 @@ import server.life.MapleNPCStats;
 import server.life.MobSkill;
 import server.maps.MapleSummon;
 import server.maps.PlayerNPCMerchant;
+import tools.BitTools;
+import tools.HexTool;
+import tools.KoreanDateUtil;
+import tools.Pair;
+import tools.StringUtil;
 
 /**
  * Provides all MapleStory packets needed in one place.
@@ -115,19 +114,6 @@ public class MaplePacketCreator {
 	private final static byte[] CHAR_INFO_MAGIC = new byte[] { (byte) 0xff, (byte) 0xc9, (byte) 0x9a, 0x3b };
 	private final static byte[] ITEM_MAGIC = new byte[] { (byte) 0x80, 5 };
 	public static final List<Pair<MapleStat, Integer>> EMPTY_STATUPDATE = Collections.emptyList();
-
-	private final static long FT_UT_OFFSET = 116444592000000000L; // EDT
-
-    
-	private static long getKoreanTimestamp(long realTimestamp) {
-		long time = (realTimestamp / 1000 / 60); // convert to minutes
-		return ((time * 600000000) + FT_UT_OFFSET);
-	}
-	
-	private static long getTime(long realTimestamp) {
-		long time = (realTimestamp / 1000); // convert to seconds
-		return ((time * 10000000) + FT_UT_OFFSET);
-	}
 	
 	/**
 	 * Sends a hello packet.
@@ -194,7 +180,7 @@ public class MaplePacketCreator {
         mplew.writeShort(SendPacketOpcode.SEND_TV.getValue()); // SEND_TV = 0x11D
         mplew.write(partner != null ? 2 : 0);
         mplew.write(type); // type   Heart = 2  Star = 1  Normal = 0
-        addCharLook(mplew, chr, false);
+        PacketHelper.addCharLook(mplew, chr, false);
         mplew.writeMapleAsciiString(chr.getName());
         if (partner != null) {
             mplew.writeMapleAsciiString(partner.getName());
@@ -210,7 +196,7 @@ public class MaplePacketCreator {
         }
         mplew.writeInt(1337); // time limit lol 'Your thing still start in blah blah seconds'
         if (partner != null) {
-            addCharLook(mplew, partner, false);
+            PacketHelper.addCharLook(mplew, partner, false);
         }
         return mplew.getPacket();
         }  
@@ -485,153 +471,6 @@ public class MaplePacketCreator {
 
         return mplew.getPacket();
     }
-	
-	/**
-	 * Gets a packet with a list of characters.
-	 * 
-	 * @param c The MapleClient to load characters of.
-	 * @param serverId The ID of the server requested.
-	 * @return The character list packet.
-	 */
-	public static MaplePacket getCharList(MapleClient c, int serverId) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-		mplew.writeShort(SendPacketOpcode.CHARLIST.getValue());
-		mplew.write(0);
-		List<MapleCharacter> chars = c.loadCharacters(serverId);
-		mplew.write((byte) chars.size());
-		for (MapleCharacter chr : chars) {
-			addCharEntry(mplew, chr);
-		}
-		mplew.writeInt(LoginServer.getInstance().getMaxCharacters());
-
-		return mplew.getPacket();
-	}
-
-	/**
-	 * Adds character stats to an existing MaplePacketLittleEndianWriter.
-	 * 
-	 * @param mplew The MaplePacketLittleEndianWrite instance to write the stats to.
-	 * @param chr The character to add the stats of.
-	 */
-private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
-        mplew.writeInt(chr.getId()); // character id
-
-        mplew.writeAsciiString(chr.getName());
-        for (int x = chr.getName().length(); x < 13; x++) { // fill to maximum name length
-
-            mplew.write(0);
-        }
-        mplew.write(chr.getGender()); // gender (0 = male, 1 = female)
-
-        mplew.write(chr.getSkinColor().getId()); // skin color
-
-        mplew.writeInt(chr.getFace()); // face
-
-        mplew.writeInt(chr.getHair()); // hair
-
-        mplew.writeLong(0);
-        mplew.writeLong(0);
-        mplew.writeLong(0);
-        mplew.write(chr.getLevel()); // level
-
-        mplew.writeShort(chr.getJob().getId()); // job
-
-        mplew.writeShort(chr.getStr()); // str
-
-        mplew.writeShort(chr.getDex()); // dex
-
-        mplew.writeShort(chr.getInt()); // int
-
-        mplew.writeShort(chr.getLuk()); // luk
-
-        mplew.writeShort(chr.getHp()); // hp (?)
-
-        mplew.writeShort(chr.getMaxHp()); // maxhp
-
-        mplew.writeShort(chr.getMp()); // mp (?)
-
-        mplew.writeShort(chr.getMaxMp()); // maxmp
-
-        mplew.writeShort(chr.getRemainingAp()); // remaining ap
-
-        mplew.writeShort(chr.getRemainingSp()); // remaining sp
-
-        mplew.writeInt(chr.getExp()); // current exp
-
-        mplew.writeShort(chr.getFame()); // fame
-
-        mplew.writeInt(0);
-        mplew.writeInt(chr.getMapId()); // current map id
-
-        mplew.write(chr.getInitialSpawnpoint()); // spawnpoint
-
-        mplew.writeInt(0);
-    }
-	/**
-	 * Adds the aesthetic aspects of a character to an existing
-	 * MaplePacketLittleEndianWriter.
-	 * 
-	 * @param mplew The MaplePacketLittleEndianWrite instance to write the stats to.
-	 * @param chr The character to add the looks of.
-	 * @param mega Unknown
-	 */
-    private static void addCharLook(MaplePacketLittleEndianWriter mplew, MapleCharacter chr, boolean mega) {
-        mplew.write(chr.getGender());
-        mplew.write(chr.getSkinColor().getId()); // skin color
-
-        mplew.writeInt(chr.getFace()); // face
-        // variable length
-
-        mplew.write(mega ? 0 : 1);
-        mplew.writeInt(chr.getHair()); // hair
-
-        MapleInventory equip = chr.getInventory(MapleInventoryType.EQUIPPED);
-        // Map<Integer, Integer> equipped = new LinkedHashMap<Integer,
-        // Integer>();
-        Map<Byte, Integer> myEquip = new LinkedHashMap<Byte, Integer>();
-        Map<Byte, Integer> maskedEquip = new LinkedHashMap<Byte, Integer>();
-        for (IItem item : equip.list()) {
-            byte pos = (byte) (item.getPosition() * -1);
-            if (pos < 100 && myEquip.get(pos) == null) {
-                myEquip.put(pos, item.getItemId());
-            } else if (pos > 100 && pos != 111) { // don't ask. o.o
-                pos -= 100;
-                if (myEquip.get(pos) != null) {
-                    maskedEquip.put(pos, myEquip.get(pos));
-                }
-                myEquip.put(pos, item.getItemId());
-            } else if (myEquip.get(pos) != null) {
-                maskedEquip.put(pos, item.getItemId());
-            }
-        }
-        for (Entry<Byte, Integer> entry : myEquip.entrySet()) {
-            mplew.write(entry.getKey());
-            mplew.writeInt(entry.getValue());
-        }
-        mplew.write(0xFF); // end of visible itens
-        // masked itens
-
-        for (Entry<Byte, Integer> entry : maskedEquip.entrySet()) {
-            mplew.write(entry.getKey());
-            mplew.writeInt(entry.getValue());
-        }
-        /*
-         * for (IItem item : equip.list()) { byte pos = (byte)(item.getPosition() * -1); if (pos > 100) {
-         * mplew.write(pos - 100); mplew.writeInt(item.getItemId()); } }
-         */
-        // ending markers
-        mplew.write(0xFF);
-        IItem cWeapon = equip.getItem((byte) -111);
-        if (cWeapon != null) {
-            mplew.writeInt(cWeapon.getItemId());
-        } else {
-            mplew.writeInt(0); // cashweapon
-
-        }
-        mplew.writeInt(0);
-        mplew.writeLong(0);
-    }
  
  
  /*
@@ -677,27 +516,6 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         }
     }
 */ 
-	/**
-	 * Adds an entry for a character to an existing
-	 * MaplePacketLittleEndianWriter.
-	 * 
-	 * @param mplew The MaplePacketLittleEndianWrite instance to write the stats to.
-	 * @param chr The character to add.
-	 */
-	private static void addCharEntry(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
-		addCharStats(mplew, chr);
-		addCharLook(mplew, chr, false);
-		if (chr.getJob().isA(MapleJob.GM)) {
-			mplew.write(0);
-			return;
-		}
-		mplew.write(1); // world rank enabled (next 4 ints are not sent if disabled)
-		mplew.writeInt(chr.getRank()); // world rank
-		mplew.writeInt(chr.getRankMove()); // move (negative is downwards)
-		mplew.writeInt(chr.getJobRank()); // job rank
-		mplew.writeInt(chr.getJobRankMove()); // move (negative is downwards)
-
-	}
 
 	/**
 	 * Adds a quest info entry for a character to an existing
@@ -743,7 +561,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.writeShort(0);
         mplew.writeInt(new Random().nextInt()); // seed the maplestory rng with a random number <3
         mplew.write(HexTool.getByteArrayFromHexString("F8 17 D7 13 CD C5 AD 78"));
-        addCharWarp(mplew, chr);
+        PacketHelper.addCharWarp(mplew, chr);
         addQuestInfo(mplew, chr);
        /*
         00 00
@@ -839,11 +657,11 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         }
         maps.clear();
         mplew.writeInt(0);
-        mplew.writeLong(getTime(System.currentTimeMillis()));
+        mplew.writeLong(PacketHelper.getTime(System.currentTimeMillis()));
         return mplew.getPacket();
     }
           
-           private static void checkRing(MaplePacketLittleEndianWriter mplew, List<MapleRing> ringlist) {
+    private static void checkRing(MaplePacketLittleEndianWriter mplew, List<MapleRing> ringlist) {
         if (ringlist.isEmpty()) {
             mplew.write(0);
         } else {
@@ -1087,191 +905,6 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.write(animated ? 4 : 1); // ?
         return mplew.getPacket();
     }
-	/**
-     * Adds info about an item to an existing MaplePacketLittleEndianWriter.
-     *
-     * @param mplew The MaplePacketLittleEndianWriter to write to.
-     * @param item The item to write info about.
-     */
-   /**
-     * Adds info about an item to an existing MaplePacketLittleEndianWriter.
-     *
-     * @param mplew The MaplePacketLittleEndianWriter to write to.
-     * @param item The item to write info about.
-     */
-    protected static void addItemInfo(MaplePacketLittleEndianWriter mplew, IItem item) {
-        addItemInfo(mplew, item, false, false);
-    }
-
-    /**
-     * Adds expiration time info to an existing MaplePacketLittleEndianWriter.
-     *
-     * @param mplew The MaplePacketLittleEndianWriter to write to.
-     * @param time The expiration time.
-     * @param showexpirationtime Show the expiration time?
-     */
-    private static void addExpirationTime(MaplePacketLittleEndianWriter mplew, long time, boolean showexpirationtime) {
-        if (time != 0) {
-            mplew.writeInt(KoreanDateUtil.getItemTimestamp(time));
-        } else {
-            mplew.writeInt(400967355);
-        }
-        mplew.write(showexpirationtime ? 1 : 2);
-    }
-    
-     public static MaplePacket itemMegaphone(String msg, boolean whisper, int channel, IItem item) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.SERVERMESSAGE.getValue());
-        mplew.write(8);
-        mplew.writeMapleAsciiString(msg);
-        mplew.write(channel - 1);
-        mplew.write(whisper ? 1 : 0);
-        if (item == null) {
-            mplew.write(0);
-        } else {
-            addItemInfo(mplew, item);
-        }
-        return mplew.getPacket();
-    }
-  
-   /**
-     * Adds item info to existing MaplePacketLittleEndianWriter.
-     * 
-     * @param mplew The MaplePacketLittleEndianWriter to write to.
-     * @param item The item to add info about.
-     * @param zeroPosition Is the position zero?
-     * @param leaveOut Leave out the item if position is zero?
-     */
-    private static void addItemInfo(MaplePacketLittleEndianWriter mplew, IItem item, boolean zeroPosition, boolean leaveOut) {
-        MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
-        boolean ring = false;
-        IEquip equip = null;
-        if (item.getType() == IItem.EQUIP) {
-            equip = (IEquip) item;
-            if (equip.getRingId() > -1) {
-                ring = true;
-            }
-        }
-        byte pos = item.getPosition();
-        boolean masking = false;
-        boolean equipped = false;
-        if (zeroPosition) {
-            if (!leaveOut) {
-                mplew.write(0);
-            }
-        } else if (pos <= (byte) -1) {
-            pos *= -1;
-            if (pos > 100 || ring) {
-                masking = true;
-                mplew.write(0);
-                mplew.write(pos - 100);
-            } else {
-                mplew.write(pos);
-            }
-            equipped = true;
-        } else {
-            mplew.write(item.getPosition());
-        }
-        if (item.getPetId() > -1) {
-            mplew.write(3);
-        } else {
-            mplew.write(item.getType());
-        }
-        mplew.writeInt(item.getItemId());
-        if (ring) {
-            mplew.write(1);
-            mplew.writeInt(equip.getRingId());
-            mplew.writeInt(0);
-        }
-        if (item.getPetId() > -1) {
-            MaplePet pet = MaplePet.loadFromDb(item.getItemId(), item.getPosition(), item.getPetId());
-            String petname = pet.getName();
-            mplew.write(1);
-            mplew.writeInt(item.getPetId());
-            mplew.writeInt(0);
-            mplew.write(0);
-            mplew.write(ITEM_MAGIC);
-            mplew.write(HexTool.getByteArrayFromHexString("BB 46 E6 17 02"));
-            if (petname.length() > 13)
-                petname = petname.substring(0, 13);
-            mplew.writeAsciiString(petname);
-            for (int i = petname.length(); i < 13; i++)
-                mplew.write(0);
-            mplew.write(pet.getLevel());
-            mplew.writeShort(pet.getCloseness());
-            mplew.write(pet.getFullness());
-            mplew.writeLong(getKoreanTimestamp((long) (System.currentTimeMillis() * 1.2)));
-            mplew.writeInt(0);
-            return;
-        }
-        if (masking && !ring) {
-            mplew.write(HexTool.getByteArrayFromHexString("01 41 B4 38 00 00 00 00 00 80 20 6F"));
-            addExpirationTime(mplew, 0, false);
-        } else if (ring) {
-            mplew.writeLong(getKoreanTimestamp((long) (System.currentTimeMillis() * 1.2)));
-        } else {
-            mplew.writeShort(0);
-            mplew.write(ITEM_MAGIC);
-            addExpirationTime(mplew, 0, false);
-        }
-        if (item.getType() == IItem.EQUIP) {
-            mplew.write(equip.getUpgradeSlots());
-            mplew.write(equip.getLevel());
-            mplew.writeShort(equip.getStr()); // str
-
-            mplew.writeShort(equip.getDex()); // dex
-
-            mplew.writeShort(equip.getInt()); // int
-
-            mplew.writeShort(equip.getLuk()); // luk
-
-            mplew.writeShort(equip.getHp()); // hp
-
-            mplew.writeShort(equip.getMp()); // mp
-
-            mplew.writeShort(equip.getWatk()); // watk
-
-            mplew.writeShort(equip.getMatk()); // matk
-
-            mplew.writeShort(equip.getWdef()); // wdef
-
-            mplew.writeShort(equip.getMdef()); // mdef
-
-            mplew.writeShort(equip.getAcc()); // accuracy
-
-            mplew.writeShort(equip.getAvoid()); // avoid
-
-            mplew.writeShort(equip.getHands()); // hands
-
-            mplew.writeShort(equip.getSpeed()); // speed
-
-            mplew.writeShort(equip.getJump()); // jump
-
-            mplew.writeMapleAsciiString(equip.getOwner());
-
-            // 0 normal; 1 locked
-            mplew.write(equip.getLocked());
-
-            if (ring && !equipped) {
-                mplew.write(0);
-            }
-
-            if (!masking && !ring) {
-                mplew.write(0);
-                mplew.writeLong(0); // values of these don't seem to matter at all
-            }
-        } else {
-            mplew.writeShort(item.getQuantity());
-            mplew.writeMapleAsciiString(item.getOwner());
-            mplew.writeShort(0); // this seems to end the item entry
-            // but only if its not a THROWING STAR :))9 O.O!
-
-            if (ii.isThrowingStar(item.getItemId()) || ii.isBullet(item.getItemId())) {
-                mplew.write(HexTool.getByteArrayFromHexString("02 00 00 00 54 00 00 34"));
-            }
-        }
-    }  
-
 
 	/**
 	 * Gets the response to a relog request.
@@ -1399,7 +1032,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		}
 		mplew.writeInt(channel - 1); // channel
 		mplew.write(ear ? 1 : 0);
-		addCharLook(mplew, chr, true);
+		PacketHelper.addCharLook(mplew, chr, true);
 
 		return mplew.getPacket();
 	}
@@ -1606,58 +1239,48 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		return mplew.getPacket();
     }
 
+    /**
+     * Gets a stop control monster packet.
+     * 
+     * @param oid The ObjectID of the monster to stop controlling.
+     * @return The stop control monster packet.
+     */
 
-	/**
-	 * Gets a stop control monster packet.
-	 * 
-	 * @param oid The ObjectID of the monster to stop controlling.
-	 * @return The stop control monster packet.
-	 */
-    
-    public static MaplePacket showCPQMobs() {
+    public static MaplePacket stopControllingMonster(int oid) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.SHOW_FAKE_MONSTER.getValue());
 
-		mplew.writeInt(0);
+        mplew.writeShort(SendPacketOpcode.SPAWN_MONSTER_CONTROL.getValue());
+        mplew.write(0);
+        mplew.writeInt(oid);
 
-		return mplew.getPacket();
-	}
+        return mplew.getPacket();
+    }
 
-	public static MaplePacket stopControllingMonster(int oid) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+    /**
+     * Gets a response to a move monster packet.
+     * 
+     * @param objectid The ObjectID of the monster being moved.
+     * @param moveid The movement ID.
+     * @param currentMp The current MP of the monster.
+     * @param useSkills Can the monster use skills?
+     * @return The move response packet.
+     */
+    public static MaplePacket moveMonsterResponse(int objectid, short moveid, int currentMp, boolean useSkills) {
+        return moveMonsterResponse(objectid, moveid, currentMp, useSkills, 0, 0);
+    }
 
-		mplew.writeShort(SendPacketOpcode.SPAWN_MONSTER_CONTROL.getValue());
-		mplew.write(0);
-		mplew.writeInt(oid);
-
-		return mplew.getPacket();
-	}
-
-	/**
-	 * Gets a response to a move monster packet.
-	 * 
-	 * @param objectid The ObjectID of the monster being moved.
-	 * @param moveid The movement ID.
-	 * @param currentMp The current MP of the monster.
-	 * @param useSkills Can the monster use skills?
-	 * @return The move response packet.
-	 */
-	public static MaplePacket moveMonsterResponse(int objectid, short moveid, int currentMp, boolean useSkills) {
-		return moveMonsterResponse(objectid, moveid, currentMp, useSkills, 0, 0);
-	}
-
-	/**
-	 * Gets a response to a move monster packet.
-	 * 
-	 * @param objectid The ObjectID of the monster being moved.
-	 * @param moveid The movement ID.
-	 * @param currentMp The current MP of the monster.
-	 * @param useSkills Can the monster use skills?
-	 * @param skillId The skill ID for the monster to use.
-	 * @param skillLevel The level of the skill to use.
-	 * @return The move response packet.
-	 */
-	public static MaplePacket moveMonsterResponse(int objectid, short moveid, int currentMp, boolean useSkills, int skillId, int skillLevel) {
+    /**
+     * Gets a response to a move monster packet.
+     * 
+     * @param objectid The ObjectID of the monster being moved.
+     * @param moveid The movement ID.
+     * @param currentMp The current MP of the monster.
+     * @param useSkills Can the monster use skills?
+     * @param skillId The skill ID for the monster to use.
+     * @param skillLevel The level of the skill to use.
+     * @return The move response packet.
+     */
+    public static MaplePacket moveMonsterResponse(int objectid, short moveid, int currentMp, boolean useSkills, int skillId, int skillLevel) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendPacketOpcode.MOVE_MONSTER_RESPONSE.getValue());
         mplew.writeInt(objectid);
@@ -1916,7 +1539,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         }
         if (!mesos) {
             mplew.write(ITEM_MAGIC);
-            addExpirationTime(mplew, System.currentTimeMillis(), false);
+            PacketHelper.addExpirationTime(mplew, System.currentTimeMillis(), false);
             mplew.write(1); //pet EQP pickup
         }
         return mplew.getPacket();
@@ -2043,7 +1666,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.writeInt(0);
         mplew.write(0x40);
         mplew.write(1);
-        addCharLook(mplew, chr, false);
+        PacketHelper.addCharLook(mplew, chr, false);
         mplew.writeInt(0);
         mplew.writeInt(chr.getItemEffect());
         mplew.writeInt(chr.getChair());
@@ -2193,7 +1816,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
         mplew.write(HexTool.getByteArrayFromHexString("04 0" + slot));
-        addCharLook(mplew, c, false);
+        PacketHelper.addCharLook(mplew, c, false);
         mplew.writeMapleAsciiString(c.getName());
         mplew.writeInt(1);
         mplew.writeInt(c.getMatchCardPoints("wins"));
@@ -2250,20 +1873,13 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         return mplew.getPacket();
     }
 
-	private static void serializeMovementList(LittleEndianWriter lew, List<LifeMovementFragment> moves) {
-		lew.write(moves.size());
-		for (LifeMovementFragment move : moves) {
-			move.serialize(lew);
-		}
-	}
-
 	public static MaplePacket movePlayer(int cid, List<LifeMovementFragment> moves) {
 		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
 		mplew.writeShort(SendPacketOpcode.MOVE_PLAYER.getValue());
 		mplew.writeInt(cid);
 		mplew.writeInt(0);
-		serializeMovementList(mplew, moves);
+		PacketHelper.serializeMovementList(mplew, moves);
 		
 		return mplew.getPacket();
 	}
@@ -2276,7 +1892,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.writeInt(oid);
 		mplew.writeShort(startPos.x);
 		mplew.writeShort(startPos.y);
-		serializeMovementList(mplew, moves);
+		PacketHelper.serializeMovementList(mplew, moves);
 
 		return mplew.getPacket();
 	}
@@ -2299,7 +1915,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.write(0);
 		mplew.writeShort(startPos.x);
 		mplew.writeShort(startPos.y);
-		serializeMovementList(mplew, moves);
+		PacketHelper.serializeMovementList(mplew, moves);
 
 		return mplew.getPacket();
 	}
@@ -2483,7 +2099,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.write(HexTool.getByteArrayFromHexString("01 00")); // add mode
 		mplew.write(type.getType()); // iv type
 		mplew.write(item.getPosition()); // slot id
-		addItemInfo(mplew, item, true, false);
+		PacketHelper.addItemInfo(mplew, item, true, false);
 
 		return mplew.getPacket();
 	}
@@ -2574,32 +2190,32 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 	}
 
 	public static MaplePacket scrolledItem(IItem scroll, IItem item, boolean destroyed) {
-		// 18 00 01 02 03 02 08 00 03 01 F7 FF 01
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            // 18 00 01 02 03 02 08 00 03 01 F7 FF 01
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		mplew.writeShort(SendPacketOpcode.MODIFY_INVENTORY_ITEM.getValue());
-		mplew.write(1); // fromdrop always true
-		mplew.write(destroyed ? 2 : 3);
-		mplew.write(scroll.getQuantity() > 0 ? 1 : 3);
-		mplew.write(MapleInventoryType.USE.getType());
-		mplew.writeShort(scroll.getPosition());
-		if (scroll.getQuantity() > 0) {
-			mplew.writeShort(scroll.getQuantity());
-		}
-		mplew.write(3);
-		if (!destroyed) {
-			mplew.write(MapleInventoryType.EQUIP.getType());
-			mplew.writeShort(item.getPosition());
-			mplew.write(0);
-		}
-		mplew.write(MapleInventoryType.EQUIP.getType());
-		mplew.writeShort(item.getPosition());
-		if (!destroyed) {
-			addItemInfo(mplew, item, true, true);
-		}
-		mplew.write(1);
+            mplew.writeShort(SendPacketOpcode.MODIFY_INVENTORY_ITEM.getValue());
+            mplew.write(1); // fromdrop always true
+            mplew.write(destroyed ? 2 : 3);
+            mplew.write(scroll.getQuantity() > 0 ? 1 : 3);
+            mplew.write(MapleInventoryType.USE.getType());
+            mplew.writeShort(scroll.getPosition());
+            if (scroll.getQuantity() > 0) {
+                    mplew.writeShort(scroll.getQuantity());
+            }
+            mplew.write(3);
+            if (!destroyed) {
+                    mplew.write(MapleInventoryType.EQUIP.getType());
+                    mplew.writeShort(item.getPosition());
+                    mplew.write(0);
+            }
+            mplew.write(MapleInventoryType.EQUIP.getType());
+            mplew.writeShort(item.getPosition());
+            if (!destroyed) {
+                PacketHelper.addItemInfo(mplew, item, true, true);
+            }
+            mplew.write(1);
 
-		return mplew.getPacket();
+            return mplew.getPacket();
 	}
 
 	public static MaplePacket getScrollEffect(int chr, ScrollResult scrollSuccess, boolean legendarySpirit) {
@@ -2684,7 +2300,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.writeShort(SendPacketOpcode.UPDATE_CHAR_LOOK.getValue());
 		mplew.writeInt(chr.getId());
 		mplew.write(1);
-		addCharLook(mplew, chr, false);
+		PacketHelper.addCharLook(mplew, chr, false);
 		MapleInventory iv = chr.getInventory(MapleInventoryType.EQUIPPED);
 		Collection<IItem> equippedC = iv.list();
 		List<Item> equipped = new ArrayList<Item>(equippedC.size());
@@ -2804,7 +2420,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 
 		mplew.writeShort(SendPacketOpcode.ADD_NEW_CHAR_ENTRY.getValue());
 		mplew.write(worked ? 0 : 1);
-		addCharEntry(mplew, chr);
+		PacketHelper.addCharEntry(mplew, chr);
 
 		return mplew.getPacket();
 	}
@@ -2813,7 +2429,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendPacketOpcode.ADD_NEW_CHAR_ENTRY.getValue());
         mplew.write(0);
-        addCharEntry(mplew, chr);
+        PacketHelper.addCharEntry(mplew, chr);
         return mplew.getPacket();
     }
 
@@ -3008,7 +2624,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.write(1);
         mplew.writeShort(quest);
         mplew.write(2);
-        mplew.writeLong(getTime(System.currentTimeMillis()));
+        mplew.writeLong(PacketHelper.getTime(System.currentTimeMillis()));
 
         return mplew.getPacket();
     }
@@ -3415,7 +3031,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 
 		mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(HexTool.getByteArrayFromHexString("04 0" + slot));
-		addCharLook(mplew, c, false);
+		PacketHelper.addCharLook(mplew, c, false);
 		mplew.writeMapleAsciiString(c.getName());
 		log.info("player shop send packet: \n" + mplew.toString());
 		return mplew.getPacket();
@@ -3434,7 +3050,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 
 		mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
 		mplew.write(HexTool.getByteArrayFromHexString("04 01"));// 00 04 88 4E 00"));
-		addCharLook(mplew, c, false);
+		PacketHelper.addCharLook(mplew, c, false);
 		mplew.writeMapleAsciiString(c.getName());
 
 		return mplew.getPacket();
@@ -3469,7 +3085,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.write(0xE);
 		mplew.write(number);
 		// mplew.write(1);
-		addItemInfo(mplew, item);
+		PacketHelper.addItemInfo(mplew, item);
 
 		return mplew.getPacket();
 	}
@@ -3482,7 +3098,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.write(number);
 		if (number == 1) {
 			mplew.write(0);
-			addCharLook(mplew, trade.getPartner().getChr(), false);
+			PacketHelper.addCharLook(mplew, trade.getPartner().getChr(), false);
 			mplew.writeMapleAsciiString(trade.getPartner().getChr().getName());
 		}
 		mplew.write(number);
@@ -3490,7 +3106,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.write(0);
 		mplew.writeInt(c.getPlayer().getId());
 		}*/
-		addCharLook(mplew, c.getPlayer(), false);
+		PacketHelper.addCharLook(mplew, c.getPlayer(), false);
 		mplew.writeMapleAsciiString(c.getPlayer().getName());
 		mplew.write(0xFF);
 
@@ -3843,7 +3459,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.writeShort(0);
 		mplew.write((byte) items.size());
 		for (IItem item : items) {
-			addItemInfo(mplew, item, true, true);
+                    PacketHelper.addItemInfo(mplew, item, true, true);
 		}
 		mplew.writeShort(0);
 		mplew.write(0);
@@ -3885,7 +3501,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.writeInt(0);
 		mplew.write(items.size());
 		for (IItem item : items) {
-			addItemInfo(mplew, item, true, true);
+			PacketHelper.addItemInfo(mplew, item, true, true);
 			// mplew.write(0);
 		}
 
@@ -3903,7 +3519,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 		mplew.writeInt(0);
 		mplew.write(items.size());
 		for (IItem item : items) {
-			addItemInfo(mplew, item, true, true);
+			PacketHelper.addItemInfo(mplew, item, true, true);
 			// mplew.write(0);
 		}
 
@@ -4851,7 +4467,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
             mplew.writeInt(rs.getInt("localthreadid"));
             mplew.writeInt(rs.getInt("postercid"));
             mplew.writeMapleAsciiString(rs.getString("name"));
-            mplew.writeLong(MaplePacketCreator.getKoreanTimestamp(rs.getLong("timestamp")));
+            mplew.writeLong(PacketHelper.getKoreanTimestamp(rs.getLong("timestamp")));
             mplew.writeInt(rs.getInt("icon"));
             mplew.writeInt(rs.getInt("replycount"));
     }
@@ -4897,7 +4513,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
             mplew.write(0x07);
             mplew.writeInt(localthreadid);
             mplew.writeInt(threadRS.getInt("postercid"));
-            mplew.writeLong(getKoreanTimestamp(threadRS.getLong("timestamp")));
+            mplew.writeLong(PacketHelper.getKoreanTimestamp(threadRS.getLong("timestamp")));
             mplew.writeMapleAsciiString(threadRS.getString("name"));
             mplew.writeMapleAsciiString(threadRS.getString("startpost"));
             mplew.writeInt(threadRS.getInt("icon"));
@@ -4908,7 +4524,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
                     for (i = 0; i < replyCount && repliesRS.next(); i++) {
                             mplew.writeInt(repliesRS.getInt("replyid"));
                             mplew.writeInt(repliesRS.getInt("postercid"));
-                            mplew.writeLong(getKoreanTimestamp(repliesRS.getLong("timestamp")));
+                            mplew.writeLong(PacketHelper.getKoreanTimestamp(repliesRS.getLong("timestamp")));
                             mplew.writeMapleAsciiString(repliesRS.getString("content"));
                     }
                     if (i != replyCount || repliesRS.next()) {
@@ -5058,7 +4674,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
             mplew.writeShort(SendPacketOpcode.MESSENGER.getValue());
             mplew.write(0x00);
             mplew.write(position);
-            addCharLook(mplew, chr, true);
+            PacketHelper.addCharLook(mplew, chr, true);
             mplew.writeMapleAsciiString(from);
             mplew.write(channel);
             mplew.write(0x00);
@@ -5082,7 +4698,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
             mplew.writeShort(SendPacketOpcode.MESSENGER.getValue());
             mplew.write(0x07);
             mplew.write(position);
-            addCharLook(mplew, chr, true);
+            PacketHelper.addCharLook(mplew, chr, true);
             mplew.writeMapleAsciiString(from);
             mplew.write(channel);
             mplew.write(0x00);
@@ -5120,475 +4736,12 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 
             return mplew.getPacket();
     }
-
-    public static MaplePacket warpCS(MapleClient c, boolean mts) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        MapleCharacter chr = c.getPlayer();
-        if (!mts) {
-            mplew.writeShort(SendPacketOpcode.CS_OPEN.getValue());
-        } else {
-            mplew.writeShort(SendPacketOpcode.MTS_OPEN.getValue());
-        }
-        addCharWarp(mplew, chr);
-        mplew.writeShort(1);
-        mplew.writeInt(662990);
-        mplew.write(HexTool.getByteArrayFromHexString("5A 42 43 44 45 46 47 48 49 4A 00 00"));
-        mplew.writeLong(0);
-        for (int i = 0; i < 15; i++) {
-            mplew.write(CHAR_INFO_MAGIC);
-        }
-        mplew.writeInt(0);
-        if (!mts) {
-            mplew.write(1);
-        }
-        mplew.writeMapleAsciiString(chr.getClient().getAccountName());
-        if (mts) {
-            mplew.writeInt(1337);
-            mplew.write(HexTool.getByteArrayFromHexString("0A 00 00 00 64 00 00 00 18 00 00 00 A8 00 00 00 B0 ED 4E 3C FD 68 C9 01"));
-        } else {
-            mplew.write(HexTool.getByteArrayFromHexString("96 00 00 00 38 21 9A 00 39 21 9A 00 3A 21 9A 00 3B 21 9A 00 3C 21 9A 00 3D 21 9A 00 3E 21 9A 00 3F 21 9A 00 40 21 9A 00 41 21 9A 00 42 21 9A 00 43 21 9A 00 44 21 9A 00 45 21 9A 00 46 21 9A 00 47 21 9A 00 48 21 9A 00 49 21 9A 00 4A 21 9A 00 4B 21 9A 00 4C 21 9A 00 4D 21 9A 00 4E 21 9A 00 4F 21 9A 00 50 21 9A 00 51 21 9A 00 52 21 9A 00 53 21 9A 00 54 21 9A 00 55 21 9A 00 56 21 9A 00 57 21 9A 00 58 21 9A 00 59 21 9A 00 5A 21 9A 00 5B 21 9A 00 5C 21 9A 00 5D 21 9A 00 5E 21 9A 00 5F 21 9A 00 60 21 9A 00 61 21 9A 00 62 21 9A 00 63 21 9A 00 64 21 9A 00 65 21 9A 00 66 21 9A 00 67 21 9A 00 68 21 9A 00 69 21 9A 00 6A 21 9A 00 6B 21 9A 00 6C 21 9A 00 6D 21 9A 00 6E 21 9A 00 6F 21 9A 00 70 21 9A 00 71 21 9A 00 72 21 9A 00 73 21 9A 00 74 21 9A 00 75 21 9A 00 76 21 9A 00 77 21 9A 00 78 21 9A 00 79 21 9A 00 7A 21 9A 00 7B 21 9A 00 7C 21 9A 00 7D 21 9A 00 7E 21 9A 00 7F 21 9A 00 80 21 9A 00 81 21 9A 00 82 21 9A 00 83 21 9A 00 84 21 9A 00 85 21 9A 00 86 21 9A 00 87 21 9A 00 88 21 9A 00 89 21 9A 00 8A 21 9A 00 8B 21 9A 00 8C 21 9A 00 8D 21 9A 00 8E 21 9A 00 8F 21 9A 00 90 21 9A 00 91 21 9A 00 92 21 9A 00 93 21 9A 00 94 21 9A 00 95 21 9A 00 96 21 9A 00 97 21 9A 00 98 21 9A 00 99 21 9A 00 9A 21 9A 00 9B 21 9A 00 9C 21 9A 00 9D 21 9A 00 9E 21 9A 00 9F 21 9A 00 A0 21 9A 00 A1 21 9A 00 A2 21 9A 00 A3 21 9A 00 A4 21 9A 00 A5 21 9A 00 A6 21 9A 00 A7 21 9A 00 A8 21 9A 00 A9 21 9A 00 AA 21 9A 00 AB 21 9A 00 AC 21 9A 00 AD 21 9A 00 AE 21 9A 00 AF 21 9A 00 B0 21 9A 00 B1 21 9A 00 B2 21 9A 00 B3 21 9A 00 B4 21 9A 00 B5 21 9A 00 B6 21 9A 00 B7 21 9A 00 B8 21 9A 00 B9 21 9A 00 BA 21 9A 00 BB 21 9A 00 BC 21 9A 00 BD 21 9A 00 BE 21 9A 00 BF 21 9A 00 C0 21 9A 00 C1 21 9A 00 C2 21 9A 00 C3 21 9A 00 C4 21 9A 00 C5 21 9A 00 C6 21 9A 00 C7 21 9A 00 C8 21 9A 00 C9 21 9A 00 CA 21 9A 00 CB 21 9A 00 CC 21 9A 00 CD 21 9A 00 59 01 C8 9D 98 00 00 02 00 C9 9D 98 00 00 02 00 EB 9D 98 00 00 02 00 EC 9D 98 00 00 02 00 EF 9D 98 00 00 02 00 F0 9D 98 00 00 02 00 F1 9D 98 00 00 02 00 F2 9D 98 00 00 02 00 F5 9D 98 00 00 06 00 00 F6 9D 98 00 00 06 00 00 F7 9D 98 00 00 02 00 F8 9D 98 00 00 02 00 F9 9D 98 00 00 02 00 FA 9D 98 00 00 02 00 FB 9D 98 00 00 02 00 FC 9D 98 00 00 02 00 FD 9D 98 00 00 02 00 FE 9D 98 00 00 02 00 FF 9D 98 00 00 02 00 00 9E 98 00 00 02 00 01 9E 98 00 00 02 00 02 9E 98 00 00 02 00 03 9E 98 00 00 02 00 04 9E 98 00 00 02 00 38 21 9A 00 00 02 01 39 21 9A 00 00 02 01 3A 21 9A 00 00 02 01 3B 21 9A 00 00 02 01 3C 21 9A 00 00 02 01 3D 21 9A 00 00 02 01 3E 21 9A 00 00 02 01 3F 21 9A 00 00 02 01 40 21 9A 00 00 02 01 41 21 9A 00 00 02 01 42 21 9A 00 00 02 01 43 21 9A 00 00 02 01 44 21 9A 00 00 02 01 45 21 9A 00 00 02 01 46 21 9A 00 00 02 01 47 21 9A 00 00 02 01 48 21 9A 00 00 02 01 49 21 9A 00 00 02 01 4A 21 9A 00 00 02 01 4B 21 9A 00 00 02 01 4C 21 9A 00 00 02 01 4D 21 9A 00 00 02 01 4E 21 9A 00 00 02 01 4F 21 9A 00 00 02 01 50 21 9A 00 00 02 01 51 21 9A 00 00 02 01 52 21 9A 00 00 02 01 53 21 9A 00 00 02 01 54 21 9A 00 00 02 01 55 21 9A 00 00 02 01 56 21 9A 00 00 02 01 57 21 9A 00 00 02 01 58 21 9A 00 00 02 01 59 21 9A 00 00 02 01 5A 21 9A 00 00 02 01 5B 21 9A 00 00 02 01 5C 21 9A 00 00 02 01 5D 21 9A 00 00 02 01 5E 21 9A 00 00 02 01 5F 21 9A 00 00 02 01 60 21 9A 00 00 02 01 61 21 9A 00 00 02 01 62 21 9A 00 00 02 01 63 21 9A 00 00 02 01 64 21 9A 00 00 02 01 65 21 9A 00 00 02 01 66 21 9A 00 00 02 01 67 21 9A 00 00 02 01 68 21 9A 00 00 02 01 69 21 9A 00 00 02 01 6A 21 9A 00 00 02 01 6B 21 9A 00 00 02 01 6C 21 9A 00 00 02 01 6D 21 9A 00 00 02 01 6E 21 9A 00 00 02 01 6F 21 9A 00 00 02 01 70 21 9A 00 00 02 01 71 21 9A 00 00 02 01 72 21 9A 00 00 02 01 73 21 9A 00 00 02 01 74 21 9A 00 00 02 01 75 21 9A 00 00 02 01 76 21 9A 00 00 02 01 77 21 9A 00 00 02 01 78 21 9A 00 00 02 01 79 21 9A 00 00 02 01 7A 21 9A 00 00 02 01 7B 21 9A 00 00 02 01 7C 21 9A 00 00 02 01 7D 21 9A 00 00 02 01 7E 21 9A 00 00 02 01 7F 21 9A 00 00 02 01 80 21 9A 00 00 02 01 81 21 9A 00 00 02 01 82 21 9A 00 00 02 01 83 21 9A 00 00 02 01 84 21 9A 00 00 02 01 85 21 9A 00 00 02 01 86 21 9A 00 00 02 01 87 21 9A 00 00 02 01 88 21 9A 00 00 02 01 89 21 9A 00 00 02 01 8A 21 9A 00 00 02 01 8B 21 9A 00 00 02 01 8C 21 9A 00 00 02 01 8D 21 9A 00 00 02 01 8E 21 9A 00 00 02 01 8F 21 9A 00 00 02 01 90 21 9A 00 00 02 01 91 21 9A 00 00 02 01 92 21 9A 00 00 02 01 93 21 9A 00 00 02 01 94 21 9A 00 00 02 01 95 21 9A 00 00 02 01 96 21 9A 00 00 02 01 97 21 9A 00 00 02 01 98 21 9A 00 00 02 01 99 21 9A 00 00 02 01 9A 21 9A 00 00 02 01 9B 21 9A 00 00 02 01 9C 21 9A 00 00 02 01 9D 21 9A 00 00 02 01 9E 21 9A 00 00 02 01 9F 21 9A 00 00 02 01 A0 21 9A 00 00 02 01 A1 21 9A 00 00 02 01 A2 21 9A 00 00 02 01 A3 21 9A 00 00 02 01 A4 21 9A 00 00 02 01 A5 21 9A 00 00 02 01 A6 21 9A 00 00 02 01 A7 21 9A 00 00 02 01 A8 21 9A 00 00 02 01 A9 21 9A 00 00 02 01 AA 21 9A 00 00 02 01 AB 21 9A 00 00 02 01 AC 21 9A 00 00 02 01 AD 21 9A 00 00 02 01 AE 21 9A 00 00 02 01 AF 21 9A 00 00 02 01 B0 21 9A 00 00 02 01 B1 21 9A 00 00 02 01 B2 21 9A 00 00 02 01 B3 21 9A 00 00 02 01 B4 21 9A 00 00 02 01 B5 21 9A 00 00 02 01 B6 21 9A 00 00 02 01 B7 21 9A 00 00 02 01 B8 21 9A 00 00 02 01 B9 21 9A 00 00 02 01 BA 21 9A 00 00 02 01 BB 21 9A 00 00 02 01 BC 21 9A 00 00 02 01 BD 21 9A 00 00 02 01 BE 21 9A 00 00 02 01 BF 21 9A 00 00 02 01 C0 21 9A 00 00 02 01 C1 21 9A 00 00 02 01 C2 21 9A 00 00 02 01 C3 21 9A 00 00 02 01 C4 21 9A 00 00 02 01 C5 21 9A 00 00 02 01 C6 21 9A 00 00 02 01 C7 21 9A 00 00 02 01 C8 21 9A 00 00 02 01 C9 21 9A 00 00 02 01 CA 21 9A 00 00 02 01 CB 21 9A 00 00 02 01 CC 21 9A 00 00 02 01 CD 21 9A 00 00 02 01 16 2D 31 01 08 04 07 FF 2B 2D 31 01 08 00 0B 4C 2D 31 01 08 00 0A 84 2D 31 01 08 04 08 02 FC 2D 31 01 08 04 08 02 E7 2E 31 01 08 04 07 FF E8 2E 31 01 08 00 08 E9 2E 31 01 08 04 07 FF FA 2E 31 01 08 04 07 FF FB 2E 31 01 08 04 07 FF FC 2E 31 01 08 04 07 FF FD 2E 31 01 08 04 07 FF FE 2E 31 01 08 04 07 FF FF 2E 31 01 08 04 07 FF 00 2F 31 01 08 04 07 FF 01 2F 31 01 08 00 0C 02 2F 31 01 08 00 0C 03 2F 31 01 08 00 0C A4 B3 32 01 08 00 0A C3 B3 32 01 08 00 09 CE B3 32 01 08 04 07 FF D1 B3 32 01 08 00 0B EB B3 32 01 08 04 08 02 02 B4 32 01 08 00 08 06 B4 32 01 08 04 07 FF 08 B4 32 01 08 04 07 FF 09 B4 32 01 08 04 07 FF 64 3A 34 01 08 00 08 70 3A 34 01 08 00 0B 87 3A 34 01 08 04 07 FF 88 3A 34 01 08 04 0A 02 89 3A 34 01 08 04 07 FF E9 C0 35 01 08 00 0B 50 C1 35 01 08 00 08 65 C1 35 01 08 04 07 02 85 C1 35 01 08 00 0A 86 C1 35 01 08 00 09 C8 C1 35 01 08 04 08 02 EE C1 35 01 08 04 07 FF 03 C2 35 01 08 04 07 FF 9C 47 37 01 08 04 08 02 1A 48 37 01 08 00 09 2B 48 37 01 08 00 0A 35 48 37 01 08 00 09 5E 48 37 01 08 00 0B 6D 48 37 01 08 00 08 6F 48 37 01 08 04 07 FF 70 48 37 01 08 04 07 FF 33 CE 38 01 08 04 08 02 3B CE 38 01 08 00 09 67 CE 38 01 08 00 09 9A CE 38 01 08 04 08 02 9F CE 38 01 08 00 0B D0 CE 38 01 08 00 0A DA CE 38 01 08 04 07 FF DB CE 38 01 08 04 07 FF DC CE 38 01 08 04 07 FF DD CE 38 01 08 04 07 FF E0 CE 38 01 08 04 07 FF C4 54 3A 01 08 04 08 02 C7 54 3A 01 08 00 0B CD 54 3A 01 08 04 07 FF 05 55 3A 01 08 00 0A 9F 55 3A 01 08 04 07 FF 67 DB 3B 01 08 00 0A 77 DB 3B 01 08 04 07 FF 8E DB 3B 01 08 00 08 92 DB 3B 01 08 04 0B 02 93 DB 3B 01 08 04 07 FF 8A 62 3D 01 08 00 0B C8 62 3D 01 08 00 0A CB 62 3D 01 08 04 07 FF D2 62 3D 01 08 00 09 EC 62 3D 01 08 00 08 EE 62 3D 01 08 04 07 FF F3 62 3D 01 08 04 08 02 F4 62 3D 01 08 04 08 02 F5 62 3D 01 08 00 0C CF E8 3E 01 08 04 08 02 DA E8 3E 01 08 00 0A DC E8 3E 01 08 00 0B DD E8 3E 01 08 00 08 E0 E8 3E 01 08 04 07 FF EF E8 3E 01 08 04 07 FF E2 F5 41 01 08 00 0B F8 F5 41 01 08 00 0A FA F5 41 01 08 04 07 FF 2C F6 41 01 08 04 07 FF 2D F6 41 01 08 04 08 02 80 C3 C9 01 08 00 0B 88 C3 C9 01 08 00 0A 20 4A CB 01 08 04 08 02 22 4A CB 01 08 00 0B 3A 4A CB 01 08 00 0A 3D 4A CB 01 08 04 07 FF C5 D0 CC 01 08 04 08 02 CD D0 CC 01 08 04 08 02 D4 D0 CC 01 08 04 07 FF DD D0 CC 01 08 04 07 FF DE D0 CC 01 08 00 09 E2 D0 CC 01 08 00 0B E3 D0 CC 01 08 00 0A A4 F0 FA 02 08 00 0B A7 F0 FA 02 08 00 0A 20 77 FC 02 08 00 0B 27 77 FC 02 08 00 09 29 77 FC 02 08 00 08 34 77 FC 02 08 00 0A 42 77 FC 02 08 04 08 02 45 77 FC 02 08 04 07 FF C1 FD FD 02 08 00 09 C4 FD FD 02 08 00 0A 05 FE FD 02 08 00 0B 06 FE FD 02 08 00 0A 08 FE FD 02 08 04 0C 02 09 FE FD 02 08 04 0C 02 0A FE FD 02 08 04 0C FF 0B FE FD 02 08 04 0B FF 11 FE FD 02 08 04 07 FF 12 FE FD 02 08 04 07 FF 13 FE FD 02 08 04 07 FF 63 84 FF 02 08 00 0B 6B 84 FF 02 08 00 0A B8 91 02 03 08 00 09 BB 91 02 03 08 00 0B BD 91 02 03 08 00 07 D0 91 02 03 08 00 08 D2 91 02 03 08 00 0A D6 91 02 03 08 00 0C 0E 87 93 03 08 00 09 14 87 93 03 08 00 08 1A 87 93 03 08 00 09 25 87 93 03 08 00 0B 26 87 93 03 08 00 08 A0 0D 95 03 08 00 0B A3 0D 95 03 08 04 08 02 A4 0D 95 03 08 00 0A D3 0D 95 03 08 04 07 FF E1 0D 95 03 08 04 07 FF 41 94 96 03 08 00 0B 5A 94 96 03 08 00 0A 73 1E 2C 04 08 06 07 00 FF 74 1E 2C 04 00 02 00 75 1E 2C 04 08 06 08 00 02 76 1E 2C 04 00 02 00 77 1E 2C 04 00 02 00 78 1E 2C 04 00 02 00 79 1E 2C 04 08 06 08 00 02 7A 1E 2C 04 00 02 00 7B 1E 2C 04 08 06 0A 00 02 7C 1E 2C 04 00 02 00 7D 1E 2C 04 00 02 00 7E 1E 2C 04 08 02 0B 00 7F 1E 2C 04 00 02 00 80 1E 2C 04 00 02 00 81 1E 2C 04 08 02 09 00 82 1E 2C 04 08 02 09 00 83 1E 2C 04 08 02 08 00 84 1E 2C 04 00 02 00 85 1E 2C 04 00 02 00 86 1E 2C 04 00 02 00 87 1E 2C 04 08 06 07 00 FF 88 1E 2C 04 08 06 07 00 FF 3A B4 C4 04 FF FF 6F D1 10 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 3B B4 C4 04 FF FF 71 D1 10 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 3C B4 C4 04 FF FF 68 4D 0F 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 3D B4 C4 04 FF FF 5A DE 13 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 3E B4 C4 04 FF FF 86 86 3D 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 3F B4 C4 04 FF FF 27 DC 1E 00 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 40 B4 C4 04 FF FF 28 DC 1E 00 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 41 B4 C4 04 FF FF 29 DC 1E 00 05 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 00 08 00 00 00 37 00 31 00 38 00 31 00 00 00 00 00 18 00 0E 00 0F 00 0C 06 38 02 14 00 08 80 B6 03 67 00 69 00 6E 00 49 00 70 00 00 00 00 00 00 00 06 00 04 00 13 00 0E 06 A8 01 14 00 D8 9F CD 03 33 00 2E 00 33 00 31 00 2E 00 32 00 33 00 35 00 2E 00 32 00 32 00 34 00 00 00 00 00 00 00 00 00 04 00 0A 00 15 01 0C 06 0E 00 00 00 62 00 65 00 67 00 69 00 6E 00 49 00 01 00 00 00 00 00 00 00 C5 FD FD 02 01 00 00 00 00 00 00 00 05 FE FD 02 01 00 00 00 00 00 00 00 13 FE FD 02 01 00 00 00 00 00 00 00 22 4A CB 01 01 00 00 00 00 00 00 00 C2 FD FD 02 01 00 00 00 01 00 00 00 C5 FD FD 02 01 00 00 00 01 00 00 00 05 FE FD 02 01 00 00 00 01 00 00 00 13 FE FD 02 01 00 00 00 01 00 00 00 22 4A CB 01 01 00 00 00 01 00 00 00 C2 FD FD 02 02 00 00 00 00 00 00 00 C5 FD FD 02 02 00 00 00 00 00 00 00 05 FE FD 02 02 00 00 00 00 00 00 00 13 FE FD 02 02 00 00 00 00 00 00 00 22 4A CB 01 02 00 00 00 00 00 00 00 C2 FD FD 02 02 00 00 00 01 00 00 00 C5 FD FD 02 02 00 00 00 01 00 00 00 05 FE FD 02 02 00 00 00 01 00 00 00 13 FE FD 02 02 00 00 00 01 00 00 00 22 4A CB 01 02 00 00 00 01 00 00 00 C2 FD FD 02 03 00 00 00 00 00 00 00 C5 FD FD 02 03 00 00 00 00 00 00 00 05 FE FD 02 03 00 00 00 00 00 00 00 13 FE FD 02 03 00 00 00 00 00 00 00 22 4A CB 01 03 00 00 00 00 00 00 00 C2 FD FD 02 03 00 00 00 01 00 00 00 C5 FD FD 02 03 00 00 00 01 00 00 00 05 FE FD 02 03 00 00 00 01 00 00 00 13 FE FD 02 03 00 00 00 01 00 00 00 22 4A CB 01 03 00 00 00 01 00 00 00 C2 FD FD 02 04 00 00 00 00 00 00 00 C5 FD FD 02 04 00 00 00 00 00 00 00 05 FE FD 02 04 00 00 00 00 00 00 00 13 FE FD 02 04 00 00 00 00 00 00 00 22 4A CB 01 04 00 00 00 00 00 00 00 C2 FD FD 02 04 00 00 00 01 00 00 00 C5 FD FD 02 04 00 00 00 01 00 00 00 05 FE FD 02 04 00 00 00 01 00 00 00 13 FE FD 02 04 00 00 00 01 00 00 00 22 4A CB 01 04 00 00 00 01 00 00 00 C2 FD FD 02 05 00 00 00 00 00 00 00 C5 FD FD 02 05 00 00 00 00 00 00 00 05 FE FD 02 05 00 00 00 00 00 00 00 13 FE FD 02 05 00 00 00 00 00 00 00 22 4A CB 01 05 00 00 00 00 00 00 00 C2 FD FD 02 05 00 00 00 01 00 00 00 C5 FD FD 02 05 00 00 00 01 00 00 00 05 FE FD 02 05 00 00 00 01 00 00 00 13 FE FD 02 05 00 00 00 01 00 00 00 22 4A CB 01 05 00 00 00 01 00 00 00 C2 FD FD 02 06 00 00 00 00 00 00 00 C5 FD FD 02 06 00 00 00 00 00 00 00 05 FE FD 02 06 00 00 00 00 00 00 00 13 FE FD 02 06 00 00 00 00 00 00 00 22 4A CB 01 06 00 00 00 00 00 00 00 C2 FD FD 02 06 00 00 00 01 00 00 00 C5 FD FD 02 06 00 00 00 01 00 00 00 05 FE FD 02 06 00 00 00 01 00 00 00 13 FE FD 02 06 00 00 00 01 00 00 00 22 4A CB 01 06 00 00 00 01 00 00 00 C2 FD FD 02 07 00 00 00 00 00 00 00 C5 FD FD 02 07 00 00 00 00 00 00 00 05 FE FD 02 07 00 00 00 00 00 00 00 13 FE FD 02 07 00 00 00 00 00 00 00 22 4A CB 01 07 00 00 00 00 00 00 00 C2 FD FD 02 07 00 00 00 01 00 00 00 C5 FD FD 02 07 00 00 00 01 00 00 00 05 FE FD 02 07 00 00 00 01 00 00 00 13 FE FD 02 07 00 00 00 01 00 00 00 22 4A CB 01 07 00 00 00 01 00 00 00 C2 FD FD 02 08 00 00 00 00 00 00 00 C5 FD FD 02 08 00 00 00 00 00 00 00 05 FE FD 02 08 00 00 00 00 00 00 00 13 FE FD 02 08 00 00 00 00 00 00 00 22 4A CB 01 08 00 00 00 00 00 00 00 C2 FD FD 02 08 00 00 00 01 00 00 00 C5 FD FD 02 08 00 00 00 01 00 00 00 05 FE FD 02 08 00 00 00 01 00 00 00 13 FE FD 02 08 00 00 00 01 00 00 00 22 4A CB 01 08 00 00 00 01 00 00 00 C2 FD FD 02 00 00 A3 00 26 71 0F 00 F3 20 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 23 00 00 00 FF FF FF FF 0F 00 00 00 BD 68 32 01 BD 68 32 01 10 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 54 71 0F 00 F4 20 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 BD 68 32 01 BD 68 32 01 10 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 58 71 0F 00 F5 20 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 32 00 00 00 FF FF FF FF 0F 00 00 00 BD 68 32 01 BD 68 32 01 10 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 B5 E6 0F 00 F8 20 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 1E 00 00 00 FF FF FF FF 0F 00 00 00 BD 68 32 01 BD 68 32 01 10 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 FD 4A 0F 00 FC 20 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 14 00 00 00 FF FF FF FF 0F 00 00 00 BE 68 32 01 BE 68 32 01 0B 00 00 00 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 29 71 0F 00 FD 20 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 23 00 00 00 FF FF FF FF 0F 00 00 00 BE 68 32 01 BE 68 32 01 0B 00 00 00 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 E5 DE 0F 00 FF 20 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 2D 00 00 00 FF FF FF FF 0F 00 00 00 BE 68 32 01 BE 68 32 01 0B 00 00 00 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 0B D1 10 00 00 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 23 00 00 00 FF FF FF FF 0F 00 00 00 BE 68 32 01 BE 68 32 01 0B 00 00 00 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 1C F9 19 00 01 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 BE 68 32 01 BE 68 32 01 0B 00 00 00 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 49 4B 4C 00 02 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 1E 00 00 00 FF FF FF FF 0F 00 00 00 BE 68 32 01 BE 68 32 01 0B 00 00 00 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 63 72 4C 00 03 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 BE 68 32 01 BE 68 32 01 0B 00 00 00 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 76 72 4C 00 04 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 32 00 00 00 FF FF FF FF 0F 00 00 00 BE 68 32 01 BE 68 32 01 0B 00 00 00 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 77 72 4C 00 05 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 1E 00 00 00 FF FF FF FF 0F 00 00 00 BE 68 32 01 BE 68 32 01 0B 00 00 00 0C 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 FC 4A 0F 00 06 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 BF 68 32 01 BF 68 32 01 0B 00 00 00 0C 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 F6 4B 0F 00 07 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 1E 00 00 00 FF FF FF FF 0F 00 00 00 BF 68 32 01 BF 68 32 01 0B 00 00 00 0C 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 07 20 4E 00 3A 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 00 00 00 00 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 09 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 79 72 4C 00 3B 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 09 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 42 BC 4E 00 3C 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 50 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 09 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 0A 31 10 00 3D 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 09 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 54 72 4C 00 3E 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 09 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 50 69 0F 00 3F 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 09 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 78 4B 0F 00 40 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 09 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 A8 F8 19 00 41 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 09 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 21 A6 1B 00 42 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B4 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 84 5C 10 00 43 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 98 34 10 00 44 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 46 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 98 0F 00 45 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 75 83 10 00 46 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 18 0A 10 00 47 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 2D 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 0B 31 10 00 48 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 46 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 61 72 4C 00 49 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 4B BC 4E 00 4A 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 50 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 39 70 4D 00 4B 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 10 47 4E 00 4C 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 C8 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B3 E6 0F 00 4D 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 73 34 10 00 4E 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 46 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 5C 98 0F 00 4F 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 2D 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 DF 82 10 00 50 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 57 4B 4C 00 51 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B8 34 10 00 52 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 48 94 0F 00 53 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 2D 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 A9 7E 10 00 54 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 2D 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 96 0D 10 00 55 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 3C 95 4E 00 56 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 E9 F8 19 00 57 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 50 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 1C D1 10 00 58 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 46 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 3F 71 0F 00 59 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 F5 4B 0F 00 5A 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B9 82 10 00 5B 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B7 D0 10 00 5C 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 2D 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 98 0F 00 5D 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 51 4B 4C 00 5E 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 0F 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 C0 DE 0F 00 5F 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 10 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 50 E3 4E 00 60 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B4 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 D0 27 4E 00 61 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 E8 94 50 00 62 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 26 71 0F 00 63 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B1 3E 52 00 64 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 D6 D0 10 00 65 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 6B 71 0F 00 66 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 71 4B 0F 00 67 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 8B F8 10 00 68 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 A9 F8 19 00 69 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 3D 6A 32 01 3D 6A 32 01 12 00 00 00 14 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 89 83 4F 00 6A 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 BE 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 C5 F7 10 00 6B 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 5F 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 02 20 4E 00 6C 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 F0 F8 4D 00 6D 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 43 BC 4E 00 6E 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 2D 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 10 31 10 00 6F 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 71 72 4C 00 70 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 71 0F 00 71 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 A9 57 10 00 72 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 08 20 4E 00 73 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 08 00 00 00 0A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 46 4B 4C 00 74 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 6A 5C 10 00 75 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 AB 34 10 00 76 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 E9 94 50 00 77 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 47 BC 4E 00 78 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 50 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 CA 2C 10 00 79 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 60 72 4C 00 7A 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 4A BC 4E 00 7B 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 38 70 4D 00 7C 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 7A C0 4C 00 7D 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0B 00 00 00 0D 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B0 CD 4F 00 7E 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 AA 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 D1 E6 0F 00 7F 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 CB 34 10 00 80 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 40 98 0F 00 81 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 32 83 10 00 82 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 90 0D 10 00 83 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 46 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 C3 2C 10 00 84 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 42 98 0F 00 85 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 FD 09 10 00 86 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B5 DE 0F 00 87 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0D 00 00 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 24 A6 1B 00 88 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 B4 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 62 E6 0F 00 89 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 46 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 EF D0 10 00 8A 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 5B 98 0F 00 8B 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 CA 4A 0F 00 8C 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 DC D0 10 00 8D 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 4E 98 0F 00 8E 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 3C 46 0F 00 8F 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 4A 4B 4C 00 90 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 9D E6 0F 00 91 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 0F 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 4B 4B 4C 00 92 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 D3 F8 19 00 93 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 50 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 F2 D0 10 00 94 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 3C 71 0F 00 95 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 67 4B 0F 00 96 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 EE D0 10 00 97 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 58 71 0F 00 98 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 45 4C 0F 00 99 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 8E F8 10 00 9A 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 2D 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 95 F8 19 00 9B 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 E9 69 32 01 E9 69 32 01 11 00 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 3A 95 4E 00 9C 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 09 20 4E 00 9D 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 46 BC 4E 00 9E 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 50 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1F 0A 10 00 9F 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0D 31 10 00 A0 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7A 72 4C 00 A1 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7A 71 0F 00 A2 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 3D 70 4D 00 A3 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 77 5C 10 00 A4 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 F9 23 4E 00 A5 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 08 00 00 00 0A 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 10 47 4E 00 A6 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 BE 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 19 5C 10 00 A7 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 7F 34 10 00 A8 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 34 98 0F 00 A9 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 11 31 10 00 AA 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 57 98 0F 00 AB 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 45 BC 4E 00 AC 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 09 10 00 AD 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 AD DE 0F 00 AE 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 70 4B 0F 00 AF 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0B 00 00 00 0D 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 64 4D 00 B0 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 F0 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 AF E6 0F 00 B1 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 98 34 10 00 B2 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 31 98 0F 00 B3 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 77 83 10 00 B4 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1B D1 10 00 B5 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 58 98 0F 00 B6 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 DE 82 10 00 B7 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FE 09 10 00 B8 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 8A E6 0F 00 B9 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0D 00 00 00 0F 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 20 A6 1B 00 BA 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 BE 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 24 F9 19 00 BB 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 D7 D0 10 00 BC 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 57 71 0F 00 BD 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 EC 4A 0F 00 BE 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E3 D0 10 00 BF 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 64 98 0F 00 C0 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 F3 4A 0F 00 C1 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 A9 F8 10 00 C2 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 8D E6 0F 00 C3 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 0F 00 00 00 11 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 89 83 4F 00 C4 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 8C 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 28 F9 19 00 C5 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 20 D1 10 00 C6 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 58 BF 0F 00 C7 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 55 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 B0 3E 52 00 C8 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 46 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 E2 D0 10 00 C9 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 4F 71 0F 00 CA 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 28 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 77 4B 0F 00 CB 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 2A F8 10 00 CC 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 37 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 13 F9 19 00 CD 21 9A 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00 19 00 00 00 FF FF FF FF 0F 00 00 00 EA 69 32 01 EA 69 32 01 11 00 00 00 13 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1F 00 00 00"));
-        }
-
-        return mplew.getPacket();
-    }
-
-    public static void toCashItem(MaplePacketLittleEndianWriter mplew, int sn, int type1, int type2) {
-            // E1 9C 98 00 00 06 00 00 00 - Globe Cap
-            mplew.writeInt(sn);
-            mplew.write(0);
-            mplew.write(type1);
-            mplew.writeShort(0);
-            mplew.write(type2);
-    }
-
-    public static void toCashItem(MaplePacketLittleEndianWriter mplew, int sn, int type0, int type1, int type2) {
-            mplew.writeInt(sn);
-            mplew.write(type0);
-            mplew.write(type1);
-            mplew.writeShort(0);
-            mplew.write(type2);
-    }
-
-    public static MaplePacket showNXMapleTokens(MapleCharacter chr) {
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.writeShort(SendPacketOpcode.CS_UPDATE.getValue());
-            mplew.writeInt(chr.getCSPoints(1)); // Paypal/PayByCash NX
-            mplew.writeInt(chr.getCSPoints(2)); // Maple Points
-            mplew.writeInt(chr.getCSPoints(4)); // Game Card NX
-
-            return mplew.getPacket();
-    }
-
-    public static MaplePacket warpCS(MapleClient c) {
-        return warpCS(c, false);
-    }
-
-    public static MaplePacket warpMTS(MapleClient c) {
-        return warpCS(c, true);
-    }
-
-    public static MaplePacket showBoughtCSItem(int itemid) {
-            // FE 00
-            // 3B 32 F0 00
-            // 00 00 00 00
-            // 00
-            // 80 B0 41 00
-            // 00 00 00 00
-            // 05 20 4E 00 - item ID
-            // CD D0 CC 01 01 00 00 04 F1 4B 40 00 80 00 00 00 01 00 00 E0 CE 0D 5F BB 53 C9 01 00 00 00 00 00 00 00 00
-
-            // FE 00
-            // 3B 41 4F 32
-            // 00 00 00 00
-            // 00
-            // 80 B0 41 00
-            // 00 00 00 00
-            // 05 20 4E 00 - item ID
-            // CD D0 CC 01 01 00 00 0A F1 4B 40 00 80 00 00 00 01 00 00 10 CB E9 4A BD 53 C9 01
-            // 00 00 00 00 00 00 00 00
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-            mplew.writeInt(15741499);
-            mplew.writeInt(0);
-            mplew.writeShort(0);
-            mplew.writeInt(4305024);
-            mplew.writeInt(0);
-            mplew.writeInt(itemid);
-            mplew.write(HexTool.getByteArrayFromHexString("CD D0 CC 01 01 00 00 0A F1 4B 40 00 80 00 00 00 01 00 00 10 CB E9 4A BD 53 C9 01"));
-            mplew.writeLong(0);
-
-            return mplew.getPacket();
-    }
-
-    public static MaplePacket showBoughtCSQuestItem(byte position, int itemid) {
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-            mplew.writeInt(365);
-            mplew.write(0);
-            mplew.writeShort(1);
-            mplew.write(position);
-            mplew.write(0);
-            mplew.writeInt(itemid);
-
-            return mplew.getPacket();
-    }
-	
-    public static MaplePacket showCouponRedeemedItem(int itemid) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-        mplew.writeShort(0x3A);
-        mplew.writeInt(0);
-        mplew.writeInt(1);
-        mplew.writeShort(1);
-        mplew.writeShort(0x1A);
-        mplew.writeInt(itemid);
-        mplew.writeInt(0);
-
-        return mplew.getPacket();
-    }
-	
-    public static MaplePacket enableCSUse0() {
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.write(HexTool.getByteArrayFromHexString("12 00 00 00 00 00 00"));
-
-            return mplew.getPacket();
-    }
-
-    public static MaplePacket enableCSUse1() {
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-            mplew.writeShort(0x2F);
-            mplew.write(0);
-            mplew.writeShort(4);
-            mplew.writeShort(3);
-
-            return mplew.getPacket();
-    }
-
-    public static MaplePacket enableCSUse2() {
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-            mplew.write(0x31);
-            mplew.writeShort(0);
-
-            return mplew.getPacket();
-    }
-
-    public static MaplePacket enableCSUse3() {
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-            mplew.write(0x33);
-            mplew.write(new byte[40]);
-
-            return mplew.getPacket();
-    }
-        
-    /*
-    public static MaplePacket getCSInventory(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-        mplew.write(Operation_Code + 4); // 5 = Failed + transfer
-        CashShop mci = c.getPlayer().getCashInventory();
-        mplew.writeShort(mci.getItemsSize());
-        if (mci.getItemsSize() > 0) {
-            int size = 0;
-            for (Item itemz : mci.getInventory()) {
-                addCashItemInfo(mplew, itemz, c.getAccID(), 0);
-                if (GameConstants.isPet(itemz.getItemId()) || GameConstants.getInventoryType(itemz.getItemId()) == MapleInventoryType.EQUIP) {
-                    size++;
-                }
-            }
-            mplew.writeInt(size);
-            for (Item itemz : mci.getInventory()) {
-                if (GameConstants.isPet(itemz.getItemId()) || GameConstants.getInventoryType(itemz.getItemId()) == MapleInventoryType.EQUIP) {
-                    PacketHelper.addItemInfo(mplew, itemz);
-                }
-            }
-        }
-        mplew.writeShort(c.getPlayer().getStorage().getSlots());
-        mplew.writeShort(c.getCharacterSlots());
-        mplew.writeShort(0);
-        mplew.writeShort(4); //04 00 <-- added?
-
-        return mplew.getPacket();
-    }
-    */
-	
-    // Decoding : Raz (Snow) | Author : Penguins (Acrylic) | Finishing: Bassoe
-    public static MaplePacket sendWishList(int characterid) {
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue()); 
-            mplew.write(0x33);
-            Connection con = DatabaseConnection.getConnection();
-            int i = 10;
-
-            try {
-                    PreparedStatement ps = con.prepareStatement("SELECT sn FROM wishlist WHERE characterid = ? LIMIT 10");
-                    ps.setInt(1, characterid);
-                    ResultSet rs = ps.executeQuery();
-                    while (rs.next()) {
-                            mplew.writeInt(rs.getInt("sn"));
-                            i--;
-                    }
-                    rs.close();
-                    ps.close();
-            } catch (SQLException se) {
-                    log.info("Error getting wishlist data:", se);
-            }
-            while (i > 0) {
-                    mplew.writeInt(0);
-                    i--;
-            }
-
-            return mplew.getPacket();
-    }
-
-    // Decoding : Raz (Snow) | Author : Penguins (Acrylic) | Finishing: Bassoe
-    public static MaplePacket updateWishList(int characterid) {
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-            mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-            mplew.write(0x39);
-
-            Connection con = DatabaseConnection.getConnection();
-            int i = 10;
-
-            try {
-                    PreparedStatement ps = con.prepareStatement("SELECT sn FROM wishlist WHERE characterid = ? LIMIT 10");
-                    ps.setInt(1, characterid);
-                    ResultSet rs = ps.executeQuery();
-                    while (rs.next()) {
-                            mplew.writeInt(rs.getInt("sn"));
-                            i--;
-                    }
-                    rs.close();
-                    ps.close();
-            } catch (SQLException se) {
-                    log.info("Error getting wishlist data:", se);
-            }
-
-            while (i > 0) {
-                    mplew.writeInt(0);
-                    i--;
-            }
-
-            return mplew.getPacket();
-    }
-
-    public static MaplePacket wrongCouponCode() {
-            // FE 00 40 87
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-            mplew.write(0x40);
-            mplew.write(0x87);
-
-            return mplew.getPacket();
-    }
-
-    public static MaplePacket getFindReplyWithCS(String target) {
-            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-            mplew.writeShort(SendPacketOpcode.WHISPER.getValue());
-            mplew.write(9);
-            mplew.writeMapleAsciiString(target);
-            mplew.write(2);
-            mplew.writeInt(-1);
-
-            return mplew.getPacket();
-    }
-	
-    public static MaplePacket updatePet(MaplePet pet, boolean alive) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.MODIFY_INVENTORY_ITEM.getValue());
-        mplew.write(0);
-        mplew.write(2);
-        mplew.write(3);
-        mplew.write(5);
-        mplew.write(pet.getPosition());
-        mplew.writeShort(0);
-        mplew.write(5);
-        mplew.write(pet.getPosition());
-        mplew.write(0);
-        mplew.write(3);
-        mplew.writeInt(pet.getItemId());
-        mplew.write(1);
-        mplew.writeInt(pet.getUniqueId());
-        mplew.writeInt(0);
-        mplew.write(HexTool.getByteArrayFromHexString("00 40 6f e5 0f e7 17 02"));
-        String petname = pet.getName();
-        if (petname.length() > 13) {
-            petname = petname.substring(0, 13);
-        }
-        mplew.writeAsciiString(petname);
-        for (int i = petname.length(); i < 13; i++) {
-            mplew.write(0);
-        }
-        mplew.write(pet.getLevel());
-        mplew.writeShort(pet.getCloseness());
-        mplew.write(pet.getFullness());
-        if (alive) {
-            mplew.writeLong(getKoreanTimestamp((long) (System.currentTimeMillis() * 1.5)));
-            mplew.writeInt(0);
-        } else {
-            mplew.write(0);
-            mplew.write(ITEM_MAGIC);
-            mplew.write(HexTool.getByteArrayFromHexString("bb 46 e6 17 02 00 00 00 00"));
-        }
-
-        return mplew.getPacket();
-    }
-	
-	public static MaplePacket showPet(MapleCharacter chr, MaplePet pet, boolean remove) {
-        return showPet(chr, pet, remove, false);
-    }
-
-    public static MaplePacket showPet(MapleCharacter chr, MaplePet pet, boolean remove, boolean hunger) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.SPAWN_PET.getValue());
-        mplew.writeInt(chr.getId());
-        mplew.write(chr.getPetIndex(pet));
-        if (remove) {
-            mplew.write(0);
-            mplew.write(hunger ? 1 : 0);
-        } else {
-            mplew.write(1);
-            mplew.write(0);
-            mplew.writeInt(pet.getItemId());
-            mplew.writeMapleAsciiString(pet.getName());
-            mplew.writeInt(pet.getUniqueId());
-            mplew.writeInt(0);
-            mplew.writeShort(pet.getPos().x);
-            mplew.writeShort(pet.getPos().y);
-            mplew.write(pet.getStance());
-            mplew.writeInt(pet.getFh());
-        }
-
-        return mplew.getPacket();
-    }
     
      public static MaplePacket itemExpired(int itemid) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendPacketOpcode.SHOW_STATUS_INFO.getValue());
         mplew.write(2);
         mplew.writeInt(itemid);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket movePet(int cid, int pid, int slot, List<LifeMovementFragment> moves) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.MOVE_PET.getValue());
-        mplew.writeInt(cid);
-        mplew.write(slot);
-        mplew.writeInt(pid);
-        serializeMovementList(mplew, moves);
-
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket petChat(int cid, int un, String text, int slot) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.PET_CHAT.getValue());
-        mplew.writeInt(cid);
-        mplew.write(slot);
-        mplew.writeShort(un);
-        mplew.writeMapleAsciiString(text);
-        mplew.write(0);
-
-        return mplew.getPacket();
-    }
-
-	public static MaplePacket commandResponse(int cid, byte command, int slot, boolean success, boolean food) {
-        // 84 00 09 03 2C 00 00 00 19 00 00
-        // 84 00 E6 DC 17 00 00 01 00 00
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.PET_COMMAND.getValue());
-        mplew.writeInt(cid);
-        mplew.write(slot);
-        if (!food) {
-            mplew.write(0);
-        }
-        mplew.write(command);
-        if (success) {
-            mplew.write(1);
-        } else {
-            mplew.write(0);
-        }
-        mplew.write(0);
-
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket showOwnPetLevelUp(int index) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.SHOW_ITEM_GAIN_INCHAT.getValue());
-        mplew.write(4);
-        mplew.write(0);
-        mplew.write(index); // Pet Index
-
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket showPetLevelUp(MapleCharacter chr, int index) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.SHOW_FOREIGN_EFFECT.getValue());
-        mplew.writeInt(chr.getId());
-        mplew.write(4);
-        mplew.write(0);
-        mplew.write(index);
-
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket changePetName(MapleCharacter chr, String newname, int slot) {
-        // 82 00 E6 DC 17 00 00 04 00 4A 65 66 66 00
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.PET_NAMECHANGE.getValue());
-        mplew.writeInt(chr.getId());
-        mplew.write(0);
-        mplew.writeMapleAsciiString(newname);
-        mplew.write(0);
-
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket petStatUpdate(MapleCharacter chr) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.UPDATE_STATS.getValue());
-        int mask = 0;
-        mask |= MapleStat.PET.getValue();
-        mplew.write(0);
-        mplew.writeInt(mask);
-        MaplePet[] pets = chr.getPets();
-        for (int i = 0; i < 3; i++) {
-            if (pets[i] != null) {
-                mplew.writeInt(pets[i].getUniqueId());
-                mplew.writeInt(0);
-            } else {
-                mplew.writeLong(0);
-            }
-        }
-        mplew.write(0);
-
         return mplew.getPacket();
     }
 	
@@ -5607,123 +4760,123 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         return mplew.getPacket();
     }
 	
-	public static MaplePacket showEquipEffect() {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+    public static MaplePacket showEquipEffect() {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		mplew.writeShort(SendPacketOpcode.SHOW_EQUIP_EFFECT.getValue());
+            mplew.writeShort(SendPacketOpcode.SHOW_EQUIP_EFFECT.getValue());
 
-		return mplew.getPacket();
-	}
-	
-	public static MaplePacket summonSkill(int cid, int summonSkillId, int newStance) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            return mplew.getPacket();
+    }
 
-		mplew.writeShort(SendPacketOpcode.SUMMON_SKILL.getValue());
-		mplew.writeInt(cid);
-		mplew.writeInt(summonSkillId);
-		mplew.write(newStance);
+    public static MaplePacket summonSkill(int cid, int summonSkillId, int newStance) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		return mplew.getPacket();
-	}
-	
-	public static MaplePacket skillCooldown(int sid, int time) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort(SendPacketOpcode.SUMMON_SKILL.getValue());
+            mplew.writeInt(cid);
+            mplew.writeInt(summonSkillId);
+            mplew.write(newStance);
 
-		mplew.writeShort(SendPacketOpcode.COOLDOWN.getValue());
-		mplew.writeInt(sid);
-		mplew.writeShort(time);
+            return mplew.getPacket();
+    }
 
-		return mplew.getPacket();
-	}
-	
-	public static MaplePacket skillBookSuccess(MapleCharacter chr, int skillid, int maxlevel, boolean canuse, boolean success) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+    public static MaplePacket skillCooldown(int sid, int time) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		mplew.writeShort(SendPacketOpcode.USE_SKILL_BOOK.getValue());
-		mplew.writeInt(chr.getId()); // character id
-		mplew.write(1);
-		mplew.writeInt(skillid);
-		mplew.writeInt(maxlevel);
-		mplew.write(canuse ? 1 : 0);
-		mplew.write(success ? 1 : 0);
+            mplew.writeShort(SendPacketOpcode.COOLDOWN.getValue());
+            mplew.writeInt(sid);
+            mplew.writeShort(time);
 
-		return mplew.getPacket();
-	}
-	
-	public static MaplePacket getMacros(SkillMacro[] macros) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            return mplew.getPacket();
+    }
 
-		mplew.writeShort(SendPacketOpcode.SKILL_MACRO.getValue());
-		int count = 0;
-		for (int i = 0; i < 5; i++) {
-			if (macros[i] != null) {
-				count++;
-			}
-		}
-		mplew.write(count); // number of macros
-		for (int i = 0; i < 5; i++) {
-			SkillMacro macro = macros[i];
-			if (macro != null) {
-				mplew.writeMapleAsciiString(macro.getName());
-				mplew.write(macro.getShout());
-				mplew.writeInt(macro.getSkill1());
-				mplew.writeInt(macro.getSkill2());
-				mplew.writeInt(macro.getSkill3());
-			}
-		}
+    public static MaplePacket skillBookSuccess(MapleCharacter chr, int skillid, int maxlevel, boolean canuse, boolean success) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		return mplew.getPacket();
-	}
-	
-	public static MaplePacket getPlayerNPC(int charid, int npcid) {
-	/*
-	* Dear LoOpEdd,
-	* 
-	* Even though you are a die-hard legit, you have
-	* just assisted the private server community by
-	* letting me packet sniff your player NPC
-	* 
-	* Sincerely,
-	* Acrylic
-	*/
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort(SendPacketOpcode.USE_SKILL_BOOK.getValue());
+            mplew.writeInt(chr.getId()); // character id
+            mplew.write(1);
+            mplew.writeInt(skillid);
+            mplew.writeInt(maxlevel);
+            mplew.write(canuse ? 1 : 0);
+            mplew.write(success ? 1 : 0);
 
-		mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
-		Connection con = DatabaseConnection.getConnection();
-		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM characters WHERE id = ?");
-			ps.setInt(1, charid);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				mplew.write(1); //Direction
-				mplew.writeInt(npcid);
-				mplew.writeMapleAsciiString(rs.getString("name"));
-				mplew.write(0);
-				mplew.write(rs.getByte("skin"));
-				mplew.writeInt(rs.getInt("face"));
-				mplew.write(0);
-				mplew.writeInt(rs.getInt("hair"));
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException se) {
-			log.warn("We warn thee...", se);
-		}
-		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM inventoryitems WHERE characterid = ? AND inventorytype = -1");
-			ps.setInt(1, charid);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				mplew.write(rs.getInt("position"));
-				mplew.writeInt(rs.getInt("itemid"));
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException se) {
-			log.warn("We warn thee...", se);
-		}
-		mplew.writeShort(-1);
-		int count = 0;
+            return mplew.getPacket();
+    }
+
+    public static MaplePacket getMacros(SkillMacro[] macros) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+
+            mplew.writeShort(SendPacketOpcode.SKILL_MACRO.getValue());
+            int count = 0;
+            for (int i = 0; i < 5; i++) {
+                    if (macros[i] != null) {
+                            count++;
+                    }
+            }
+            mplew.write(count); // number of macros
+            for (int i = 0; i < 5; i++) {
+                    SkillMacro macro = macros[i];
+                    if (macro != null) {
+                            mplew.writeMapleAsciiString(macro.getName());
+                            mplew.write(macro.getShout());
+                            mplew.writeInt(macro.getSkill1());
+                            mplew.writeInt(macro.getSkill2());
+                            mplew.writeInt(macro.getSkill3());
+                    }
+            }
+
+            return mplew.getPacket();
+    }
+
+    public static MaplePacket getPlayerNPC(int charid, int npcid) {
+    /*
+    * Dear LoOpEdd,
+    * 
+    * Even though you are a die-hard legit, you have
+    * just assisted the private server community by
+    * letting me packet sniff your player NPC
+    * 
+    * Sincerely,
+    * Acrylic
+    */
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+
+            mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
+            Connection con = DatabaseConnection.getConnection();
+            try {
+                    PreparedStatement ps = con.prepareStatement("SELECT * FROM characters WHERE id = ?");
+                    ps.setInt(1, charid);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                            mplew.write(1); //Direction
+                            mplew.writeInt(npcid);
+                            mplew.writeMapleAsciiString(rs.getString("name"));
+                            mplew.write(0);
+                            mplew.write(rs.getByte("skin"));
+                            mplew.writeInt(rs.getInt("face"));
+                            mplew.write(0);
+                            mplew.writeInt(rs.getInt("hair"));
+                    }
+                    rs.close();
+                    ps.close();
+            } catch (SQLException se) {
+                    log.warn("We warn thee...", se);
+            }
+            try {
+                    PreparedStatement ps = con.prepareStatement("SELECT * FROM inventoryitems WHERE characterid = ? AND inventorytype = -1");
+                    ps.setInt(1, charid);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                            mplew.write(rs.getInt("position"));
+                            mplew.writeInt(rs.getInt("itemid"));
+                    }
+                    rs.close();
+                    ps.close();
+            } catch (SQLException se) {
+                    log.warn("We warn thee...", se);
+            }
+            mplew.writeShort(-1);
+            int count = 0;
 //		try {
 //			PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 1");
 //			ps.setInt(1, id);
@@ -5737,370 +4890,370 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
 //		} catch (SQLException se) {
 //			log.warn("We warn thee...", se);
 //		}
-		while (count < 4) {
-			mplew.writeInt(0);
-			count += 1;
-		}
+            while (count < 4) {
+                    mplew.writeInt(0);
+                    count += 1;
+            }
 
-		return mplew.getPacket();
-	}
-	
-	public static MaplePacket getPlayerNPC(PlayerNPCMerchant merchant) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
-		mplew.write(1); //Direction
-		mplew.writeInt(merchant.getNpcId());
-		mplew.writeMapleAsciiString(merchant.getName());
-		mplew.write(0);
-		mplew.write(merchant.getSkin());
-		mplew.writeInt(merchant.getFace());
-		mplew.write(0);
-		mplew.writeInt(merchant.getHair());
-		//Loop through equips
-		if (merchant.getHat() != -1) {
-			mplew.write(1);
-			mplew.writeInt(merchant.getHat());
-		}
-		if (merchant.getMask() != -1) {
-			mplew.write(2);
-			mplew.writeInt(merchant.getMask());
-		}
-		if (merchant.getEyes() != -1) {
-			mplew.write(3);
-			mplew.writeInt(merchant.getEyes());
-		}
-		if (merchant.getEarring() != -1) {
-			mplew.write(4);
-			mplew.writeInt(merchant.getEarring());
-		}
-		if (merchant.getTop() != -1) {
-			mplew.write(5);
-			mplew.writeInt(merchant.getTop());
-		}
-		if (merchant.getBottom() != -1) {
-			mplew.write(6);
-			mplew.writeInt(merchant.getBottom());
-		}
-		if (merchant.getShoes() != -1) {
-			mplew.write(7);
-			mplew.writeInt(merchant.getShoes());
-		}
-		if (merchant.getGlove() != -1) {
-			mplew.write(8);
-			mplew.writeInt(merchant.getGlove());
-		}
-		if (merchant.getCape() != -1) {
-			mplew.write(9);
-			mplew.writeInt(merchant.getCape());
-		}
-		if (merchant.getShield() != -1) {
-			mplew.write(10);
-			mplew.writeInt(merchant.getShield());
-		}
-		if (merchant.getWeapon() != -1) {
-			mplew.write(11);
-			mplew.writeInt(merchant.getWeapon());
-		}
+            return mplew.getPacket();
+    }
 
-		mplew.writeShort(-1);
-		int count = 0;
-		// try {
-			// PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 1");
-			// ps.setInt(1, id);
-			// ResultSet rs = ps.executeQuery();
-			// while (rs.next()) {
-				// mplew.writeInt(rs.getInt("equipid"));
-				// count += 1;
-			// }
-			// rs.close();
-			// ps.close();
-		// } catch (SQLException se) {
-			// log.warn("We warn thee...", se);
-		// }
-		while (count < 4) {
-			mplew.writeInt(0);
-			count += 1;
-		}
+    public static MaplePacket getPlayerNPC(PlayerNPCMerchant merchant) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
+            mplew.write(1); //Direction
+            mplew.writeInt(merchant.getNpcId());
+            mplew.writeMapleAsciiString(merchant.getName());
+            mplew.write(0);
+            mplew.write(merchant.getSkin());
+            mplew.writeInt(merchant.getFace());
+            mplew.write(0);
+            mplew.writeInt(merchant.getHair());
+            //Loop through equips
+            if (merchant.getHat() != -1) {
+                    mplew.write(1);
+                    mplew.writeInt(merchant.getHat());
+            }
+            if (merchant.getMask() != -1) {
+                    mplew.write(2);
+                    mplew.writeInt(merchant.getMask());
+            }
+            if (merchant.getEyes() != -1) {
+                    mplew.write(3);
+                    mplew.writeInt(merchant.getEyes());
+            }
+            if (merchant.getEarring() != -1) {
+                    mplew.write(4);
+                    mplew.writeInt(merchant.getEarring());
+            }
+            if (merchant.getTop() != -1) {
+                    mplew.write(5);
+                    mplew.writeInt(merchant.getTop());
+            }
+            if (merchant.getBottom() != -1) {
+                    mplew.write(6);
+                    mplew.writeInt(merchant.getBottom());
+            }
+            if (merchant.getShoes() != -1) {
+                    mplew.write(7);
+                    mplew.writeInt(merchant.getShoes());
+            }
+            if (merchant.getGlove() != -1) {
+                    mplew.write(8);
+                    mplew.writeInt(merchant.getGlove());
+            }
+            if (merchant.getCape() != -1) {
+                    mplew.write(9);
+                    mplew.writeInt(merchant.getCape());
+            }
+            if (merchant.getShield() != -1) {
+                    mplew.write(10);
+                    mplew.writeInt(merchant.getShield());
+            }
+            if (merchant.getWeapon() != -1) {
+                    mplew.write(11);
+                    mplew.writeInt(merchant.getWeapon());
+            }
 
-		return mplew.getPacket();
-	}
+            mplew.writeShort(-1);
+            int count = 0;
+            // try {
+                    // PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 1");
+                    // ps.setInt(1, id);
+                    // ResultSet rs = ps.executeQuery();
+                    // while (rs.next()) {
+                            // mplew.writeInt(rs.getInt("equipid"));
+                            // count += 1;
+                    // }
+                    // rs.close();
+                    // ps.close();
+            // } catch (SQLException se) {
+                    // log.warn("We warn thee...", se);
+            // }
+            while (count < 4) {
+                    mplew.writeInt(0);
+                    count += 1;
+            }
 
-	public static MaplePacket getPlayerNPC(int id) {
-	/*
-	* Dear LoOpEdd,
-	* 
-	* Even though you are a die-hard legit, you have
-	* just assisted the private server community by
-	* letting me packet sniff your player NPC
-	* 
-	* Sincerely,
-	* Acrylic
-	*/
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            return mplew.getPacket();
+    }
 
-		mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
-		Connection con = DatabaseConnection.getConnection();
-		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs WHERE id = ?");
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				mplew.write(rs.getByte("dir"));
-				//mplew.writeShort(rs.getInt("x"));
-				//mplew.writeShort(rs.getInt("y"));
-				mplew.writeInt(rs.getInt("npcid"));
-				mplew.writeMapleAsciiString(rs.getString("name"));
-				mplew.write(0);
-				mplew.write(rs.getByte("skin"));
-				mplew.writeInt(rs.getInt("face"));
-				mplew.write(0);
-				mplew.writeInt(rs.getInt("hair"));
-			   /*
-				* 01 // hat
-				* CA 4A 0F 00 // 1002186 - transparent hat
-				* 03 // eye accessory
-				* 4F 98 0F 00 // 1022031 - white toy shades
-				* 04 // earring
-				* 58 BF 0F 00 // 1032024 - transparent earrings
-				* 05 // top
-				* D1 E6 0F 00 // 1042129 - ? unknown top maybe?
-				* 06 // bottom
-				* 9F 34 10 00 // 1062047 - brisk (pants)
-				* 07 // shoes
-				* 82 5C 10 00 // 1072258 - kitty slippers
-				* 08 // gloves
-				* 01 83 10 00 // 1082113 - hair cutter gloves
-				* 09 // cape
-				* D7 D0 10 00 // 1102039 - transparent cape
-				* 0B // weapon
-				* 00 76 16 // ?
-				* 00
-				* FF FF
-				* D3 F8 19 00 // 1702099 - transparent claw
-				* 00 00 00 00
-				* 00 00 00 00
-				* 00 00 00 00
-				*/
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException se) {
-			log.warn("We warn thee...", se);
-		}
-		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 0");
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				mplew.write(rs.getByte("equippos"));
-				mplew.writeInt(rs.getInt("equipid"));
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException se) {
-			log.warn("We warn thee...", se);
-		}
-		mplew.writeShort(-1);
-		int count = 0;
-		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 1");
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				mplew.writeInt(rs.getInt("equipid"));
-				count += 1;
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException se) {
-			log.warn("We warn thee...", se);
-		}
-		while (count < 4) {
-			mplew.writeInt(0);
-			count += 1;
-		}
+    public static MaplePacket getPlayerNPC(int id) {
+    /*
+    * Dear LoOpEdd,
+    * 
+    * Even though you are a die-hard legit, you have
+    * just assisted the private server community by
+    * letting me packet sniff your player NPC
+    * 
+    * Sincerely,
+    * Acrylic
+    */
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		return mplew.getPacket();
-	}
-	
-	public static MaplePacket getPlayerNPC(int id, MapleCharacter player) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
-		Connection con = DatabaseConnection.getConnection();
-		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs WHERE id = ?");
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				mplew.write(rs.getByte("dir"));
-				mplew.writeShort(player.getPosition().x);
-				mplew.writeShort(player.getPosition().y);
-				mplew.writeMapleAsciiString(player.getName());
-				mplew.write(0);
-				mplew.write(rs.getByte("skin"));
-				mplew.writeInt(rs.getInt("face"));
-                mplew.writeInt(player.getMap().getId());
-				mplew.write(0);
-				mplew.writeInt(rs.getInt("hair"));
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException se) {
-			log.warn("We warn thee...", se);
-		}
-		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 0");
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				mplew.write(rs.getByte("equippos"));
-				mplew.writeInt(rs.getInt("equipid"));
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException se) {
-			log.warn("We warn thee...", se);
-		}
-		mplew.writeShort(-1);
-		int count = 0;
-		try {
-			PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 1");
-			ps.setInt(1, id);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				mplew.writeInt(rs.getInt("equipid"));
-				count += 1;
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException se) {
-			log.warn("We warn thee...", se);
-		}
-		while (count < 4) {
-			mplew.writeInt(0);
-			count += 1;
-		}
+            mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
+            Connection con = DatabaseConnection.getConnection();
+            try {
+                    PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs WHERE id = ?");
+                    ps.setInt(1, id);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                            mplew.write(rs.getByte("dir"));
+                            //mplew.writeShort(rs.getInt("x"));
+                            //mplew.writeShort(rs.getInt("y"));
+                            mplew.writeInt(rs.getInt("npcid"));
+                            mplew.writeMapleAsciiString(rs.getString("name"));
+                            mplew.write(0);
+                            mplew.write(rs.getByte("skin"));
+                            mplew.writeInt(rs.getInt("face"));
+                            mplew.write(0);
+                            mplew.writeInt(rs.getInt("hair"));
+                       /*
+                            * 01 // hat
+                            * CA 4A 0F 00 // 1002186 - transparent hat
+                            * 03 // eye accessory
+                            * 4F 98 0F 00 // 1022031 - white toy shades
+                            * 04 // earring
+                            * 58 BF 0F 00 // 1032024 - transparent earrings
+                            * 05 // top
+                            * D1 E6 0F 00 // 1042129 - ? unknown top maybe?
+                            * 06 // bottom
+                            * 9F 34 10 00 // 1062047 - brisk (pants)
+                            * 07 // shoes
+                            * 82 5C 10 00 // 1072258 - kitty slippers
+                            * 08 // gloves
+                            * 01 83 10 00 // 1082113 - hair cutter gloves
+                            * 09 // cape
+                            * D7 D0 10 00 // 1102039 - transparent cape
+                            * 0B // weapon
+                            * 00 76 16 // ?
+                            * 00
+                            * FF FF
+                            * D3 F8 19 00 // 1702099 - transparent claw
+                            * 00 00 00 00
+                            * 00 00 00 00
+                            * 00 00 00 00
+                            */
+                    }
+                    rs.close();
+                    ps.close();
+            } catch (SQLException se) {
+                    log.warn("We warn thee...", se);
+            }
+            try {
+                    PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 0");
+                    ps.setInt(1, id);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                            mplew.write(rs.getByte("equippos"));
+                            mplew.writeInt(rs.getInt("equipid"));
+                    }
+                    rs.close();
+                    ps.close();
+            } catch (SQLException se) {
+                    log.warn("We warn thee...", se);
+            }
+            mplew.writeShort(-1);
+            int count = 0;
+            try {
+                    PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 1");
+                    ps.setInt(1, id);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                            mplew.writeInt(rs.getInt("equipid"));
+                            count += 1;
+                    }
+                    rs.close();
+                    ps.close();
+            } catch (SQLException se) {
+                    log.warn("We warn thee...", se);
+            }
+            while (count < 4) {
+                    mplew.writeInt(0);
+                    count += 1;
+            }
 
-		return mplew.getPacket();
-	}
-	/** @author Jvlaple **/
-	public static MaplePacket getPlayerNPC(MapleCharacter player) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
-		mplew.write(1); //direction
-		mplew.writeInt(9901000); //NPCID
-		mplew.writeMapleAsciiString(player.getName());
-		mplew.write(0);
-		mplew.write(player.getSkinColor().getId());
-		mplew.writeInt(player.getFace());
-		mplew.write(0);
-		mplew.writeInt(player.getHair());
-		Collection<IItem> equips = player.getInventory(MapleInventoryType.EQUIPPED).list();
-		for (IItem equip : equips) {
-			mplew.write(Math.abs(equip.getPosition()));
-			mplew.writeInt(equip.getItemId());
-		}
-		mplew.writeShort(-1);
-		int count = 0;
+            return mplew.getPacket();
+    }
+
+    public static MaplePacket getPlayerNPC(int id, MapleCharacter player) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
+            Connection con = DatabaseConnection.getConnection();
+            try {
+                    PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs WHERE id = ?");
+                    ps.setInt(1, id);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                            mplew.write(rs.getByte("dir"));
+                            mplew.writeShort(player.getPosition().x);
+                            mplew.writeShort(player.getPosition().y);
+                            mplew.writeMapleAsciiString(player.getName());
+                            mplew.write(0);
+                            mplew.write(rs.getByte("skin"));
+                            mplew.writeInt(rs.getInt("face"));
+            mplew.writeInt(player.getMap().getId());
+                            mplew.write(0);
+                            mplew.writeInt(rs.getInt("hair"));
+                    }
+                    rs.close();
+                    ps.close();
+            } catch (SQLException se) {
+                    log.warn("We warn thee...", se);
+            }
+            try {
+                    PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 0");
+                    ps.setInt(1, id);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                            mplew.write(rs.getByte("equippos"));
+                            mplew.writeInt(rs.getInt("equipid"));
+                    }
+                    rs.close();
+                    ps.close();
+            } catch (SQLException se) {
+                    log.warn("We warn thee...", se);
+            }
+            mplew.writeShort(-1);
+            int count = 0;
+            try {
+                    PreparedStatement ps = con.prepareStatement("SELECT * FROM playernpcs_equip WHERE npcid = ? AND type = 1");
+                    ps.setInt(1, id);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                            mplew.writeInt(rs.getInt("equipid"));
+                            count += 1;
+                    }
+                    rs.close();
+                    ps.close();
+            } catch (SQLException se) {
+                    log.warn("We warn thee...", se);
+            }
+            while (count < 4) {
+                    mplew.writeInt(0);
+                    count += 1;
+            }
+
+            return mplew.getPacket();
+    }
+    /** @author Jvlaple **/
+    public static MaplePacket getPlayerNPC(MapleCharacter player) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort(SendPacketOpcode.PLAYER_NPC.getValue());
+            mplew.write(1); //direction
+            mplew.writeInt(9901000); //NPCID
+            mplew.writeMapleAsciiString(player.getName());
+            mplew.write(0);
+            mplew.write(player.getSkinColor().getId());
+            mplew.writeInt(player.getFace());
+            mplew.write(0);
+            mplew.writeInt(player.getHair());
+            Collection<IItem> equips = player.getInventory(MapleInventoryType.EQUIPPED).list();
+            for (IItem equip : equips) {
+                    mplew.write(Math.abs(equip.getPosition()));
+                    mplew.writeInt(equip.getItemId());
+            }
+            mplew.writeShort(-1);
+            int count = 0;
 //		for (IItem equip : equips) {
 //			mplew.writeInt(equip.getItemId());
 //			count += 1;
 //		}
-		while (count < 4) {
-			mplew.writeInt(0);
-			count += 1;
-		}
+            while (count < 4) {
+                    mplew.writeInt(0);
+                    count += 1;
+            }
 
-		return mplew.getPacket();
-	}
-        
-       public static MaplePacket showNotes(ResultSet notes, int count) throws SQLException {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.SHOW_NOTES.getValue());
-        mplew.write(2);
-        mplew.write(count);
-        for (int i = 0; i < count; i++) {
-            mplew.writeInt(notes.getInt("id"));
-            mplew.writeMapleAsciiString(notes.getString("from"));
-            mplew.writeMapleAsciiString(notes.getString("message"));
-            mplew.writeLong(getKoreanTimestamp(notes.getLong("timestamp")));
-            mplew.write(0);
-            notes.next();
-        }
-        return mplew.getPacket();
+            return mplew.getPacket();
     }
-        
-        
 
-	public static void sendUnkwnNote(String to, String msg, String from) throws SQLException {
-		Connection con = DatabaseConnection.getConnection();
-		PreparedStatement ps = con.prepareStatement("INSERT INTO notes (`to`, `from`, `message`, `timestamp`) VALUES (?, ?, ?, ?)");
-		ps.setString(1, to);
-		ps.setString(2, from);
-		ps.setString(3, msg);
-		ps.setLong(4, System.currentTimeMillis());
-		ps.executeUpdate();
-		ps.close();
-	}
+   public static MaplePacket showNotes(ResultSet notes, int count) throws SQLException {
+    MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+    mplew.writeShort(SendPacketOpcode.SHOW_NOTES.getValue());
+    mplew.write(2);
+    mplew.write(count);
+    for (int i = 0; i < count; i++) {
+        mplew.writeInt(notes.getInt("id"));
+        mplew.writeMapleAsciiString(notes.getString("from"));
+        mplew.writeMapleAsciiString(notes.getString("message"));
+        mplew.writeLong(PacketHelper.getKoreanTimestamp(notes.getLong("timestamp")));
+        mplew.write(0);
+        notes.next();
+    }
+    return mplew.getPacket();
+}
 
-	public static MaplePacket updateAriantPQRanking(String name, int score, boolean empty) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		mplew.writeShort(SendPacketOpcode.ARIANT_PQ_START.getValue());
-		//E9 00 pid
-		//01 unknown
-		//09 00 53 69 6E 50 61 74 6A 65 68 maple ascii string name
-		//00 00 00 00 score
-		mplew.write(empty ? 0 : 1);
-		if (!empty) {
-			mplew.writeMapleAsciiString(name);
-			mplew.writeInt(score);
-		}
 
-		return mplew.getPacket();
-	}
+    public static void sendUnkwnNote(String to, String msg, String from) throws SQLException {
+            Connection con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement("INSERT INTO notes (`to`, `from`, `message`, `timestamp`) VALUES (?, ?, ?, ?)");
+            ps.setString(1, to);
+            ps.setString(2, from);
+            ps.setString(3, msg);
+            ps.setLong(4, System.currentTimeMillis());
+            ps.executeUpdate();
+            ps.close();
+    }
 
-	public static MaplePacket catchMonster(int mobid, int itemid, byte success) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+    public static MaplePacket updateAriantPQRanking(String name, int score, boolean empty) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		mplew.writeShort(SendPacketOpcode.CATCH_MONSTER.getValue());
-		//BF 00 
-		//38 37 2B 00 mob id
-		//32 A3 22 00 item id
-		//00 success??
-		mplew.writeInt(mobid);
-		mplew.writeInt(itemid);
-		mplew.write(success);
+            mplew.writeShort(SendPacketOpcode.ARIANT_PQ_START.getValue());
+            //E9 00 pid
+            //01 unknown
+            //09 00 53 69 6E 50 61 74 6A 65 68 maple ascii string name
+            //00 00 00 00 score
+            mplew.write(empty ? 0 : 1);
+            if (!empty) {
+                    mplew.writeMapleAsciiString(name);
+                    mplew.writeInt(score);
+            }
 
-		return mplew.getPacket();
-	}
+            return mplew.getPacket();
+    }
 
-	public static MaplePacket showAriantScoreBoard() {
-	MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-	mplew.writeShort(SendPacketOpcode.ARIANT_SCOREBOARD.getValue());
-	return mplew.getPacket();
-	}
+    public static MaplePacket catchMonster(int mobid, int itemid, byte success) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-	public static MaplePacket showAllCharacter(int chars, int unk) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.ALL_CHARLIST.getValue());
-		mplew.write(1);
-		mplew.writeInt(chars);
-		mplew.writeInt(unk);
-		return mplew.getPacket();
-	}
+            mplew.writeShort(SendPacketOpcode.CATCH_MONSTER.getValue());
+            //BF 00 
+            //38 37 2B 00 mob id
+            //32 A3 22 00 item id
+            //00 success??
+            mplew.writeInt(mobid);
+            mplew.writeInt(itemid);
+            mplew.write(success);
 
-	public static MaplePacket showAllCharacterInfo(int worldid, List<MapleCharacter> chars) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.ALL_CHARLIST.getValue());
-		mplew.write(0);
-		mplew.write(worldid);
-		mplew.write(chars.size());
-		for (MapleCharacter chr : chars) {
-			addCharEntry(mplew, chr);
-		}
-		return mplew.getPacket();
-	}
+            return mplew.getPacket();
+    }
+
+    public static MaplePacket showAriantScoreBoard() {
+    MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+    mplew.writeShort(SendPacketOpcode.ARIANT_SCOREBOARD.getValue());
+    return mplew.getPacket();
+    }
+
+    public static MaplePacket showAllCharacter(int chars, int unk) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort(SendPacketOpcode.ALL_CHARLIST.getValue());
+            mplew.write(1);
+            mplew.writeInt(chars);
+            mplew.writeInt(unk);
+            return mplew.getPacket();
+    }
+
+    public static MaplePacket showAllCharacterInfo(int worldid, List<MapleCharacter> chars) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort(SendPacketOpcode.ALL_CHARLIST.getValue());
+            mplew.write(0);
+            mplew.write(worldid);
+            mplew.write(chars.size());
+            for (MapleCharacter chr : chars) {
+                    PacketHelper.addCharEntry(mplew, chr);
+            }
+            return mplew.getPacket();
+    }
 
 
     public static MaplePacket useChalkboard(MapleCharacter chr, boolean close) {
@@ -6116,171 +5269,18 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         return mplew.getPacket();
     }
 
-	public static MaplePacket sendMTS(List<MTSItemInfo> items, int tab, int type, int page, int pages) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        
-        mplew.writeShort(SendPacketOpcode.MTS_OPERATION.getValue());
-        mplew.write(0x15); //operation
-        mplew.writeInt(pages * 10);
-        mplew.writeInt(items.size()); //number of items
-        mplew.writeInt(tab);
-        mplew.writeInt(type);
-        mplew.writeInt(page);
-        mplew.write(1);
-        mplew.write(1);
+    public static MaplePacket showZakumShrineTimeLeft(int timeleft) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-        for(int i = 0; i < items.size(); i++)
-        {
-            MTSItemInfo item = items.get(i);
-            addItemInfo(mplew, item.getItem(), true, true);
-            mplew.writeInt(item.getID()); //id
-            mplew.writeInt(item.getTaxes()); //this + below = price
-            mplew.writeInt(item.getPrice()); //price
-            mplew.writeLong(0);
-            mplew.writeInt(KoreanDateUtil.getQuestTimestamp(item.getEndingDate()));
-            mplew.writeMapleAsciiString(item.getSeller()); //account name (what was nexon thinking?)
-            mplew.writeMapleAsciiString(item.getSeller()); //char name
-            for(int ii = 0; ii < 28; ii++)
-                mplew.write(0);
-        }
-        mplew.write(1);
-        
-        return mplew.getPacket();
-	}
+            mplew.writeShort(SendPacketOpcode.ZAKUM_SHRINE.getValue());
+            mplew.write(0);
+            mplew.writeInt(timeleft);
 
-    public static MaplePacket showMTSCash(MapleCharacter p)
-    {
-        //16 01 00 00 00 00 00 00 00 00
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.MTS_OPERATION2.getValue());
-        mplew.writeInt(p.getCSPoints(4));
-        mplew.writeInt(p.getCSPoints(2));
-        return mplew.getPacket();
+            return mplew.getPacket();
     }
 
-    public static MaplePacket MTSWantedListingOver(int nx, int items)
-    {
-        //Listing period on [WANTED] items
-        //(just a message stating you have gotten your NX/items back, only displays if nx or items != 0)
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.MTS_OPERATION.getValue());
-        mplew.write(0x3D);
-        mplew.writeInt(nx);
-        mplew.writeInt(items);
-        return mplew.getPacket();
-    }
 
-    public static MaplePacket MTSConfirmSell()
-    {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.MTS_OPERATION.getValue());
-        mplew.write(0x1D);
-        return mplew.getPacket();
-    }
-    
-    public static MaplePacket MTSConfirmBuy()
-    {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.MTS_OPERATION.getValue());
-        mplew.write(0x33);
-        return mplew.getPacket();
-    }
-    
-    public static MaplePacket MTSFailBuy()
-    {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.MTS_OPERATION.getValue());
-        mplew.write(0x34);
-        mplew.write(0x42);
-        return mplew.getPacket();
-    }
-    
-    public static MaplePacket MTSConfirmTransfer(int quantity, int pos)
-    {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.MTS_OPERATION.getValue());
-        mplew.write(0x27);
-        mplew.writeInt(quantity);
-        mplew.writeInt(pos);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket NotYetSoldInv(List<MTSItemInfo> items)
-    {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        
-        mplew.writeShort(SendPacketOpcode.MTS_OPERATION.getValue());
-        mplew.write(0x23);
-
-        mplew.writeInt(items.size());
-
-        if(items.size() != 0) {
-	        for(MTSItemInfo item : items)
-	        {
-	            addItemInfo(mplew, item.getItem(), true, true);
-	            mplew.writeInt(item.getID()); //id
-	            mplew.writeInt(item.getTaxes()); //this + below = price
-	            mplew.writeInt(item.getPrice()); //price
-	            mplew.writeLong(0);
-				mplew.writeInt(KoreanDateUtil.getQuestTimestamp(item.getEndingDate()));
-	            mplew.writeMapleAsciiString(item.getSeller()); //account name (what was nexon thinking?)
-	            mplew.writeMapleAsciiString(item.getSeller()); //char name
-	            for(int ii = 0; ii < 28; ii++)
-	                mplew.write(0);
-	        }
-        } else{
-        	mplew.writeInt(0);
-        }
-
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket TransferInventory(List<MTSItemInfo> items) {
-    	MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        
-        mplew.writeShort(SendPacketOpcode.MTS_OPERATION.getValue());
-        mplew.write(0x21);
-
-        mplew.writeInt(items.size());
-        
-        if(items.size() != 0) {
-	        for(MTSItemInfo item : items)
-	        {
-	            addItemInfo(mplew, item.getItem(), true, true);
-	            mplew.writeInt(item.getID()); //id
-	            mplew.writeInt(item.getTaxes()); //taxes
-	            mplew.writeInt(item.getPrice()); //price
-	            mplew.writeLong(0);
-	            mplew.writeInt(KoreanDateUtil.getQuestTimestamp(item.getEndingDate()));
-	            mplew.writeMapleAsciiString(item.getSeller()); //account name (what was nexon thinking?)
-	            mplew.writeMapleAsciiString(item.getSeller()); //char name
-	            for(int i = 0; i < 28; i++)
-	                mplew.write(0);
-	        }
-        }
-        mplew.write(0xD0 + items.size());
-        mplew.write(HexTool.getByteArrayFromHexString("FF FF FF 00"));
-
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket enableMTS() {
-        return enableCSUse0();
-    }
-
-	public static MaplePacket showZakumShrineTimeLeft(int timeleft) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-		mplew.writeShort(SendPacketOpcode.ZAKUM_SHRINE.getValue());
-		mplew.write(0);
-		mplew.writeInt(timeleft);
-
-		return mplew.getPacket();
-	}
-
-        
-       public static MaplePacket boatPacket(boolean type) {
-
+    public static MaplePacket boatPacket(boolean type) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendPacketOpcode.BOAT_EFFECT.getValue());
         mplew.writeShort(type ? 1 : 2);
@@ -6288,7 +5288,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         return mplew.getPacket();
     }
         
-         public static MaplePacket showBoatEffect(int effect) {
+    public static MaplePacket showBoatEffect(int effect) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendPacketOpcode.BOAT_EFFECT.getValue());
         mplew.writeShort(effect); //1034: balrog boat comes, 1548: boat comes in ellinia station, 520: boat leaves ellinia station
@@ -6306,30 +5306,30 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         return mplew.getPacket(); 
     }  
 
-	public static MaplePacket TrockRefreshMapList(int characterid, byte vip) { 
- 		        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(); 
- 		        Connection con = DatabaseConnection.getConnection(); 
- 		        int i = 10; 
- 		        mplew.writeShort(SendPacketOpcode.TROCK_LOCATIONS.getValue()); 
- 		        mplew.write(0x03); // unknown 
- 		        mplew.write(vip); // vip/no, please dont put the parameter above 1 -.-
- 		        try { 
- 		            PreparedStatement ps = con.prepareStatement("SELECT mapid FROM trocklocations WHERE characterid = ? LIMIT 10"); 
- 		            ps.setInt(1, characterid); 
- 		            ResultSet rs = ps.executeQuery(); 
- 		            while (rs.next()) { 
- 		                mplew.writeInt(rs.getInt("mapid")); 
- 		            } 
- 		            rs.close(); 
- 		            ps.close(); 
- 		        } catch (SQLException se) { 
- 		        } 
- 		        while (i > 0) { 
- 		            mplew.writeInt(999999999); // write empty maps to remaining slots 
- 		            i--; 
- 		        } 
- 		        return mplew.getPacket(); 
-	}
+    public static MaplePacket TrockRefreshMapList(int characterid, byte vip) { 
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter(); 
+        Connection con = DatabaseConnection.getConnection(); 
+        int i = 10; 
+        mplew.writeShort(SendPacketOpcode.TROCK_LOCATIONS.getValue()); 
+        mplew.write(0x03); // unknown 
+        mplew.write(vip); // vip/no, please dont put the parameter above 1 -.-
+        try { 
+            PreparedStatement ps = con.prepareStatement("SELECT mapid FROM trocklocations WHERE characterid = ? LIMIT 10"); 
+            ps.setInt(1, characterid); 
+            ResultSet rs = ps.executeQuery(); 
+            while (rs.next()) { 
+                mplew.writeInt(rs.getInt("mapid")); 
+            } 
+            rs.close(); 
+            ps.close(); 
+        } catch (SQLException se) { 
+        } 
+        while (i > 0) { 
+            mplew.writeInt(999999999); // write empty maps to remaining slots 
+            i--; 
+        } 
+        return mplew.getPacket(); 
+    }
 
 
     public static MaplePacket showDashP(List<Pair<MapleBuffStat, Integer>> statups, int x, int y, int duration) {
@@ -6350,7 +5350,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
  		mplew.writeShort(0);
  		mplew.write(2);
  		return mplew.getPacket();
- 	}
+    }
 
     public static MaplePacket showDashM(int cid, int x, int y, int duration) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
@@ -6370,92 +5370,29 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
  		mplew.writeShort(0);
         return mplew.getPacket();
     }
-    
-     	public static MaplePacket startCPQ() {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.MONSTER_CARNIVAL_START.getValue());
-		mplew.writeLong(0);
-		mplew.writeLong(0);
-		mplew.writeInt(0);
-		mplew.writeShort(0);
-		mplew.write(0);
-		return mplew.getPacket();
-	}
-			
-	public static MaplePacket startMonsterCarnival(int team) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		mplew.writeShort(SendPacketOpcode.MONSTER_CARNIVAL_START.getValue());
-		mplew.write(team);
-		mplew.write(HexTool.getByteArrayFromHexString("00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"));
-		return mplew.getPacket();
-	}
-
-    public static MaplePacket obtainCP(int unused, int total) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.MONSTER_CARNIVAL_OBTAINED_CP.getValue());
-		mplew.writeShort(unused);
-		mplew.writeShort(total);
-		return mplew.getPacket();
-	}
-
-    public static MaplePacket updateCP(int team, int unused, int total) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.MONSTER_CARNIVAL_PARTY_CP.getValue());
-		mplew.write(team);
-		mplew.writeShort(unused);
-		mplew.writeShort(total);
-		return mplew.getPacket();
-	}
-
-    public static MaplePacket playerSummoned(String name, int tab, int number) {
-		//E5 00
-		//02 tabnumber
-		//04 number
-		//09 00 57 61 72 50 61 74 6A 65 68 name
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		mplew.writeShort(SendPacketOpcode.MONSTER_CARNIVAL_SUMMON.getValue());
-		mplew.write(tab);
-		mplew.write(number);
-		mplew.writeMapleAsciiString(name);
-		return mplew.getPacket();
-	}
-
-
-	public static MaplePacket playerDiedMessage(String name, int lostCP, int team) { //CPQ
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-		mplew.writeShort(SendPacketOpcode.MONSTER_CARNIVAL_DIED.getValue());
-		mplew.write(team); //team
-		mplew.writeMapleAsciiString(name);
-		mplew.write(lostCP);
-		return mplew.getPacket();
-	}
-
-
-
-      public static MaplePacket toSpouse(String sender, String text, int type) {
-			MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-			mplew.writeShort(SendPacketOpcode.SPOUSE_CHAT.getValue());
-			mplew.write(type);
-			if (type == 4) {
-				mplew.write(1);
-			} else {
-				mplew.writeMapleAsciiString(sender);
-				mplew.write(5);
-			}
-			mplew.writeMapleAsciiString(text);
-			return mplew.getPacket();
+    public static MaplePacket toSpouse(String sender, String text, int type) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.SPOUSE_CHAT.getValue());
+        mplew.write(type);
+        if (type == 4) {
+                mplew.write(1);
+        } else {
+                mplew.writeMapleAsciiString(sender);
+                mplew.write(5);
         }
+        mplew.writeMapleAsciiString(text);
+        return mplew.getPacket();
+    }
 
-      public static MaplePacket reportReply(byte type) {
-			MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-			mplew.writeShort(SendPacketOpcode.REPORTREPLY.getValue());
-			mplew.write(type);
-			return mplew.getPacket();
-	 }
+    public static MaplePacket reportReply(byte type) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(SendPacketOpcode.REPORTREPLY.getValue());
+        mplew.write(type);
+        return mplew.getPacket();
+    }
 
-      public static MaplePacket giveEnergyCharge(int barammount, int test2) {
+    public static MaplePacket giveEnergyCharge(int barammount, int test2) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.write(HexTool.getByteArrayFromHexString("1D 00 00 00 00 00 00 00 00 00 00 00 00 08 00 00 00 00 00 00"));
         mplew.writeShort(barammount); // 0=no bar, 10000=full bar
@@ -6484,20 +5421,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         return mplew.getPacket();
     }
 
-	public static MaplePacket CPUpdate(boolean party, int curCP, int totalCP, int team) { //CPQ
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-		if (!party) {
-			mplew.writeShort(SendPacketOpcode.MONSTER_CARNIVAL_OBTAINED_CP.getValue());
-		} else {
-			mplew.writeShort(SendPacketOpcode.MONSTER_CARNIVAL_PARTY_CP.getValue());
-			mplew.write(team); //team?
-		}
-		mplew.writeShort(curCP);
-		mplew.writeShort(totalCP);
-		return mplew.getPacket();
-	}
-	
-	public static MaplePacket yellowChat(String msg) {
+    public static MaplePacket yellowChat(String msg) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort((int) 0x4A);
         mplew.write(5);
@@ -6936,7 +5860,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.write(ips.isOwner(chr) ? 0 : 1);
         mplew.write(0);
         if (type == 2 || type == 3 || type == 4) {
-            addCharLook(mplew, ((MaplePlayerShop) ips).getMCOwner(), false);
+            PacketHelper.addCharLook(mplew, ((MaplePlayerShop) ips).getMCOwner(), false);
             mplew.writeMapleAsciiString(ips.getOwnerName());
         } else {
             mplew.writeInt(((HiredMerchant) ips).getItemId());
@@ -6945,7 +5869,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         for (int i = 0; i < 3; i++) {
             if (ips.getVisitors()[i] != null) {
                 mplew.write(i + 1);
-                addCharLook(mplew, ips.getVisitors()[i], false);
+                PacketHelper.addCharLook(mplew, ips.getVisitors()[i], false);
                 mplew.writeMapleAsciiString(ips.getVisitors()[i].getName());
             }
         }
@@ -7005,7 +5929,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
                     mplew.writeShort(item.getBundles());
                     mplew.writeShort(item.getItem().getQuantity());
                     mplew.writeInt(item.getPrice());
-                    addItemInfo(mplew, item.getItem(), true, true);
+                    PacketHelper.addItemInfo(mplew, item.getItem(), true, true);
                 }
             }
         }
@@ -7138,7 +6062,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
             mplew.writeShort(item.getBundles());
             mplew.writeShort(item.getItem().getQuantity());
             mplew.writeInt(item.getPrice());
-            addItemInfo(mplew, item.getItem(), true, true);
+            PacketHelper.addItemInfo(mplew, item.getItem(), true, true);
         }
         return mplew.getPacket();
     }
@@ -7148,7 +6072,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
         mplew.write(0x04);
         mplew.write(slot);
-        addCharLook(mplew, chr, false);
+        PacketHelper.addCharLook(mplew, chr, false);
         mplew.writeMapleAsciiString(chr.getName());
         if (chr.getInteraction().getShopType() == 4 || chr.getInteraction().getShopType() == 3) {
             MapleMiniGame game = (MapleMiniGame) chr.getInteraction();
@@ -7374,7 +6298,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
                 mplew.write(0);
                 if (dp.getItem() != null) {
                     mplew.write(1);
-                    addItemInfo(mplew, dp.getItem(), true, true);
+                    PacketHelper.addItemInfo(mplew, dp.getItem(), true, true);
                 } else {
                     mplew.write(0);
                 }
@@ -7415,37 +6339,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.write(skill_3);
         mplew.write(skill_4);
         mplew.writePos(startPos);
-        serializeMovementList(mplew, moves);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket sendWishList(int characterid, boolean update) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.CS_OPERATION.getValue());
-        if (update) {
-            mplew.write(0x39);
-        } else {
-            mplew.write(0x33);
-        }
-        Connection con = DatabaseConnection.getConnection();
-        int i = 10;
-        try {
-            PreparedStatement ps = con.prepareStatement("SELECT sn FROM wishlist WHERE characterid = ? LIMIT 10");
-            ps.setInt(1, characterid);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                mplew.writeInt(rs.getInt("sn"));
-                i--;
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException se) {
-            log.info("Error getting wishlist data:", se);
-        }
-        while (i > 0) {
-            mplew.writeInt(0);
-            i--;
-        }
+        PacketHelper.serializeMovementList(mplew, moves);
         return mplew.getPacket();
     }
 
@@ -7453,18 +6347,6 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(SendPacketOpcode.GENDER.getValue());
         mplew.write(chr.getGender());
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getFindReplyWithCSorMTS(String target, boolean mts) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(SendPacketOpcode.WHISPER.getValue());
-        mplew.write(9);
-        mplew.writeMapleAsciiString(target);
-        mplew.write(mts ? 0 : 2);
-        mplew.writeInt(-1);
-
         return mplew.getPacket();
     }
 
@@ -7477,7 +6359,7 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.write(0);
         mplew.write(item.getType()); // 1 show / 0 disapear ? o________o
         mplew.writeShort(item.getPosition()); // update this slot ?
-        addItemInfo(mplew, item, true, true);
+        PacketHelper.addItemInfo(mplew, item, true, true);
         mplew.writeMapleAsciiString(Configuration.Server_Name);
         return mplew.getPacket();
     }
@@ -7490,84 +6372,6 @@ private static void addCharStats(MaplePacketLittleEndianWriter mplew, MapleChara
         mplew.write(reason);
         mplew.writeMapleAsciiString(sReason);
         return mplew.getPacket();
-    }
-
-    public static MaplePacket enableCSorMTS() {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.write(HexTool.getByteArrayFromHexString("12 00 00 00 00 00 00"));
-        return mplew.getPacket();
-    }
-
-        private static void addCharWarp(MaplePacketLittleEndianWriter mplew, MapleCharacter chr) {
-        mplew.writeLong(-1);
-        addCharStats(mplew, chr);
-        mplew.write(chr.getBuddyCapacity());
-        mplew.writeInt(chr.getMeso());
-        mplew.write(100); // equip slots
-        mplew.write(100); // use slots
-        mplew.write(100); // set-up slots
-        mplew.write(100); // etc slots
-        mplew.write(100); // cash slots
-        MapleInventory iv = chr.getInventory(MapleInventoryType.EQUIPPED);
-        Collection<IItem> equippedC = iv.list();
-        List<Item> equipped = new ArrayList<Item>(equippedC.size());
-        for (IItem item : equippedC) {
-            equipped.add((Item) item);
-        }
-        Collections.sort(equipped);
-
-        for (Item item : equipped) {
-            addItemInfo(mplew, item);
-        }
-        mplew.writeShort(0); // start of equip inventory
-
-        iv = chr.getInventory(MapleInventoryType.EQUIP);
-        for (IItem item : iv.list()) {
-            addItemInfo(mplew, item);
-        }
-        mplew.write(0); // start of use inventory
-
-        iv = chr.getInventory(MapleInventoryType.USE);
-        for (IItem item : iv.list()) {
-            addItemInfo(mplew, item);
-        }
-        mplew.write(0); // start of set-up inventory
-
-        iv = chr.getInventory(MapleInventoryType.SETUP);
-        for (IItem item : iv.list()) {
-            addItemInfo(mplew, item);
-        }
-        mplew.write(0); // start of etc inventory
-
-        iv = chr.getInventory(MapleInventoryType.ETC);
-        for (IItem item : iv.list()) {
-            addItemInfo(mplew, item);
-        }
-        mplew.write(0); // start of cash inventory
-
-        iv = chr.getInventory(MapleInventoryType.CASH);
-        for (IItem item : iv.list()) {
-            addItemInfo(mplew, item);
-        }
-        mplew.write(0); // start of skills
-
-        Map<ISkill, MapleCharacter.SkillEntry> skills = chr.getSkills();
-        mplew.writeShort(skills.size());
-        for (Entry<ISkill, MapleCharacter.SkillEntry> skill : skills.entrySet()) {
-            mplew.writeInt(skill.getKey().getId());
-            mplew.writeInt(skill.getValue().skillevel);
-            if (skill.getKey().isFourthJob()) {
-                mplew.writeInt(skill.getValue().masterlevel);
-            }
-        }
-        List<PlayerCoolDownValueHolder> coolDowns = chr.getAllCooldowns();
-        mplew.writeShort(coolDowns.size());
-        for (PlayerCoolDownValueHolder cooling : coolDowns) {
-            mplew.writeInt(cooling.skillId);
-            int timeLeft = (int) (cooling.length + cooling.startTime - System.currentTimeMillis());
-            mplew.writeShort(timeLeft / 1000);
-        }
-        coolDowns.clear();
     }
 
     public static MaplePacket boatArrivePacket(){

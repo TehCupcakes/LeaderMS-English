@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import client.MapleCharacter;
 import database.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

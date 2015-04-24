@@ -4,7 +4,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import handling.MaplePacketHandler;
 import handling.login.LoginWorker;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.KoreanDateUtil;
 import java.util.Calendar;

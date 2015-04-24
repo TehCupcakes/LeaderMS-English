@@ -11,7 +11,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import database.DatabaseConnection;
 import server.maps.MapleMapObjectType;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class MapleMiniGame extends PlayerInteractionManager {
 

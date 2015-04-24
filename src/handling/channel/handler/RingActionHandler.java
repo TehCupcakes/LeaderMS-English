@@ -11,7 +11,7 @@ import handling.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 import scripting.npc.NPCScriptManager;
 import scripting.npc.Marriage;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  * Ring actions o.O

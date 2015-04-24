@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import database.DatabaseConnection;
 import handling.channel.ChannelServer;
 import handling.world.remote.WorldChannelInterface;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class ReportHandler extends AbstractMaplePacketHandler {
     final static int GMGuildId = 198;

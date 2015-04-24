@@ -36,7 +36,7 @@ import handling.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
 import server.maps.MapleMap;
 import server.MapleItemInformationProvider;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**

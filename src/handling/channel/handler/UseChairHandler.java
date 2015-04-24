@@ -5,7 +5,7 @@ import client.MapleClient;
 import client.inventory.MapleInventoryType;
 import client.anticheat.CheatingOffense;
 import handling.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class UseChairHandler extends AbstractMaplePacketHandler {

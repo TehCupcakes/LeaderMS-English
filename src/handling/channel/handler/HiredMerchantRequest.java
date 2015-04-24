@@ -4,7 +4,7 @@ import java.util.Arrays;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
 import server.maps.MapleMapObjectType;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class HiredMerchantRequest extends AbstractMaplePacketHandler {

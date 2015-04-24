@@ -22,7 +22,7 @@
 package client.messages;
 
 import client.MapleClient;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class WhisperMapleClientMessageCallback implements MessageCallback {
 	private MapleClient client;

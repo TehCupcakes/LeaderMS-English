@@ -7,7 +7,7 @@ import client.inventory.MapleInventoryType;
 import client.inventory.MaplePet;
 import handling.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
-import tools.MaplePacketCreator;
+import tools.packet.PetPacket;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class PetFoodHandler extends AbstractMaplePacketHandler {
@@ -48,8 +48,8 @@ public class PetFoodHandler extends AbstractMaplePacketHandler {
                     pet.setCloseness(newCloseness);
                     if (newCloseness >= ExpTable.getClosenessNeededForLevel(pet.getLevel() + 1)) {
                         pet.setLevel(pet.getLevel() + 1);
-                        c.getSession().write(MaplePacketCreator.showOwnPetLevelUp(c.getPlayer().getPetIndex(pet)));
-                        c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.showPetLevelUp(c.getPlayer(), c.getPlayer().getPetIndex(pet)));
+                        c.getSession().write(PetPacket.showOwnPetLevelUp(c.getPlayer().getPetIndex(pet)));
+                        c.getPlayer().getMap().broadcastMessage(PetPacket.showPetLevelUp(c.getPlayer(), c.getPlayer().getPetIndex(pet)));
                     }
                 }
             } else {
@@ -64,8 +64,8 @@ public class PetFoodHandler extends AbstractMaplePacketHandler {
                     }
                 }
             }
-            c.getSession().write(MaplePacketCreator.updatePet(pet, true));
-            c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.commandResponse(c.getPlayer().getId(), (byte) 1, slot, true, true), true);
+            c.getSession().write(PetPacket.updatePet(pet, true));
+            c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(c.getPlayer().getId(), (byte) 1, slot, true, true), true);
             MapleInventoryManipulator.removeById(c, MapleInventoryType.USE, itemId, 1, true, false);
         }
     }

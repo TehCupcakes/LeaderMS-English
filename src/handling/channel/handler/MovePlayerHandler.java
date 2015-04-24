@@ -4,7 +4,7 @@ import java.util.List;
 import client.MapleClient;
 import handling.MaplePacket;
 import server.movement.LifeMovementFragment;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class MovePlayerHandler extends AbstractMovementPacketHandler {

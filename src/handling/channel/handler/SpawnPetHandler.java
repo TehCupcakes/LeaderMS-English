@@ -14,7 +14,8 @@ import client.inventory.PetDataFactory;
 import client.SkillFactory;
 import handling.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
+import tools.packet.PetPacket;
 import tools.Pair;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -70,11 +71,11 @@ public class SpawnPetHandler extends AbstractMaplePacketHandler {
             pet.setFh(player.getMap().getFootholds().findBelow(pet.getPos()).getId());
             pet.setStance(0);
             player.addPet(pet);
-            player.getMap().broadcastMessage(player, MaplePacketCreator.showPet(player, pet, false), true);
+            player.getMap().broadcastMessage(player, PetPacket.showPet(player, pet, false), true);
             int uniqueid = pet.getUniqueId();
             List<Pair<MapleStat, Integer>> stats = new ArrayList<Pair<MapleStat, Integer>>();
             stats.add(new Pair<MapleStat, Integer>(MapleStat.PET, Integer.valueOf(uniqueid)));
-            c.getSession().write(MaplePacketCreator.petStatUpdate(player));
+            c.getSession().write(PetPacket.petStatUpdate(player));
             c.getSession().write(MaplePacketCreator.enableActions());
             int hunger = PetDataFactory.getHunger(pet.getItemId());
             player.startFullnessSchedule(hunger, pet, player.getPetIndex(pet));

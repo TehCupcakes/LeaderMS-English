@@ -24,7 +24,7 @@ package handling.channel.handler;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
 import server.MaplePortal;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class ChangeMapSpecialHandler extends AbstractMaplePacketHandler {

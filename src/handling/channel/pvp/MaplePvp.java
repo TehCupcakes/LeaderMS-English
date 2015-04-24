@@ -9,7 +9,7 @@ import handling.channel.handler.AbstractDealDamageHandler;
 import server.life.MapleMonster;
 import server.life.MapleLifeFactory;
 import server.maps.MapleMap;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class MaplePvp {
 

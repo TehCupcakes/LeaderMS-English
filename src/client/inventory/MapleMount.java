@@ -24,7 +24,7 @@ package client.inventory;
 import client.MapleCharacter;
 import java.util.concurrent.ScheduledFuture;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

@@ -44,7 +44,7 @@ import handling.MaplePacket;
 import handling.channel.ChannelServer;
 import handling.channel.remote.ChannelWorldInterface;
 import handling.world.WorldRegistryImpl;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

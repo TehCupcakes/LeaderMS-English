@@ -29,7 +29,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import server.maps.MapleSummon;
 import server.movement.LifeMovementFragment;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import tools.data.input.StreamUtil;
 

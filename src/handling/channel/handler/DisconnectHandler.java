@@ -8,7 +8,7 @@ package handling.channel.handler;
 import java.rmi.RemoteException;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

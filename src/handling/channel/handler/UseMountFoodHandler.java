@@ -25,7 +25,7 @@ import client.MapleClient;
 import client.inventory.MapleInventoryType;
 import handling.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**

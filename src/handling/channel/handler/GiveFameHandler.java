@@ -26,7 +26,7 @@ import client.MapleClient;
 import client.MapleStat;
 import client.anticheat.CheatingOffense;
 import handling.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class GiveFameHandler extends AbstractMaplePacketHandler {

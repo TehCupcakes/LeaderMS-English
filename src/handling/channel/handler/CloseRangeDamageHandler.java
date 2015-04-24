@@ -30,7 +30,7 @@ import client.MapleJob;
 import client.MapleStat;
 import client.SkillFactory;
 import server.MapleStatEffect;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class CloseRangeDamageHandler extends AbstractDealDamageHandler {

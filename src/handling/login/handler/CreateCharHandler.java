@@ -13,7 +13,7 @@ import client.MapleSkinColor;
 import handling.AbstractMaplePacketHandler;
 import server.MapleItemInformationProvider;
 import tools.FilePrinter;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.StringUtil;
 import tools.data.input.SeekableLittleEndianAccessor;
 

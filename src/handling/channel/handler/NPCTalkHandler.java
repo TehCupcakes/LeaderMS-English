@@ -31,7 +31,7 @@ import server.PlayerNPCEngine;
 import server.life.MapleNPC;
 import server.maps.MapleMapObject;
 import server.maps.PlayerNPCMerchant;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 // 0 = next button

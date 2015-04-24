@@ -13,7 +13,7 @@ import server.MapleInventoryManipulator;
 import server.TimerManager;
 import server.maps.MapleMap;
 import server.maps.MapleMapObjectType;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

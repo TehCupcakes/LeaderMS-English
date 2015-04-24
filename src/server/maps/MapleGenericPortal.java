@@ -30,7 +30,7 @@ import handling.channel.ChannelServer;
 import scripting.portal.PortalScriptManager;
 import server.MaplePortal;
 import server.fourthjobquests.FourthJobQuestsPortalHandler;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class MapleGenericPortal implements MaplePortal {
 	private String name;

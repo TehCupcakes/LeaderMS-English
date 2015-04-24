@@ -1,7 +1,7 @@
 package server.maps;
 import client.MapleClient;
 import handling.MaplePacket;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import java.util.Calendar;
 import java.util.concurrent.ScheduledFuture;
 

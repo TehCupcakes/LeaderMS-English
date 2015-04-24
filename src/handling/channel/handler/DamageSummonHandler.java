@@ -28,7 +28,7 @@ import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
 import handling.MaplePacketHandler;
 import server.maps.MapleSummon;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /*

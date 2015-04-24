@@ -47,7 +47,7 @@ import server.life.MobSkillFactory;
 import server.life.MobSkill;
 import handling.world.MapleParty;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.Pair;
 import tools.data.input.SeekableLittleEndianAccessor;
 

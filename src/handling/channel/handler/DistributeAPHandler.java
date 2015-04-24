@@ -30,7 +30,7 @@ import client.MapleJob;
 import client.MapleStat;
 import client.SkillFactory;
 import handling.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.Pair;
 import tools.data.input.SeekableLittleEndianAccessor;
 

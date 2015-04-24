@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import client.inventory.Equip;
 import client.ExpTable;
 import client.IItem;
@@ -26,7 +24,7 @@ import java.util.Map;
 import handling.AbstractMaplePacketHandler;
 import handling.world.remote.WorldLocation;
 import server.MapleInventoryManipulator;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 import tools.data.input.SeekableLittleEndianAccessor;
 import server.MapleItemInformationProvider;
 import server.MaplePortal;
@@ -371,7 +369,7 @@ public class UseCashItemHandler extends AbstractMaplePacketHandler {
                                 return;
                             }
                         }
-                        c.getChannelServer().getWorldInterface().broadcastMessage(null, MaplePacketCreator.itemMegaphone(msg, whisper, c.getChannel(), item).getBytes());
+                        c.getChannelServer().getWorldInterface().broadcastMessage(null, PacketHelper.itemMegaphone(msg, whisper, c.getChannel(), item).getBytes());
                         MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.CASH, slot, (short) 1, false);
                         break;
                             case 5: // Maple TV
@@ -479,11 +477,11 @@ public class UseCashItemHandler extends AbstractMaplePacketHandler {
                                 }
                                 while (pet.getCloseness() >= ExpTable.getClosenessNeededForLevel(pet.getLevel() + 1)) {
                                     pet.setLevel(pet.getLevel() + 1);
-                                    c.getSession().write(MaplePacketCreator.showOwnPetLevelUp(player.getPetIndex(pet)));
-                                    player.getMap().broadcastMessage(MaplePacketCreator.showPetLevelUp(c.getPlayer(), player.getPetIndex(pet)));
+                                    c.getSession().write(PetPacket.showOwnPetLevelUp(player.getPetIndex(pet)));
+                                    player.getMap().broadcastMessage(PetPacket.showPetLevelUp(c.getPlayer(), player.getPetIndex(pet)));
                                 }
-                                c.getSession().write(MaplePacketCreator.updatePet(pet, true));
-                                player.getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.commandResponse(player.getId(), (byte) 1, 0, true, true), true);
+                                c.getSession().write(PetPacket.updatePet(pet, true));
+                                player.getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(player.getId(), (byte) 1, 0, true, true), true);
                                 MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.CASH, slot, (short) 1, false);
                             } else if (pet.canConsume(itemId)) {
                                 pet.setFullness(100);
@@ -495,11 +493,11 @@ public class UseCashItemHandler extends AbstractMaplePacketHandler {
                                 }
                                 while (pet.getCloseness() >= ExpTable.getClosenessNeededForLevel(pet.getLevel() + 1)) {
                                     pet.setLevel(pet.getLevel() + 1);
-                                    c.getSession().write(MaplePacketCreator.showOwnPetLevelUp(player.getPetIndex(pet)));
-                                    player.getMap().broadcastMessage(MaplePacketCreator.showPetLevelUp(c.getPlayer(), player.getPetIndex(pet)));
+                                    c.getSession().write(PetPacket.showOwnPetLevelUp(player.getPetIndex(pet)));
+                                    player.getMap().broadcastMessage(PetPacket.showPetLevelUp(c.getPlayer(), player.getPetIndex(pet)));
                                 }
-                                c.getSession().write(MaplePacketCreator.updatePet(pet, true));
-                                player.getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.commandResponse(player.getId(), (byte) 1, 0, true, true), true);
+                                c.getSession().write(PetPacket.updatePet(pet, true));
+                                player.getMap().broadcastMessage(c.getPlayer(), PetPacket.commandResponse(player.getId(), (byte) 1, 0, true, true), true);
                                 MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.CASH, slot, (short) 1, false);
                             }
                             c.getSession().write(MaplePacketCreator.enableActions());
@@ -534,9 +532,9 @@ public class UseCashItemHandler extends AbstractMaplePacketHandler {
                         String newName = slea.readMapleAsciiString();
                         if (newName.length() > 2 && newName.length() < 14) {
                             pet.setName(newName);
-                            c.getSession().write(MaplePacketCreator.updatePet(pet, true));
+                            c.getSession().write(PetPacket.updatePet(pet, true));
                             c.getSession().write(MaplePacketCreator.enableActions());
-                            player.getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.changePetName(c.getPlayer(), newName, 1), true);
+                            player.getMap().broadcastMessage(c.getPlayer(), PetPacket.changePetName(c.getPlayer(), newName, 1), true);
                             MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.CASH, slot, (short) 1, false);
                         } else {
                             cm.dropMessage("Names must be 2 - 14 characters.");

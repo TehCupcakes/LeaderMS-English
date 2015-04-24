@@ -32,7 +32,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import database.DatabaseConnection;
 import handling.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 import handling.world.guild.MapleGuild;
 

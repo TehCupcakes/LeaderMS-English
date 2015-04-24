@@ -17,7 +17,6 @@ import client.inventory.MapleInventoryType;
 import client.inventory.MaplePet;
 import client.MapleQuestStatus;
 import config.configuration.Configuration;
-import handling.MaplePacket;
 import handling.channel.ChannelServer;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
@@ -31,7 +30,7 @@ import server.maps.MapleMapObject;
 import server.maps.MapleMapObjectType;
 import server.maps.MapleReactor;
 import server.quest.MapleQuest;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 
 public class AbstractPlayerInteraction {
 
@@ -324,7 +323,7 @@ public class AbstractPlayerInteraction {
         MaplePet pet = getPlayer().getPet(index);
         if (pet != null) {
             pet.setCloseness(pet.getCloseness() + closeness);
-            getClient().getSession().write(MaplePacketCreator.updatePet(pet, true));
+            getClient().getSession().write(PetPacket.updatePet(pet, true));
         }
     }
 
@@ -332,7 +331,7 @@ public class AbstractPlayerInteraction {
         for (MaplePet pet : getPlayer().getPets()) {
             if (pet != null) {
                 pet.setCloseness(pet.getCloseness() + closeness);
-                getClient().getSession().write(MaplePacketCreator.updatePet(pet, true));
+                getClient().getSession().write(PetPacket.updatePet(pet, true));
             }
         }
     }

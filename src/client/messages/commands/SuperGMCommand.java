@@ -34,7 +34,7 @@ import client.messages.CommandDefinition;
 import client.messages.IllegalCommandSyntaxException;
 import client.messages.MessageCallback;
 import database.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class SuperGMCommand implements Command {
 

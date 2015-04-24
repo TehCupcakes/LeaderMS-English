@@ -48,7 +48,7 @@ import server.maps.MapleReactorStats;
 import server.maps.PlayerNPCMerchant;
 import server.quest.MapleQuest;
 import tools.HexTool;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 import tools.data.output.MaplePacketLittleEndianWriter;
 
 public class DebugCommands implements Command {
@@ -168,7 +168,7 @@ public class DebugCommands implements Command {
             System.gc();
             mc.dropMessage("Free Memory = " + Runtime.getRuntime().freeMemory() + " .");
         } else if (splitted[0].equalsIgnoreCase("!cpqhud")) {
-            c.getSession().write(MaplePacketCreator.startMonsterCarnival(c.getPlayer().getTeam()));
+            c.getSession().write(MonsterCarnivalPacket.startMonsterCarnival(c.getPlayer().getTeam()));
         } else if (splitted[0].equalsIgnoreCase("!maxskills")) {
             teachSkill(c, 9001000, 1, 1); //Start of max-level "1" skills
             teachSkill(c, 9001001, 1, 1);

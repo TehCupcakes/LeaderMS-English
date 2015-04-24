@@ -8,7 +8,7 @@ import config.configuration.Configuration;
 import handling.AbstractMaplePacketHandler;
 import handling.channel.ChannelServer;
 import server.AutobanManager;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class WhisperHandler extends AbstractMaplePacketHandler {
@@ -44,9 +44,9 @@ public class WhisperHandler extends AbstractMaplePacketHandler {
                 MapleCharacter victim = pserv.getPlayerStorage().getCharacterByName(recipient);
                 if (!victim.isGM() || (c.getPlayer().isGM() && victim.isGM())) {
                     if (victim.inCS()) {
-                        c.getSession().write(MaplePacketCreator.getFindReplyWithCSorMTS(victim.getName(), false));
+                        c.getSession().write(MTSCSPacket.getFindReplyWithCSorMTS(victim.getName(), false));
                     } else if (victim.inMTS()) {
-                        c.getSession().write(MaplePacketCreator.getFindReplyWithCSorMTS(victim.getName(), true));
+                        c.getSession().write(MTSCSPacket.getFindReplyWithCSorMTS(victim.getName(), true));
                     } else if (c.getChannel() == victim.getClient().getChannel()) {
                         c.getSession().write(MaplePacketCreator.getFindReplyWithMap(victim.getName(), victim.getMapId()));
                     } else {

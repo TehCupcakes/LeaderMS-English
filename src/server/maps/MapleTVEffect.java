@@ -6,7 +6,7 @@ import client.MapleCharacter;
 import handling.MaplePacket;
 import server.TimerManager;
 import handling.channel.ChannelServer;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class MapleTVEffect {
 

@@ -14,7 +14,7 @@ import database.DatabaseConnection;
 import handling.MaplePacket;
 import server.MapleInventoryManipulator;
 import server.maps.AbstractMapleMapObject;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 /**
  *
  * @author XoticStory

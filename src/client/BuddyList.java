@@ -32,7 +32,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import database.DatabaseConnection;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class BuddyList {
 	public enum BuddyOperation {

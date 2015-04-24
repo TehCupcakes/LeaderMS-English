@@ -35,7 +35,7 @@ import client.MapleCharacter;
 import java.rmi.RemoteException;
 import server.AutobanManager;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.StringUtil;
 
 public class CheatTracker {

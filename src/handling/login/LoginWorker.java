@@ -12,7 +12,7 @@ import client.MapleClient;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import server.Timer;

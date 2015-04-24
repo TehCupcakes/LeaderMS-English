@@ -3,7 +3,7 @@ package handling.channel.handler;
 import client.MapleCharacter;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.packet.PetPacket;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class PetChatHandler extends AbstractMaplePacketHandler {
@@ -15,6 +15,6 @@ public class PetChatHandler extends AbstractMaplePacketHandler {
         int unknownShort = slea.readShort();
         String text = slea.readMapleAsciiString();
         MapleCharacter player = c.getPlayer();
-        player.getMap().broadcastMessage(player, MaplePacketCreator.petChat(player.getId(), unknownShort, text, c.getPlayer().getPetIndex(petId)), true);
+        player.getMap().broadcastMessage(player, PetPacket.petChat(player.getId(), unknownShort, text, c.getPlayer().getPetIndex(petId)), true);
     }
 }

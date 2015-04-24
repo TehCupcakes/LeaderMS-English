@@ -27,7 +27,7 @@ import client.status.MonsterStatus;
 import handling.MaplePacket;
 import scripting.reactor.ReactorScriptManager;
 import server.TimerManager;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.Pair;
 
 /**

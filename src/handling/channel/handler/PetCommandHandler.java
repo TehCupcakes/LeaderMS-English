@@ -30,7 +30,7 @@ import client.inventory.MaplePet;
 import client.inventory.PetCommand;
 import client.inventory.PetDataFactory;
 import handling.AbstractMaplePacketHandler;
-import tools.MaplePacketCreator;
+import tools.packet.PetPacket;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class PetCommandHandler extends AbstractMaplePacketHandler {
@@ -68,14 +68,14 @@ public class PetCommandHandler extends AbstractMaplePacketHandler {
 				pet.setCloseness(newCloseness);
 				if (newCloseness >= ExpTable.getClosenessNeededForLevel(pet.getLevel() + 1)) {
 					pet.setLevel(pet.getLevel() + 1);
-					c.getSession().write(MaplePacketCreator.showOwnPetLevelUp(c.getPlayer().getPetIndex(pet)));
-					c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.showPetLevelUp(c.getPlayer(), c.getPlayer().getPetIndex(pet)));
+					c.getSession().write(PetPacket.showOwnPetLevelUp(c.getPlayer().getPetIndex(pet)));
+					c.getPlayer().getMap().broadcastMessage(PetPacket.showPetLevelUp(c.getPlayer(), c.getPlayer().getPetIndex(pet)));
 				}
-				c.getSession().write(MaplePacketCreator.updatePet(pet, true));
+				c.getSession().write(PetPacket.updatePet(pet, true));
 			}
 		}
 		
 		MapleCharacter player = c.getPlayer();
-		player.getMap().broadcastMessage(player, MaplePacketCreator.commandResponse(player.getId(), command, petIndex, success, false), true);
+		player.getMap().broadcastMessage(player, PetPacket.commandResponse(player.getId(), command, petIndex, success, false), true);
 	}
 }

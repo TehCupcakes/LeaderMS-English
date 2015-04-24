@@ -56,7 +56,7 @@ import server.life.MapleLifeFactory;
 import server.life.MobSkillFactory;
 import server.maps.MapleMap;
 import tools.FilePrinter;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.StringUtil;
 
 public class CharCommands implements Command {

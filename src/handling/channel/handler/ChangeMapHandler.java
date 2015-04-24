@@ -29,7 +29,7 @@ import handling.MaplePacket;
 import handling.channel.ChannelServer;
 import server.MaplePortal;
 import server.maps.MapleMap;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 import org.slf4j.Logger;

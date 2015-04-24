@@ -11,7 +11,7 @@ import handling.world.MapleParty;
 import handling.channel.ChannelServer;
 import handling.world.MaplePartyCharacter;
 import server.maps.MapleMap;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

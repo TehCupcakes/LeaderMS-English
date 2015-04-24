@@ -34,7 +34,7 @@ import client.SkillFactory;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleStatEffect;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class RangedAttackHandler extends AbstractDealDamageHandler {

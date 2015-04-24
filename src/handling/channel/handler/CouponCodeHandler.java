@@ -26,7 +26,7 @@ import java.sql.SQLException;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
 import server.MapleInventoryManipulator;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -85,7 +85,7 @@ public class CouponCodeHandler extends AbstractMaplePacketHandler {
 			    case 4:
                                 MapleInventoryManipulator.addById(c, item, (short) 1, "An item was obtained from a coupon.", null, -1);
                                 
-				c.getSession().write(MaplePacketCreator.showCouponRedeemedItem(item));
+				c.getSession().write(MTSCSPacket.showCouponRedeemedItem(item));
 				break;
 			    case 5:
 				c.getPlayer().modifyCSPoints(0, item);
@@ -94,13 +94,13 @@ public class CouponCodeHandler extends AbstractMaplePacketHandler {
                                 MapleInventoryManipulator.addById(c, item, (short) 1, "An item was obtained from a coupon.", null, -1);
                                 break;
 			}
-			c.getSession().write(MaplePacketCreator.showNXMapleTokens(c.getPlayer()));
+			c.getSession().write(MTSCSPacket.showNXMapleTokens(c.getPlayer()));
 		} else {
-			c.getSession().write(MaplePacketCreator.wrongCouponCode());
+			c.getSession().write(MTSCSPacket.wrongCouponCode());
 		}
 
-		c.getSession().write(MaplePacketCreator.enableCSUse0());
-		c.getSession().write(MaplePacketCreator.enableCSUse1());
-		c.getSession().write(MaplePacketCreator.enableCSUse2());
+		c.getSession().write(MTSCSPacket.enableCSUse0());
+		c.getSession().write(MTSCSPacket.enableCSUse1());
+		c.getSession().write(MTSCSPacket.enableCSUse2());
 	}
 }

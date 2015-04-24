@@ -23,7 +23,7 @@
 
 package handling.world.guild;
 
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import handling.MaplePacket;
 
 public enum MapleGuildResponse {

@@ -5,7 +5,7 @@ import java.io.IOException;
 import handling.channel.ChannelServer;
 import handling.login.LoginWorker;
 import tools.MapleAESOFB;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.ByteArrayByteStream;
 import tools.data.input.GenericSeekableLittleEndianAccessor;
 import tools.data.input.SeekableLittleEndianAccessor;

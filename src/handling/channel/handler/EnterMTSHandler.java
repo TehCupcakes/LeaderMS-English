@@ -31,7 +31,7 @@ import handling.AbstractMaplePacketHandler;
 import handling.channel.ChannelServer;
 import handling.world.remote.WorldChannelInterface;
 import server.MTSItemInfo;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 import tools.data.input.SeekableLittleEndianAccessor;
  
 import database.DatabaseConnection;
@@ -63,11 +63,11 @@ public class EnterMTSHandler extends AbstractMaplePacketHandler {
                         }
            
                         c.getPlayer().getMap().removePlayer(c.getPlayer());
-            c.getSession().write(MaplePacketCreator.warpMTS(c));
+            c.getSession().write(MTSCSPacket.warpMTS(c));
                         c.getPlayer().setInMTS(true);
-                        c.getSession().write(MaplePacketCreator.enableMTS());
-            c.getSession().write(MaplePacketCreator.MTSWantedListingOver(0, 0));
-            c.getSession().write(MaplePacketCreator.showMTSCash(c.getPlayer()));
+                        c.getSession().write(MTSCSPacket.enableMTS());
+            c.getSession().write(MTSCSPacket.MTSWantedListingOver(0, 0));
+            c.getSession().write(MTSCSPacket.showMTSCash(c.getPlayer()));
            
             List<MTSItemInfo> items = new ArrayList<MTSItemInfo>();
             int pages = 0;
@@ -124,9 +124,9 @@ public class EnterMTSHandler extends AbstractMaplePacketHandler {
                 log.error("Err1: " + e);
             }
            
-            c.getSession().write(MaplePacketCreator.sendMTS(items, 1, 0, 0, pages));
-            c.getSession().write(MaplePacketCreator.TransferInventory(getTransfer(c.getPlayer().getId())));
-            c.getSession().write(MaplePacketCreator.NotYetSoldInv(getNotYetSold(c.getPlayer().getId())));
+            c.getSession().write(MTSCSPacket.sendMTS(items, 1, 0, 0, pages));
+            c.getSession().write(MTSCSPacket.TransferInventory(getTransfer(c.getPlayer().getId())));
+            c.getSession().write(MTSCSPacket.NotYetSoldInv(getNotYetSold(c.getPlayer().getId())));
                         c.getPlayer().saveToDB(true, true);
                 } else {
                         new ServernoticeMapleClientMessageCallback(5, c).dropMessage("The Maple Trade Service is not available at this time.");

@@ -50,7 +50,7 @@ import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import server.MapleShopFactory;
 import server.quest.MapleQuest;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import client.MapleStat;
 import handling.world.guild.MapleGuild;
 import server.MapleSquad;

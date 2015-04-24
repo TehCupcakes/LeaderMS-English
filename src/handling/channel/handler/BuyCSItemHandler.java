@@ -31,7 +31,7 @@ import server.CashItemInfo;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.FilePrinter;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class BuyCSItemHandler extends AbstractMaplePacketHandler {
@@ -43,16 +43,16 @@ public class BuyCSItemHandler extends AbstractMaplePacketHandler {
     
     private void updateInformation(MapleClient c, int item) {
         CashItemInfo Item = CashItemFactory.getItem(item);
-        c.getSession().write(MaplePacketCreator.showBoughtCSItem(Item.getId()));
+        c.getSession().write(MTSCSPacket.showBoughtCSItem(Item.getId()));
         updateInformation(c);
     }
 
     private void updateInformation(MapleClient c) {
-        c.getSession().write(MaplePacketCreator.showNXMapleTokens(c.getPlayer()));
-        c.getSession().write(MaplePacketCreator.enableCSUse0());
-        c.getSession().write(MaplePacketCreator.enableCSUse1());
-        c.getSession().write(MaplePacketCreator.enableCSUse2());
-        c.getSession().write(MaplePacketCreator.enableCSUse3());
+        c.getSession().write(MTSCSPacket.showNXMapleTokens(c.getPlayer()));
+        c.getSession().write(MTSCSPacket.enableCSUse0());
+        c.getSession().write(MTSCSPacket.enableCSUse1());
+        c.getSession().write(MTSCSPacket.enableCSUse2());
+        c.getSession().write(MTSCSPacket.enableCSUse3());
         c.getSession().write(MaplePacketCreator.enableActions());
     }
 
@@ -169,7 +169,7 @@ public class BuyCSItemHandler extends AbstractMaplePacketHandler {
                 }
             } catch (SQLException se) {
             }
-            c.getSession().write(MaplePacketCreator.sendWishList(c.getPlayer().getId(), true));
+            c.getSession().write(MTSCSPacket.sendWishList(c.getPlayer().getId(), true));
         } else if (action == 7) {
                 slea.skip(1);
                 byte toCharge = slea.readByte();
@@ -178,11 +178,11 @@ public class BuyCSItemHandler extends AbstractMaplePacketHandler {
                     c.getPlayer().modifyCSPoints(toCharge, -4000);
                     if (toIncrease == 0)
                         c.getPlayer().getStorage().gainSlots((byte) 4);
-                    c.getSession().write(MaplePacketCreator.showNXMapleTokens(c.getPlayer()));
-                    c.getSession().write(MaplePacketCreator.enableCSUse0());
-                    c.getSession().write(MaplePacketCreator.enableCSUse1());
-                    c.getSession().write(MaplePacketCreator.enableCSUse2());
-                    c.getSession().write(MaplePacketCreator.enableCSUse3());
+                    c.getSession().write(MTSCSPacket.showNXMapleTokens(c.getPlayer()));
+                    c.getSession().write(MTSCSPacket.enableCSUse0());
+                    c.getSession().write(MTSCSPacket.enableCSUse1());
+                    c.getSession().write(MTSCSPacket.enableCSUse2());
+                    c.getSession().write(MTSCSPacket.enableCSUse3());
                     c.getSession().write(MaplePacketCreator.enableActions());
                 }
             } else if (action == 27 || action == 33) {

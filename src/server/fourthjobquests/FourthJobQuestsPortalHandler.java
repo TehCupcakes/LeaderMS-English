@@ -7,7 +7,7 @@ import client.messages.ServernoticeMapleClientMessageCallback;
 import handling.StringValueHolder;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

@@ -63,7 +63,7 @@ import handling.channel.ChannelServer;
 import handling.PacketProcessor;
 import handling.RecvPacketOpcode;
 import handling.SendPacketOpcode;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.StringUtil;
 import tools.performance.CPUSampler;
 import scripting.portal.PortalScriptManager;

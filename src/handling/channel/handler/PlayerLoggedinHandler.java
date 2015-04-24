@@ -52,7 +52,8 @@ import handling.world.PlayerBuffValueHolder;
 import handling.world.PlayerCoolDownValueHolder;
 import handling.world.guild.MapleAlliance;
 import handling.world.remote.WorldChannelInterface;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
+import tools.packet.PetPacket;
 import tools.Pair;
 import tools.data.input.SeekableLittleEndianAccessor;
 
@@ -242,7 +243,7 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
                         c.getPlayer().addPet(pet);
 
                         // Broadcast packet to the map...
-                        c.getPlayer().getMap().broadcastMessage(c.getPlayer(), MaplePacketCreator.showPet(c.getPlayer(), pet, false), true);
+                        c.getPlayer().getMap().broadcastMessage(c.getPlayer(), PetPacket.showPet(c.getPlayer(), pet, false), true);
 
                         // Find the pet's unique ID
                         int uniqueid = pet.getUniqueId();
@@ -251,7 +252,7 @@ public class PlayerLoggedinHandler extends AbstractMaplePacketHandler {
                         List<Pair<MapleStat, Integer>> stats = new ArrayList<Pair<MapleStat, Integer>>();
                         stats.add(new Pair<MapleStat, Integer>(MapleStat.PET, Integer.valueOf(uniqueid)));
                         // Write the stat update to the player...
-                        c.getSession().write(MaplePacketCreator.petStatUpdate(c.getPlayer()));
+                        c.getSession().write(PetPacket.petStatUpdate(c.getPlayer()));
                         c.getSession().write(MaplePacketCreator.enableActions());
 
                         // Get the data

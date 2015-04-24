@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 import client.MapleCharacter;
 import handling.MaplePacket;
 import handling.channel.ChannelServer;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class MapleParty implements Serializable {
 	private static final long serialVersionUID = 9179541993413738569L;

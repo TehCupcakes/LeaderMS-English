@@ -8,7 +8,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import server.MapleInventoryManipulator;
 import server.maps.MapleMapObjectType;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class MaplePlayerShop extends PlayerInteractionManager {
 

@@ -35,7 +35,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import handling.world.MaplePartyCharacter;
 import server.MaplePortal;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

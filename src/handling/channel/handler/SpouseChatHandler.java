@@ -6,7 +6,7 @@ import client.MapleClient;
 import client.messages.CommandProcessor;
 import handling.AbstractMaplePacketHandler;
 import handling.channel.ChannelServer;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 

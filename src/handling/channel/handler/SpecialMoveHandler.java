@@ -31,7 +31,7 @@ import client.messages.ServernoticeMapleClientMessageCallback;
 import handling.AbstractMaplePacketHandler;
 import server.MapleStatEffect;
 import server.life.MapleMonster;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class SpecialMoveHandler extends AbstractMaplePacketHandler {

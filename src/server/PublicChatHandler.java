@@ -6,7 +6,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import client.messages.WhisperMapleClientMessageCallback;
 import handling.channel.ChannelServer;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.StringUtil;
 
 public class PublicChatHandler {

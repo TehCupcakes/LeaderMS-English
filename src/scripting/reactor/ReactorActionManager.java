@@ -46,7 +46,7 @@ import server.life.MapleMonsterQuestInformationProvider.QuestDropEntry;
 import server.maps.MapleReactor;
 import server.maps.ReactorDropEntry;
 import server.quest.MapleQuest;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  * @author Lerk

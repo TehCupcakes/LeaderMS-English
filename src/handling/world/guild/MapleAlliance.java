@@ -16,7 +16,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import database.DatabaseConnection;
 import handling.world.remote.WorldChannelInterface;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

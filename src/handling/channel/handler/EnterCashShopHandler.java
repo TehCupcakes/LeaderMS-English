@@ -28,7 +28,7 @@ import java.rmi.RemoteException;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
 import handling.world.remote.WorldChannelInterface;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**
@@ -63,14 +63,14 @@ public class EnterCashShopHandler extends AbstractMaplePacketHandler {
         }
         
         player.getMap().removePlayer(player);
-        c.getSession().write(MaplePacketCreator.warpCS(c, false));
+        c.getSession().write(MTSCSPacket.warpCS(c, false));
         player.setInCS(true);
-        c.getSession().write(MaplePacketCreator.enableCSUse0());
-        c.getSession().write(MaplePacketCreator.enableCSUse1());
-        c.getSession().write(MaplePacketCreator.enableCSUse2());
-        c.getSession().write(MaplePacketCreator.enableCSUse3());
-        c.getSession().write(MaplePacketCreator.showNXMapleTokens(player));
-        c.getSession().write(MaplePacketCreator.sendWishList(player.getId(), false));
+        c.getSession().write(MTSCSPacket.enableCSUse0());
+        c.getSession().write(MTSCSPacket.enableCSUse1());
+        c.getSession().write(MTSCSPacket.enableCSUse2());
+        c.getSession().write(MTSCSPacket.enableCSUse3());
+        c.getSession().write(MTSCSPacket.showNXMapleTokens(player));
+        c.getSession().write(MTSCSPacket.sendWishList(player.getId(), false));
         player.saveToDB(true, true);
     }
 }

@@ -27,7 +27,7 @@ import java.net.UnknownHostException;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
 import handling.login.LoginServer;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class CharSelectedHandler extends AbstractMaplePacketHandler {

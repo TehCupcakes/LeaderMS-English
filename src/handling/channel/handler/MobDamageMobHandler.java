@@ -10,7 +10,7 @@ import handling.AbstractMaplePacketHandler;
 import tools.data.input.SeekableLittleEndianAccessor;
 import server.maps.MapleMap;
 import server.life.MapleMonster;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  * Handler for Mobs damaging Mobs.

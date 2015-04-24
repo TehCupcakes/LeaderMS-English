@@ -30,7 +30,7 @@ import client.MapleClient;
 import client.SkillFactory;
 import handling.MaplePacket;
 import server.MapleStatEffect;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class MapleMist extends AbstractMapleMapObject {
 	private Rectangle mistPosition;

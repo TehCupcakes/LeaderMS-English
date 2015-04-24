@@ -29,7 +29,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import database.DatabaseConnection;
 import handling.channel.ChannelServer;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 
 /**

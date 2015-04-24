@@ -21,7 +21,7 @@ import config.configuration.Configuration;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.FilePrinter;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class CashPQ {
     /* Mensagem ao pegar item */

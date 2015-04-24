@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
 import handling.world.guild.MapleAlliance;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 /**

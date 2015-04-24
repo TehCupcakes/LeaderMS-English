@@ -52,7 +52,7 @@ import handling.world.remote.CheaterData;
 import server.ShutdownServer;
 import server.TimerManager;
 import tools.CollectionUtil;
-import tools.MaplePacketCreator;
+import tools.packet.*;
 
 /**
  *
@@ -418,7 +418,7 @@ public class ChannelWorldInterfaceImpl extends UnicastRemoteObject implements Ch
 			MaplePet[] pets = mc.getPets();
 			for (int i = 0; i < 3; i++) {
 				if (pets[i] != null) {
-					mc.getMap().broadcastMessage(mc, MaplePacketCreator.showPet(mc, pets[i], false, false), false);
+					mc.getMap().broadcastMessage(mc, PetPacket.showPet(mc, pets[i], false, false), false);
 				}
 			}
 		}

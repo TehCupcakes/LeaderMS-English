@@ -40,7 +40,7 @@ import client.MapleCharacter;
 import client.MapleClient;
 import client.inventory.MapleInventoryType;
 import config.configuration.Configuration;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

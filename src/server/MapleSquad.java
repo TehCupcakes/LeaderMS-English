@@ -26,7 +26,7 @@ import java.util.List;
 
 import client.MapleCharacter;
 import handling.MaplePacket;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

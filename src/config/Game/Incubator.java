@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import server.MapleInventoryManipulator;
 import server.MapleItemInformationProvider;
 import tools.FilePrinter;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 public class Incubator {
     /* Message when using Incubator */

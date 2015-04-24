@@ -66,7 +66,7 @@ import server.maps.SummonMovementType;
 import handling.world.PlayerCoolDownValueHolder;
 import handling.MaplePacket;
 import tools.ArrayMap;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.Pair;
 import config.configuration.Configuration;
 

@@ -16,7 +16,7 @@ import server.PlayerInteraction.HiredMerchant;
 import server.PlayerInteraction.IPlayerInteractionManager;
 import server.PlayerInteraction.MaplePlayerShop;
 import server.PublicChatHandler;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class ChangeChannelHandler extends AbstractMaplePacketHandler {

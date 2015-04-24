@@ -23,15 +23,17 @@
 
 package handling.channel.handler;
 
+import java.util.Iterator;
+
+import client.inventory.MaplePet;
+import client.MapleCharacter;
 import client.MapleClient;
 import handling.AbstractMaplePacketHandler;
-import tools.data.input.SeekableLittleEndianAccessor;
-import java.util.Iterator;
-import tools.MaplePacketCreator;
-import client.MapleCharacter;
-import client.inventory.MaplePet;
 import handling.world.guild.MapleGuild;
 import handling.world.guild.MapleGuildResponse;
+import tools.data.input.SeekableLittleEndianAccessor;
+import tools.packet.MaplePacketCreator;
+import tools.packet.PetPacket;
 
 public class GuildOperationHandler extends AbstractMaplePacketHandler {
 	private boolean isGuildNameAcceptable(String name) {
@@ -53,7 +55,7 @@ public class GuildOperationHandler extends AbstractMaplePacketHandler {
 		}
 		if (mc.getNoPets() > 0) {
 			for (MaplePet pet : mc.getPets()) {
-				mc.getMap().broadcastMessage(mc, MaplePacketCreator.showPet(mc, pet, false, false), false);
+				mc.getMap().broadcastMessage(mc, PetPacket.showPet(mc, pet, false, false), false);
 			}
 		}
 	}

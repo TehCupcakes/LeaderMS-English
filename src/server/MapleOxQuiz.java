@@ -7,7 +7,7 @@ package server;
 import client.MapleCharacter;
 import client.MapleStat;
 import server.maps.MapleMap;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

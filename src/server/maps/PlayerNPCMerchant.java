@@ -17,7 +17,7 @@ import client.inventory.MapleInventory;
 import client.inventory.MapleInventoryType;
 import server.life.MapleLifeFactory;
 import server.life.MapleNPC;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 
 /**
  *

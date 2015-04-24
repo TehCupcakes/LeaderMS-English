@@ -41,7 +41,7 @@ import database.DatabaseConnection;
 import handling.AbstractMaplePacketHandler;
 import handling.channel.remote.ChannelWorldInterface;
 import handling.world.remote.WorldChannelInterface;
-import tools.MaplePacketCreator;
+import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
 
 public class BuddylistModifyHandler extends AbstractMaplePacketHandler {
