@@ -1490,4 +1490,16 @@ getPlayer().sendServerNotice(msg);
                     return false;		
             }
     }
+    
+    public String getServerName() {
+        return Configuration.Server_Name;
+    }
+    
+    public String getMapleVersion() {
+        return Configuration.MS_Version;
+    }
+    
+    public String getSourceVersion() {
+        return Configuration.Source_Version;
+    }
 }

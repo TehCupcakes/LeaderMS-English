@@ -5,10 +5,15 @@
 */
 
 function start() {
-    cm.sendYesNo("Do you want to leave #bHappy Village#k?");
+    cm.sendYesNo("Do you want to leave #bHappyville#k?");
 }
 
 function action(mode, type, selection) {
-    cm.warp(100000000);
-    cm.dispose();
+    if (mode != 1) {
+		cm.dispose();
+	} else {
+		var location = cm.getPlayerVariable("HV_map");
+        cm.warp(location,0);
+		cm.dispose();
+	}
 }

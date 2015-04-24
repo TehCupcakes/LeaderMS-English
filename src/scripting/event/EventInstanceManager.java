@@ -32,14 +32,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Collections;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.script.ScriptException;
 
 import client.MapleCharacter;
+import config.configuration.Configuration;
 import database.DatabaseConnection;
-import java.util.Collections;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import handling.world.MapleParty;
 import handling.world.MaplePartyCharacter;
 import provider.MapleDataProviderFactory;
@@ -457,14 +458,26 @@ public class EventInstanceManager {
         return (chr.getParty().getLeader().getId() == chr.getId());
     }
 	
-	public boolean isSquadLeader(MapleCharacter tt, MapleSquadType ttt) {
-			return (tt.getClient().getChannelServer().getMapleSquad(ttt).getLeader().equals(tt));
-	}
-	
-	public void registerSquad(MapleSquad squad, MapleMap map) {
-		for (MapleCharacter pc : squad.getMembers()) {
-			MapleCharacter c = map.getCharacterById(pc.getId());
-			registerPlayer(c);
-		}
-	}
+    public boolean isSquadLeader(MapleCharacter tt, MapleSquadType ttt) {
+        return (tt.getClient().getChannelServer().getMapleSquad(ttt).getLeader().equals(tt));
+    }
+
+    public void registerSquad(MapleSquad squad, MapleMap map) {
+        for (MapleCharacter pc : squad.getMembers()) {
+            MapleCharacter c = map.getCharacterById(pc.getId());
+            registerPlayer(c);
+        }
+    }
+    
+    public String getServerName() {
+        return Configuration.Server_Name;
+    }
+    
+    public String getMapleVersion() {
+        return Configuration.MS_Version;
+    }
+    
+    public String getSourceVersion() {
+        return Configuration.Source_Version;
+    }
 }

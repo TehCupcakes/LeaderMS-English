@@ -50,7 +50,7 @@ public class Configuration {
     
     /*    Server Information     */
     public static final String MS_Version = ".62";
-    public static final String Server_Version = "1.0";
+    public static final String Source_Version = "1.0";
     public static String Server_Name = "LeaderMS";
     /*   Login Messages     */
     public static final String Player_Login = "Welcome back. Don't forget to vote for our server (#r#e"+Configuration.Server_Name+"#k#n).";

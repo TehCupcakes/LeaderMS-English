@@ -93,16 +93,4 @@ public abstract class AbstractScriptManager {
             path = "scripts/" + path;
             c.removeScriptEngine(path);
     }
-        
-    protected String getServerName() {
-        return Configuration.Server_Name;
-    }
-    
-    protected String getMapleVersion() {
-        return Configuration.MS_Version;
-    }
-    
-    protected String getServerVersion() {
-        return Configuration.Server_Version;
-    }
 }
