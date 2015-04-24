@@ -53,7 +53,7 @@ public class FilePrinter {
     private static final String primeiraEntrada = "Reports/NewPlayers/" + sdf.format(Calendar.getInstance().getTime()) + "/";// + sdf.format(Calendar.getInstance().getTime()) + "/"
     private static final String suporteGM = "Reports/GMSupport/" + sdf.format(Calendar.getInstance().getTime()) + "/";// + sdf.format(Calendar.getInstance().getTime()) + "/"
     private static final String JumpQuest = "Reports/JumpQuest/" + sdf.format(Calendar.getInstance().getTime()) + "/";// + sdf.format(Calendar.getInstance().getTime()) + "/"
-    private static final String printBanco = "Reports/Depositos/" + sdf.format(Calendar.getInstance().getTime()) + "/";// + sdf.format(Calendar.getInstance().getTime()) + "/"
+    private static final String printBanco = "Reports/Storage/" + sdf.format(Calendar.getInstance().getTime()) + "/";// + sdf.format(Calendar.getInstance().getTime()) + "/"
     private static final String printNovo = "Reports/NewPlayers/" + sdf.format(Calendar.getInstance().getTime()) + "/";// + sdf.format(Calendar.getInstance().getTime()) + "/"
     private static final String ERROR = "error/";
     private static final String printBug = "Reports/Bugs/" + sdf.format(Calendar.getInstance().getTime()) + "/";// + sdf.format(Calendar.getInstance().getTime()) + "/"

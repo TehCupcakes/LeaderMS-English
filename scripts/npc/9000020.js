@@ -28,10 +28,10 @@ function action(mode, type, selection) {
 	if (cm.getPlayer().getMapId() != 800000000) {
 		if (status == 0) {
 			if (cm.getJob().equals(Packages.client.MapleJob.BEGINNER)) {
-				cm.sendNext("Se voce esta cansado do cotidiano monotono, que tal sair para uma mudanca? Nao ha nada como a absorver uma nova cultura, aprender algo novo a cada minuto! E hora de voce sair e viajar. Recomendamos uma #bWorld Tour#k, voce esta preocupado com a despesa de viagem? Nao precisa se preocupar! O #bMaple Travel Agency#k oferece o alojamento em viagens de primeira classe para o baixo preco de #b300 mesos#k.");
+				cm.sendNext("If you're tired of the monotonous daily life, how about getting out for a change? there's nothing quite like soaking up a new culture, learning something new by the minute! It's time for you to get out and travel. We, at the Maple Travel Agency recommend you going on a #bWorld Tour#k! Are you worried about the travel expense? You shouldn't be! We, the #bMaple Travel Agency#k, have carefully come up with a plan to let you travel for ONLY #b300 mesos#k!");
 				cost = 300;
 			} else {
-				cm.sendNext("Se voce esta cansado do cotidiano monotono, que tal sair para uma mudanca? Nao ha nada como a absorver uma nova cultura, aprender algo novo a cada minuto! E hora de voce sair e viajar. Recomendamos uma #bWorld Tour#k, voce esta preocupado com a despesa de viagem? Nao precisa se preocupar! O #bMaple Travel Agency#k oferece o alojamento em viagens de primeira classe para o baixo preco de \r\n#b3,000 mesos#k!");
+				cm.sendNext("If you're tired of the monotonous daily life, how about getting out for a change? there's nothing quite like soaking up a new culture, learning something new by the minute! It's time for you to get out and travel. We, at the Maple Travel Agency recommend you going on a #bWorld Tour#k! Are you worried about the travel expense? You shouldn't be! We, the #bMaple Travel Agency#k, have carefully come up with a plan to let you travel for ONLY #b3,000 mesos#k!");
 				cost = 3000;
 			}
 		} else if (status == 1) {

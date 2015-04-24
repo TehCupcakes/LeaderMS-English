@@ -92,6 +92,6 @@ action( 1, 0, 0);
 }
 
 function action (mode, type , selection) {
-    cm.sendOk("Ola, seja bem-vindo ao "+cm.getServerName()+"!\r\nEm breve teremos novidades por aqui, aguarde!");
+    cm.sendOk("Hello, welcome to "+cm.getServerName()+"!");
     cm.dispose();
 }

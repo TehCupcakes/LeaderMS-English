@@ -2,19 +2,15 @@
     Made by Cygnus
 */
 
-
-importPackage(net.sf.odinms.client);
-
+importPackage(Packages.client);
 
 var status = 0;
 var job;
-
 
 function start() {
     status = -1;
     action(1, 0, 0);
 }
-
 
 function action(mode, type, selection) {
     if (mode == -1) {
@@ -30,7 +26,7 @@ function action(mode, type, selection) {
         else
             status--;
         if (status == 0) {
-            if (cm.getJob().equals(net.sf.odinms.client.MapleJob.BEGINNER)) {
+            if (cm.getJob().equals(MapleJob.BEGINNER)) {
                 if (cm.getLevel() >= 10 && cm.getChar().getDex() >= 20)
                     cm.sendNext("So you decided to become a #rPirate#k?");
                 else {
@@ -39,19 +35,19 @@ function action(mode, type, selection) {
                 }
             } else {
                 if (cm.getLevel() >= 30 
-                    && cm.getJob().equals(net.sf.odinms.client.MapleJob.PIRATE)) {
-                        if (cm.getQuestStatus(2192).equals(net.sf.odinms.client.MapleQuestStatus.Status.COMPLETED)) {
+                    && cm.getJob().equals(MapleJob.PIRATE)) {
+                        if (cm.getQuestStatus(2192).equals(MapleQuestStatus.Status.COMPLETED)) {
                             status = 20;
                             cm.sendNext("I knew you'd pass the test as expected. You had some impressive moves in there. Not bad at all! Now as promised, you will become a #bGunslinger#k.");
                         } 
-                     else if (cm.getQuestStatus(2191).equals(net.sf.odinms.client.MapleQuestStatus.Status.COMPLETED)) {
+                     else if (cm.getQuestStatus(2191).equals(MapleQuestStatus.Status.COMPLETED)) {
                             status = 30;
                             cm.sendNext("I knew you'd pass the test as expected. You had some impressive moves in there. Not bad at all! Now as promised, you will become a #bBrawler#k.");
                         }                        
-                     else if (cm.getQuestStatus(2191).equals(net.sf.odinms.client.MapleQuestStatus.Status.STARTED)) {
+                     else if (cm.getQuestStatus(2191).equals(MapleQuestStatus.Status.STARTED)) {
                         status = 15;
 						cm.sendYesNo("Would you like to take the test for the second job advancement?");
-                    } else if (cm.getQuestStatus(2192).equals(net.sf.odinms.client.MapleQuestStatus.Status.STARTED)) {
+                    } else if (cm.getQuestStatus(2192).equals(MapleQuestStatus.Status.STARTED)) {
                         status = 10;
 						cm.sendYesNo("Would you like to take the test for the second job advancement?");
                     } else {
@@ -87,8 +83,8 @@ function action(mode, type, selection) {
         } else if (status == 2) {
             cm.sendYesNo("Do you want to become a #rPirate#k?");
         } else if (status == 3) {
-            if (cm.getJob().equals(net.sf.odinms.client.MapleJob.BEGINNER))
-                cm.changeJob(net.sf.odinms.client.MapleJob.PIRATE);
+            if (cm.getJob().equals(MapleJob.BEGINNER))
+                cm.changeJob(MapleJob.PIRATE);
             cm.getChar().gainSp(1);
             cm.gainItem(2330000,1000);
             cm.gainItem(1492000,1);
@@ -113,7 +109,7 @@ function action(mode, type, selection) {
             cm.warp(108000502);
         } else if (status == 21) {
             cm.sendNext("From here on out, you are a #bGunslinger#k. Gunslingers are notable for their long-range attacks with sniper-like accuracy and of course, using Guns as their primary weapon. You should continue training to truly master your skills. If you are having trouble training, I'll be there to help.");
-            cm.changeJob(net.sf.odinms.client.MapleJob.GUNSLINGER);
+            cm.changeJob(MapleJob.GUNSLINGER);
             cm.getChar().gainAp(5);
             cm.getChar().gainSp(1);
             cm.removeAll(4031857);
@@ -125,7 +121,7 @@ function action(mode, type, selection) {
             cm.sendNextPrev("Gunslingers are deadly at range combat, but that doesn't mean they have the right to bully the weak. Gunslingers will need to use their immense power in positive ways, and that is actually harder than just training to gain strength. I hope you follow this creed as you leave your mark in this world as a Gunslinger. I will see you when you have accomplished everything you can as a Gunslinger. I'll be waiting for you here.");    
         }    else if (status == 31) {
 			cm.sendNext("From here on out, you are a #bBrawler#k. Brawlers rule the world with the power of their bare firsts... Which means they need to train the body more than others. If you have any trouble training, I'll be more than happy to help.");
-            cm.changeJob(net.sf.odinms.client.MapleJob.BRAWLER);
+            cm.changeJob(MapleJob.BRAWLER);
             cm.getChar().gainAp(5);
             cm.getChar().gainSp(1);
             cm.removeAll(4031856);

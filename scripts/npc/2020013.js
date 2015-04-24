@@ -2,13 +2,12 @@
    Made By Cygnus
 */
 
+importPackage(Packages.client);
 
-importPackage(net.sf.odinms.client);
 status = -1;
 var job;
 var sel;
 actionx = {"Mental" : false, "Physical" : false};
-
 
 function start() {
     if (!(cm.getJob().equals(MapleJob.BRAWLER) ||

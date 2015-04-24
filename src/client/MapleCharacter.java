@@ -2129,7 +2129,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
         this.remainingSp = remainingSp;
     }
     
-    public void ganhaSp(int remainingSp) {
+    public void gainSp(int remainingSp) {
        this.remainingSp += remainingSp;
     }
 
@@ -4391,10 +4391,10 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
         }
     }
 
-      public void alertaInicioJQ(int jq) {
+      public void alertInitiateJQ(int jq) {
         StringBuilder sb = new StringBuilder();
         String readableTargetName = MapleCharacterUtil.makeMapleReadable(getName());
-        sb.append("[Alerta] ");
+        sb.append("[Alert] ");
         sb.append("(").append(readableTargetName).append(")");
         sb.append(" Started a JQ: ");
         sb.append(jq);
@@ -4409,7 +4409,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
     }    
         
         
-   public void alertaTerminoJQ() {
+   public void alertEndedJQ() {
         StringBuilder sb = new StringBuilder();
         String readableTargetName = MapleCharacterUtil.makeMapleReadable(getName());
         sb.append("[Alert] ");
@@ -4426,7 +4426,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
 
     }
 
-    public void ganhaJQPoints() {
+    public void gainJQPoints() {
          if (jqStart == null) {
             dropMessage("You did not begin the JQ properly and therefore there is no reward for you!");
             return;
@@ -6003,7 +6003,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
     public void setChatRange(int chatRange) {
         this.chatRange = chatRange;
     }
-  public boolean gainItem(int id, short quantity, boolean randomStats, boolean show) {
+    
+    public boolean gainItem(int id, short quantity, boolean randomStats, boolean show) {
         if (quantity >= 0) {
             MapleItemInformationProvider ii = MapleItemInformationProvider.getInstance();
             IItem item = ii.getEquipById(id);

@@ -577,7 +577,7 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 	}
 
 	public void openDuey() {
-		c.getSession().write(MaplePacketCreator.sendDuey((byte) 8, DueyHandler.loadItems(this.getPlayer())));
+            c.getSession().write(MaplePacketCreator.sendDuey((byte) 8, DueyHandler.loadItems(this.getPlayer())));
 	}
         
      public int[] hpqmaps = {
@@ -714,13 +714,13 @@ public class NPCConversationManager extends AbstractPlayerInteraction {
 		//}
 	}
         
-    public void jqCompleta() {
-            getPlayer().ganhaJQPoints();
-            getPlayer().alertaTerminoJQ();
+    public void jqComplete() {
+            getPlayer().gainJQPoints();
+            getPlayer().alertEndedJQ();
     }
     
-    public void IniciaJQ(int mapa) {
-        getPlayer().alertaInicioJQ(mapa);
+    public void initiateJQ(int map) {
+        getPlayer().alertInitiateJQ(map);
     }
          
     private int getChannel() {

@@ -59,11 +59,14 @@ public class NPCTalkHandler extends AbstractMaplePacketHandler {
 		}
 		c.getPlayer().setLastNpcTalk(System.currentTimeMillis());
                 if (npc.getId() == 9010009) {
-                    c.getPlayer().getClient().getSession().write(MaplePacketCreator.getNPCTalk(9010009, (byte) 0, "Hello " + c.getPlayer().getName() + ", this NPC is disabled!", "00 00"));
-                    return;
+                    if (c.isGuest()) {
+                        c.getPlayer().dropMessage(1, "Duey is not available to Guests");
+                        c.getSession().write(MaplePacketCreator.enableActions());
+                        return;
+                    }
+                } else {
+                    c.getSession().write(MaplePacketCreator.enableActions());
                 }
-                c.getSession().write(MaplePacketCreator.enableActions());
-
 //                if (npc.getId() == 2042000 || npc.getId() == 2042001 || npc.getId() == 2042002) {
 //			 c.getPlayer().getClient().getSession().write(MaplePacketCreator.getNPCTalk(9010009, (byte) 0, "Ola " + c.getPlayer().getName() + ", aguarde o lancamento oficial da CPQ!", "00 00"));
 //			return;

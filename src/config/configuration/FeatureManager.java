@@ -12,7 +12,7 @@ package config.configuration;
 public class FeatureManager {
     //All toggleable features should be listed in this enum
     public static enum FeatureName {
-        Test
+        JobAdvancer //Turns Cody into an all-in-one job advancer
     }
     
     
@@ -20,7 +20,7 @@ public class FeatureManager {
     public final Feature[] featureList = {
         //This is "create" features and mark them on ar off.
         //You can also set a "priority" for what features should override others.
-        new Feature(FeatureName.Test, false, 1)
+        new Feature(FeatureName.JobAdvancer, false, 1)
     };
     
     private Feature findFeature(FeatureName f) {
