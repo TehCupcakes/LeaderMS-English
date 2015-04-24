@@ -84,7 +84,7 @@ public class PetLootHandler extends AbstractMaplePacketHandler {
                             c.getPlayer().getCheatTracker().pickupComplete();
                             c.getPlayer().getMap().removeMapObject(ob);
                             int necksonGain = (Integer) pair.getRight();
-                            c.getSession().write(MaplePacketCreator.serverNotice(5, "[Cash System] You gained LeaderNX (+" + necksonGain + ")."));
+                            c.getSession().write(MaplePacketCreator.serverNotice(5, "[Cash System] You gained NX (+" + necksonGain + ")."));
                             c.getPlayer().modifyCSPoints(4, necksonGain);
                             c.getSession().write(MaplePacketCreator.getShowItemGain(mapitem.getItem().getItemId(), (short) 1));
                             c.getSession().write(MaplePacketCreator.enableActions());

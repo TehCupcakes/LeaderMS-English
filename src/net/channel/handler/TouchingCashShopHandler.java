@@ -36,9 +36,9 @@ public class TouchingCashShopHandler extends AbstractMaplePacketHandler {
 	@Override
 	public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
 		c.getSession().write(MaplePacketCreator.showNXMapleTokens(c.getPlayer()));
-		/* c.getSession().write(MaplePacketCreator.enableCSUse0());
+		c.getSession().write(MaplePacketCreator.enableCSUse0());
 		c.getSession().write(MaplePacketCreator.enableCSUse1());
 		c.getSession().write(MaplePacketCreator.enableCSUse2());
-		c.getSession().write(MaplePacketCreator.enableCSUse3());*/
+		c.getSession().write(MaplePacketCreator.enableCSUse3());
 	}
 }

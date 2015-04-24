@@ -804,9 +804,9 @@ getPlayer().sendServerNotice(msg);
 	public void gainNeckson(int gain) {
 		c.getPlayer().modifyCSPoints(4, gain);
 		if (gain > 0) {
-			playerMessage(5, "You gained LeaderNX (+" + gain + ")");
+			playerMessage(5, "You gained NX (+" + gain + ")");
 		} else {
-			playerMessage(5, "You lost LeaderNX (-" + gain + ")");
+			playerMessage(5, "You lost NX (-" + gain + ")");
 		}
 	}
 	
