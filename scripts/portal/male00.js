@@ -7,7 +7,7 @@ function enter(pi) {
 		pi.warp(670010200, 3);
 		return true;
 	} else {
-		pi.getPlayer().getClient().getSession().write(Packages.tools.MaplePacketCreator.serverNotice(5, "You cannot proceed past here."));
+		pi.getPlayer().getClient().getSession().write(Packages.tools.packet.MaplePacketCreator.serverNotice(5, "You cannot proceed past here."));
 		return false;
 	}
 }

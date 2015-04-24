@@ -34,7 +34,7 @@ var mySelection = -1;
 var rings = Array(1112001, 1112002, 1112003, 1112005, 1112006);
 
 importPackage(Packages.client);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(Packages.server);
 
 function start() {

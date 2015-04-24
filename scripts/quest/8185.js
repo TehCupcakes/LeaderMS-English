@@ -4,7 +4,7 @@
 	Description: 		Quest - Roger's Apple
 */
 
-importPackage(net.sf.odinms.net.channel.handler);
+importPackage(Packages.handling.channel.handler);
 
 var status = -1;
 

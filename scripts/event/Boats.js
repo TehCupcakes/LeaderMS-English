@@ -41,7 +41,7 @@
 **/
 
 importPackage(Packages.client);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(Packages.server.life);
 
 //Time Setting is in millisecond

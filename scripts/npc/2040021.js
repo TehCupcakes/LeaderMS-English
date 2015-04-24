@@ -30,7 +30,7 @@
 
 importPackage(Packages.client);
 importPackage(Packages.server);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 var status = 0;
 var selectedType = -1;

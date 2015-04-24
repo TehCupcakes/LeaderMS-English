@@ -31,7 +31,7 @@
 ---------------------------------------------------------------------------------------------------
 **/
 
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 //Time Setting is in millisecond
 var closeTime = 240000; //The time to close the gate

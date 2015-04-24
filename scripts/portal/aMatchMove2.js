@@ -20,7 +20,7 @@
 */ 
 
 importPackage(Packages.server.maps); 
-importPackage(Packages.net.channel); 
+importPackage(Packages.handling.channel); 
 
 /* 
     Return from 

@@ -34,7 +34,7 @@
 importPackage(java.lang);
 importPackage(Packages.world);
 importPackage(Packages.client);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(Packages.server.maps);
 
 var exitMap;

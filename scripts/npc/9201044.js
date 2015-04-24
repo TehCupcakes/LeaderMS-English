@@ -24,7 +24,7 @@
  * 
  * Amorian Challenge PQ NPC
 */
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(Packages.server.life);
 importPackage(java.awt);
 

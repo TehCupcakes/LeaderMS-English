@@ -33,7 +33,7 @@ importPackage(Packages.client);
 importPackage(Packages.server.maps);
 importPackage(Packages.server.life);
 importPackage(Packages.scripting.npc);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 var exitMap;
 var instanceId;

@@ -25,7 +25,7 @@
 **/
 
 importPackage(Packages.world);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 var returnMap;
 var map;

@@ -29,7 +29,7 @@ public class RingActionHandler extends AbstractMaplePacketHandler {
     public void handlePacket(SeekableLittleEndianAccessor slea, MapleClient c) {
         byte mode = slea.readByte();
         MapleCharacter player = c.getPlayer();
-        //c.getSession().write(net.sf.odinms.tools.MaplePacketCreator.serverNotice(1, "TEST"));
+        //c.getSession().write(MaplePacketCreator.serverNotice(1, "TEST"));
         switch (mode) {
             case 0x00: //Send
                 if ((System.currentTimeMillis() - player.getLatestMarriageRequest()) > 60000) {

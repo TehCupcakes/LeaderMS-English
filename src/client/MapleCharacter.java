@@ -3188,7 +3188,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
             MapleGuild g;
             try {
                 g = client.getChannelServer().getWorldInterface().getGuild(mgc.getGuildId(), mgc);
-                g.broadcast(MaplePacketCreator.serverNotice(5, String.format("<Cla> %s atingiu o Lv. %d.", getName(), getLevel())));
+                g.broadcast(MaplePacketCreator.serverNotice(5, String.format("<Cla> %s reached lvl. %d.", getName(), getLevel())));
             } catch (RemoteException ex) {
                 ex.printStackTrace();
             }

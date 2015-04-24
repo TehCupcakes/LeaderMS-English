@@ -72,7 +72,7 @@ function setup() {
 function announce() {
 	em.setProperty("entryPossible", "true");
 	if (i == 0) i = 5;
-	em.getChannelServer().broadcastPacket(MaplePacketCreator.serverNotice(6, "[Evento] Campo de Julgamento sera aberto em " + i + " minutos!"));
+	em.getChannelServer().broadcastPacket(MaplePacketCreator.serverNotice(6, "[Event] Field of Judgment will be opened in " + i + " minutes!"));
 	i--;
 }
 
@@ -86,7 +86,7 @@ function mesoDistribution() {
 			var randWinner = Math.floor(Math.random() * eim.getPlayerCount());
 			var winner = eim.getPlayers().get(randWinner);
 			var map = eim.getMapFactory().getMap(mapId, false, false);
-			map.broadcastMessage(MaplePacketCreator.serverNotice(6, "[Evento] " + winner.getName() + " wins " + meso + " meso"));
+			map.broadcastMessage(MaplePacketCreator.serverNotice(6, "[Event] " + winner.getName() + " wins " + meso + " mesos!"));
 			winner.gainMeso(meso, true, true, true);
 		}
 	}
@@ -94,7 +94,7 @@ function mesoDistribution() {
 
 function start() {
 	scheduleNew();
-	em.getChannelServer().broadcastPacket(MaplePacketCreator.serverNotice(6, "[Evento] Campo do Julgamento ja esta aberto."));	
+	em.getChannelServer().broadcastPacket(MaplePacketCreator.serverNotice(6, "[Event] Field of Judgment has opened."));	
 	var iter = em.getInstances().iterator();
 	while (iter.hasNext()) {
 		var eim = iter.next();

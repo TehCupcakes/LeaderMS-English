@@ -33,7 +33,7 @@
 ---------------------------------------------------------------------------------------------------
 **/
 
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 //Time Setting is in millisecond
 var closeTime = 240000; //The time to close the gate
@@ -61,8 +61,8 @@ function scheduleNew() {
 	em.setProperty("docked", "true");
 	em.setProperty("entry", "true");
 	if(toggleMsg) {
-		KC_docked.broadcastMessage(MaplePacketCreator.serverNotice(0, "O trem do metro para NLC chegou."));
-		NLC_docked.broadcastMessage(MaplePacketCreator.serverNotice(0, "O trem do metro para KC chegou."));
+		KC_docked.broadcastMessage(MaplePacketCreator.serverNotice(0, "The metro train to New Leaf City has arrived."));
+		NLC_docked.broadcastMessage(MaplePacketCreator.serverNotice(0, "The metro train to Kerning City has arrived."));
 	}
 	em.schedule("stopEntry", closeTime);
 	em.schedule("takeoff", beginTime);
@@ -83,8 +83,8 @@ function takeoff() {
 		temp2.next().changeMap(Subway_to_KC, Subway_to_KC.getPortal(0));
 	}
 	if(toggleMsg) {
-		KC_docked.broadcastMessage(MaplePacketCreator.serverNotice(0, "O trem do metro para NLC esta a decolar."));
-		NLC_docked.broadcastMessage(MaplePacketCreator.serverNotice(0, "O trem do metro para KC esta a decolar."));
+		KC_docked.broadcastMessage(MaplePacketCreator.serverNotice(0, "The metro train to New Leaf City is departing."));
+		NLC_docked.broadcastMessage(MaplePacketCreator.serverNotice(0, "The metro train to Kerning City is departing."));
 	}
 	var temp = rideTime / 1000;
 	Subway_to_KC.broadcastMessage(MaplePacketCreator.getClock(temp));

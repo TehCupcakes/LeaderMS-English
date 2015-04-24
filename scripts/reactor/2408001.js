@@ -26,8 +26,8 @@
 */
 // importPackage(Packages.client);
 // importPackage(Packages.server.maps);
-// importPackage(Packages.net.channel);
-// importPackage(Packages.tools);
+// importPackage(Packages.handling.channel);
+// importPackage(Packages.tools.packet);
 
 // function act() {
 	// var eim = rm.getPlayer().getEventInstance()

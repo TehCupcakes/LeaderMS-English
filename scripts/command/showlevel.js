@@ -21,9 +21,9 @@
 
 importPackage(Packages.client);
 importPackage(Packages.client.messages);
-importPackage(Packages.net.channel);
+importPackage(Packages.handling.channel);
 importPackage(Packages.server);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 function getDefinition () {
 	var ret = java.lang.reflect.Array.newInstance(CommandDefinition, 1);

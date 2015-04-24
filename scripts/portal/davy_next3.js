@@ -20,8 +20,8 @@
 */
 importPackage(java.lang);
 importPackage(Packages.server.maps);
-importPackage(Packages.net.channel);
-importPackage(Packages.tools);
+importPackage(Packages.handling.channel);
+importPackage(Packages.tools.package);
 
 /*
 @Author Jvlaple
@@ -48,7 +48,7 @@ function enter(pi) {
 			eim.setProperty("entryTimeStamp", 1000 * 60 * 6);
 			for(var g=0; g<party.size(); g++) {
 				party.get(g).changeMap(target, targetPortal);
-				party.get(g).getClient().getSession().write(Packages.tools.MaplePacketCreator.getClock(360));
+				party.get(g).getClient().getSession().write(MaplePacketCreator.getClock(360));
 			}
 			return true;
 		}

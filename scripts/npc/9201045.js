@@ -4,7 +4,7 @@
  *For Jvlaple's APQ
  */
  
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(Packages.server.life);
 importPackage(java.awt);
 

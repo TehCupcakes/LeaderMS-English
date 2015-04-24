@@ -27,7 +27,7 @@
  * [x]shows animation,
  * [x]makes stirges and stuff appear
  */
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(Packages.server);
 importPackage(Packages.server.life);
 importPackage(Packages.server.maps);

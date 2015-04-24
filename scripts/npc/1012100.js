@@ -27,7 +27,7 @@
 */
 
 importPackage(Packages.client);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 var status = 0;
 var job;

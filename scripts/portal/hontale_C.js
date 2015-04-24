@@ -4,8 +4,8 @@
 @author Jvlaple
 */
 importPackage(Packages.server.maps);
-importPackage(Packages.net.channel);
-importPackage(Packages.tools);
+importPackage(Packages.handling.channel);
+importPackage(Packages.tools.packet);
 
 function enter(pi) {
 

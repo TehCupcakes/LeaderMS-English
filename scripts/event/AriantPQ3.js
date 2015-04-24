@@ -14,7 +14,7 @@ importPackage(Packages.world);
 importPackage(Packages.client);
 importPackage(Packages.server.maps);
 importPackage(Packages.server);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 var exitMap;
 var instanceId;

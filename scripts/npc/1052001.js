@@ -31,7 +31,7 @@ var job;
 var pnpc = -1;
 
 importPackage(Packages.client);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(Packages.scripting);
 
 function start() {

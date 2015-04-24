@@ -7,7 +7,7 @@
 
 importPackage(Packages.client);
 importPackage(Packages.server.life);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 var setupTask;
 var Mapas = 910000000;

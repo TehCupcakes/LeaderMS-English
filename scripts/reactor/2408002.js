@@ -7,7 +7,7 @@
 importPackage(Packages.world);
 importPackage(Packages.client);
 importPackage(Packages.server.maps);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(java.lang);
 
 function act() {
@@ -18,7 +18,7 @@ function act() {
 	var vvpKey;
 	var vvpOrig = 4001087;
 	var vvpStage = -1;
-	rm.mapMessage(6, "A chave e o teleporte em algum lugar ...");
+	rm.mapMessage(6, "The key will teleport you somewhere...");
 	switch (vvpMap) {
 		case 240050101 : {
 							vvpKey = vvpOrig;
@@ -50,7 +50,7 @@ function act() {
 	var theWomanfred = womanfred.getReactorByName("keyDrop1");
 	var dropper = eim.getPlayers().get(0);
 	womanfred.spawnItemDrop(theWomanfred, dropper, tehWomanfred, theWomanfred.getPosition(), true, true);
-	womanfred.broadcastMessage(MaplePacketCreator.serverNotice(5, "Um flash de luz brilhante, entao uma chave de repente aparece em algum lugar do mapa."));
+	womanfred.broadcastMessage(MaplePacketCreator.serverNotice(5, "There is a bright flash of light, then suddenly a key appears somewhere on the map."));
 }
 	
 	

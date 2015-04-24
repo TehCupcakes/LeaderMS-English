@@ -2,7 +2,7 @@
  *@author Jvlaple
  */
  
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(Packages.server.life);
 importPackage(java.awt);
 

@@ -6,7 +6,7 @@
 
 importPackage(Packages.client);
 importPackage(Packages.server.life);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 
 
 function init() {

@@ -1,6 +1,6 @@
 importPackage(Packages.server.maps);
-importPackage(Packages.net.channel);
-importPackage(Packages.tools);
+importPackage(Packages.handling.channel);
+importPackage(Packages.tools.packet);
 
 function enter(pi) {
     var papuMap = ChannelServer.getInstance(pi.getPlayer().getClient().getChannel()).getMapFactory().getMap(220080001);

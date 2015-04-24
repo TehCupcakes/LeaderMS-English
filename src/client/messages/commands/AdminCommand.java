@@ -193,6 +193,7 @@ public class AdminCommand implements Command {
                 outputMessage = c.getChannelServer().getArrayString();
             }
             cserv.setServerMessage(outputMessage);
+        /*
         } else if (splitted[0].equals("!startProfiling")) {
             CPUSampler sampler = CPUSampler.getInstance();
             sampler.addIncluded("net.sf.odinms");
@@ -217,6 +218,7 @@ public class AdminCommand implements Command {
                 log.error("THROW", e);
             }
             sampler.reset();
+        */
         } else if (splitted[0].equalsIgnoreCase("!warpallhere")) {
             List<MapleCharacter> people = new LinkedList<MapleCharacter>();
             //list the chars...

@@ -24,7 +24,7 @@
  *@author Jvlaple :)
  */
  
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(Packages.client);
 importPackage(Packages.server.maps);
 importPackage(java.lang);

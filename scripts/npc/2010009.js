@@ -1,4 +1,4 @@
-importPackage(Packages.net.world.guild);
+importPackage(Packages.handling.world.guild);
 
 var status;
 var choice;

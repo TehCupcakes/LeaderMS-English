@@ -10,7 +10,7 @@ importPackage(Packages.world);
 importPackage(Packages.client);
 importPackage(Packages.server.life);
 importPackage(Packages.server.maps);
-importPackage(Packages.tools);
+importPackage(Packages.tools.packet);
 importPackage(java.lang);
 
 var exitMap;
