@@ -46,29 +46,29 @@ function action(mode, type, selection) {
 		else
 			status--;
 		if (status == 0) {
-			cm.sendSimple ("Ola, eu sou o taxista Dolphin,\r\nO que voce quer fazer hoje?\r\n#L0#Aprenda a montar um porco#l\r\n#L1#Ir para Herb Town#l\r\n#L2#Comecar Aquarium Party Quest#l\r\n#L3#Conte-me sobre a outra dimensao.#l");
+			cm.sendSimple ("Hello, I am the Dolphin taxi!\r\nWhat do you want to do today?\r\n#L0#Learn to ride a pig#l\r\n#L1#Go to Herb Town#l\r\n#L2#Begin Aquarium Party Quest#l\r\n#L3#Tell me about the other dimension#l");
 		} else if (status == 1) {
 			if (selection == 0) {
 				if(cm.getLevel() >= 70) {
 					cm.teachSkill(1004, 1, 0);
-					cm.sendOk("Voce esta pronto para entrar na Pig.");
+					cm.sendOk("You are ready to ride a pig");
 				} else {
-					cm.sendOk("Voce e muito fraco. Por favor, volte quando voce crescer mais.");
+					cm.sendOk("You are very weak. Please come back when you have grown more.");
 				}
 				cm.dispose();
 			} else if (selection == 1) {
-				cm.sendNext ("Tudo bem, vejo voce na próxima vez.");
+                            cm.sendNext ("All right, see you next time.");
 			} else if (selection == 2) {
 					if (cm.getParty() == null) {
-						cm.sendOk("Por favor, fale comigo de novo depois de ter grupo formado.");
+						cm.sendOk("Please speak to me again after forming a party.");
 						cm.dispose();
 						return;
 					}
 					if (!cm.isLeader()) { 
-						cm.sendOk("Por favor, peca o lider do grupo para falar comigo!");
+						cm.sendOk("Please ask the party leader to talk to me.");
 						cm.dispose();
 				       } if (checkLevelsAndMap(minLevel, maxLevel) == 2) {  
-	                                        cm.sendOk("Acho que nem todos os membros do seu grupo estao presentes.");
+	                                        cm.sendOk("Not all of the party members are present or in the appropriate level range.");
                                                 cm.dispose();
                                                 return;
                                              }  else {
@@ -100,13 +100,13 @@ function action(mode, type, selection) {
 							}
 							cm.dispose();
 						}else {
-					cm.sendOk("Seu grupo nao pode participar da missao porque nao possui 6 membros. Por favor, reuna 6 pessoas no seu grupo.");
+					cm.sendOk("Your party cannot participate because it does not have 6 members. Please gather 6 people in your party.");
 					cm.dispose();
 				}
 			 }
 			 cm.dispose();
 			} else if (selection == 3) {
-				cm.sendNext("Ultimamente no aquario, uma outra dimensao tem aparecido do nada, e que a maior ameaca que representa para nos e que #bSuper Pianus#k, o chefe de seu mundo esta lentamente se fundindo em nosso mundo. Precisamos de pessoas corajosas para combater #bSuper Pianus .#k Os item dropados do Super Pianus tambem sao de outra dimensao, o que significa que eles sao incrivelmente fortes.");
+				cm.sendNext("Recently, a portal to another dimension has appeared in the Aquarium. The greatest threat posed to us is #bSuper Pianus#k, whose world is slowly melting into our world. We need brave people to fight #bSuper Pianus#k. The items dropped by Super Pianus are also from another dimension, which means they are incredibly strong.");
 				cm.dispose();
 			}
 		} else if (status == 2) {

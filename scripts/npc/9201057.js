@@ -132,9 +132,9 @@
 
 function start() {
     if (cm.c.getPlayer().getMapId() == 103000100 || cm.c.getPlayer().getMapId() == 600010001)
-        cm.sendYesNo("A viagem e para " + (cm.c.getPlayer().getMapId() == 103000100 ? "New Leaf City of Masteria" : "Kerning City of Victoria Island") + " vai lhe custar #b5000 mesos#k. Tem certeza de que deseja comprar um #b#t" + (4031711 + parseInt(cm.c.getPlayer().getMapId() / 300000000)) + "##k?");
+        cm.sendYesNo("Travel to " + (cm.c.getPlayer().getMapId() == 103000100 ? "New Leaf City of Masteria" : "Kerning City of Victoria Island") + " will cost you #b5000 mesos#k. Are you sure you want to buy a #b#t" + (4031711 + parseInt(cm.c.getPlayer().getMapId() / 300000000)) + "##k?");
     else if (cm.c.getPlayer().getMapId() == 600010002 || cm.c.getPlayer().getMapId() == 600010004)
-        cm.sendYesNo("Voce quer sair antes que o trem comecar? Não havera reembolso.");
+        cm.sendYesNo("You want to get out before the train leaves? There will be no refund.");
 }
 
 function action(mode, type, selection) {
@@ -146,11 +146,11 @@ function action(mode, type, selection) {
         if(cm.getMeso() >= 5000){
             cm.gainMeso(-5000);
             cm.gainItem(4031711 + parseInt(cm.c.getPlayer().getMapId() / 300000000), 1);
-            cm.sendNext("Voce agora possui o ticket de viagem.");
+            cm.sendNext("You now have the travel ticket.");
         }else
-            cm.sendNext("Voce nao possui mesos suficiente!");
+            cm.sendNext("You do not have enough mesos!");
     }else{
-        cm.sendNext("Tudo bem, te vejo na proxima vez.");
+        cm.sendNext("All right, see you the next time.");
         cm.warp(cm.c.getPlayer().getMapId() == 600010002 ? 600010001 : 103000100);
     }
     cm.dispose();

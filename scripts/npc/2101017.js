@@ -50,18 +50,18 @@ function action(mode, type, selection) {
 						return;
 				}
 				if (cm.checkSquadLeader(arena)) {
-					cm.sendSimple("O que voce gostaria de fazer?#b\r\n\r\n#L1#Ver registro atual da arena!#l\r\n#L2#Comece a luta!#l\r\n#L3#Sair desta arena!#l");
+					cm.sendSimple("What would you like to do?#b\r\n\r\n#L1#View current arena record!#l\r\n#L2#Start the fight!#l\r\n#L3#Leave this arena!#l");
                     status = 19;
 				} else if (cm.isSquadMember(arena)) {
 					var noOfChars = cm.numSquadMembers(arena);
-                    var toSend = "Voce tem atualmente essas pessoas em sua arena :\r\n#b";
+                    var toSend = "You currently have these people in your arena:\r\n#b";
 					for (var i = 1; i <= noOfChars; i++) {
 						toSend += "\r\n#L" + i + "#" + cm.getSquadMember(arena, i - 1).getName() + "#l";
 					}
 					cm.sendSimple(toSend);
 					cm.dispose();
 				} else {
-					cm.sendOk("O que aconteceu?");
+					cm.sendOk("What happened?");
 					cm.dispose();
 				}
 			} else if (status == 20) {
@@ -83,7 +83,7 @@ function action(mode, type, selection) {
 					}
 				if (selection == 1) {
 					var noOfChars = cm.numSquadMembers(arena);
-                    var toSend = "Voce tem atualmente essas pessoas em sua arena :\r\n#b";
+                    var toSend = "You currently have these people in your arena:\r\n#b";
 					for (var i = 1; i <= noOfChars; i++) {
 						toSend += "\r\n#L" + i + "#" + cm.getSquadMember(arena, i - 1).getName() + "#l";
 					}
@@ -91,7 +91,7 @@ function action(mode, type, selection) {
 					cm.dispose();
 				} else if (selection == 2) {
 					if (cm.numSquadMembers(arena) < 2 && !cm.getChar().isGM()) {
-						cm.sendOk("Eu so posso deixa-lo lutar quando voce tem duas ou mais pessoas.");
+						cm.sendOk("I can only let you fight when you have two or more people.");
 						cm.dispose();
 					} else {
 						var em = cm.getEventManager(arenaName);
@@ -106,7 +106,7 @@ function action(mode, type, selection) {
 						cm.dispose();
 					}
 				} else if (selection == 3) {
-					cm.mapMessage("O lider da Arena saiu.");
+					cm.mapMessage("The leader of the arena left.");
 					cm.warpSquadMembers(arena, 980010000)
 					var squad = cm.getPlayer().getClient().getChannelServer().getMapleSquad(arena);
 					cm.getPlayer().getClient().getChannelServer().removeMapleSquad(squad, arena);
@@ -118,11 +118,11 @@ function action(mode, type, selection) {
 			if (status == 0) {
 				var gotTheBombs = eim.getProperty("gotBomb" + cm.getChar().getId());
 				if (gotTheBombs != null) {
-                                    cm.sendOk("Eu ja lhe dei as bombas, por favor, mate os #eEscorpioes#n para conseguir mais na proxima!");
+                                    cm.sendOk("I already gave you the bombs. Please kill #eScorpions#n to get more in the next round!");
 //					cm.sendOk("Eu ja lhe dei as bombas, por favor, mate os #eEscorpioes#n para conseguir mais na proxima!\r\n\r\n#b#L3#Eu quero sair daqui!#l#k");
 					cm.dispose();
 				} else {
-					cm.sendOk("Eu lhe dei (5) #b#eBombas#k#n e (50) #b#eRochas Elementais#k#n.\r\nUse as rochas elementais para capturar os escorpioes para Sra.#r#eSpirit Jewels#k#n!");
+					cm.sendOk("I gave you (5) #b#eBombs#k#n and (50) #b#eElemental Rocks#k#n.\r\nUse the elemental rocks to capture the scorpions for #r#eSpirit Jewels#k#n!");
 					eim.setProperty("gotBomb" + cm.getChar().getId(), "got");
 					cm.gainItem(2270002, 50);
 					cm.gainItem(2100067, 5);

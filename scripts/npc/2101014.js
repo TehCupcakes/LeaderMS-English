@@ -33,24 +33,24 @@ function action(mode, type, selection) {
 		}
 		if (cm.getPlayer().getMapId() == 980010000) {
 			if (status == 0) {
-				var toSnd = "Voce gostaria de participar do Desafio #eAriant Coliseu#n?\r\n\r\n#e#r       (Escolha uma arena)#n#k\r\n#b";
+				var toSnd = "Would you like to join the #eAriant Coliseum Challenge#n?\r\n\r\n#e#r       (Choose an arena)#n#k\r\n#b";
 				if (cm.getSquadState(MapleSquadType.ARIANT1) != 2 && cm.getSquadState(MapleSquadType.ARIANT1) != 1) {
-					toSnd += "#L0#Comece Ariant Coliseu (1)#l\r\n";
+					toSnd += "#L0#Start Ariant Coliseum (1)#l\r\n";
 				} else if (cm.getSquadState(MapleSquadType.ARIANT1) == 1) {
-					toSnd += "#L0#Junte-se ao Ariant Coliseu (1)  Dono (" + cm.getSquadMember(MapleSquadType.ARIANT1, 0).getName() + ")" + " Membros Atuais: " + cm.numSquadMembers(MapleSquadType.ARIANT1) + "\r\n";
+					toSnd += "#L0#Join Ariant Coliseum (1)  Owner: " + cm.getSquadMember(MapleSquadType.ARIANT1, 0).getName() + " ; Current Members: " + cm.numSquadMembers(MapleSquadType.ARIANT1) + "\r\n";
 				}
 				if (cm.getSquadState(MapleSquadType.ARIANT2) != 2 && cm.getSquadState(MapleSquadType.ARIANT2) != 1) {
-					toSnd += "#L1#Comece Ariant Coliseu (2)#l\r\n";
+					toSnd += "#L1#Start Ariant Coliseum (2)#l\r\n";
 				} else if (cm.getSquadState(MapleSquadType.ARIANT2) == 1) {
-					toSnd += "#L1#Junte-se ao Ariant Coliseu (2)  Dono (" + cm.getSquadMember(MapleSquadType.ARIANT2, 0).getName() + ")" + " Membros Atuais:: " + cm.numSquadMembers(MapleSquadType.ARIANT2) + "\r\n";
+					toSnd += "#L1#Join Ariant Coliseum (2)  Owner: " + cm.getSquadMember(MapleSquadType.ARIANT2, 0).getName() + " ; Current Members: " + cm.numSquadMembers(MapleSquadType.ARIANT2) + "\r\n";
 				}
 				if (cm.getSquadState(MapleSquadType.ARIANT3) != 2 && cm.getSquadState(MapleSquadType.ARIANT3) != 1) {
-					toSnd += "#L2#Comece Ariant Coliseu (3)#l\r\n";
+					toSnd += "#L2#Start Ariant Coliseum (3)#l\r\n";
 				} else if (cm.getSquadState(MapleSquadType.ARIANT3) == 1) {
-					toSnd += "#L2#Junte-se ao Ariant Coliseu (3)  Dono (" + cm.getSquadMember(MapleSquadType.ARIANT3, 0).getName() + ")" + " Membros Atuais:: " + cm.numSquadMembers(MapleSquadType.ARIANT3) + "\r\n";
+					toSnd += "#L2#Join Ariant Coliseum (3)  Owner: " + cm.getSquadMember(MapleSquadType.ARIANT3, 0).getName()  + " ; Current Members: " + cm.numSquadMembers(MapleSquadType.ARIANT3) + "\r\n";
 				}
-				if (toSnd.equals("Voce gostaria de participar do Desafio Ariant Coliseu? Escolha uma arena!\r\n#b")) {
-                                        cm.sendOk("Todas as arenas esta ocupadas agora. Eu sugiro que voce volte mais tarde ou mudar de canal.");
+				if (toSnd.equals("Would you like to join the #eAriant Coliseum Challenge#n?\r\n\r\n#e#r       (Choose an arena)#n#k\r\n#b")) {
+                                        cm.sendOk("All arenas are busy now. I suggest you come back later or change channels.");
 					cm.dispose();
 				} else {
 					cm.sendSimple(toSnd);
@@ -73,30 +73,30 @@ function action(mode, type, selection) {
 					}
 				if (cm.getSquadState(choice) == 0) {
 					if (cm.createMapleSquad(choice) != null) {
-						cm.getPlayer().dropMessage("Sua Arena foi criada. Aguarde as pessoas entrarem agora!");
+						cm.getPlayer().dropMessage("Your arena was created. Please wait for people to enter!");
 						cm.warp(map, 0);
 						cm.dispose();
 					} else {
-						cm.getPlayer().dropMessage("Houve um erro. Por favor, reporte este fato a um GameMaster o mais breve possivel.");
+						cm.getPlayer().dropMessage("There was an error. Please report this to a GameMaster as soon as possible.");
 						cm.dispose();
 					}
 				} else if (cm.getSquadState(choice) == 1) {
 					if (cm.numSquadMembers(choice) > 5) {
-						cm.sendOk("Desculpe, a Lobby esta cheia agora.");
+						cm.sendOk("Sorry, the lobby is full now.");
 						cm.dispose();
 					} else {
 						if (cm.canAddSquadMember(choice)) {
 							cm.addSquadMember(choice);
-							cm.sendOk("Voce ja se inscreveu!");
+							cm.sendOk("You have signed up!");
 							cm.warp(map, 0);
 							cm.dispose();
 						} else {
-							cm.sendOk("Desculpe, mas o lider pediu para nao ser autorizado a entrar.");
+							cm.sendOk("Sorry, the leader did not allow you to enter .");
 							cm.dispose();
 						}
 					}
 				} else {
-					cm.sendOk("Algo ocorreu mal.");
+					cm.sendOk("Something bad happened.");
 					cm.dispose();
 				}
 			}  

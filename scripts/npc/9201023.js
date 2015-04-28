@@ -113,21 +113,21 @@ function action(mode, type, selection) {
         if (cm.getPlayer().getMarriageQuestLevel() == 1 || cm.getPlayer().getMarriageQuestLevel() == 52) {
             if (!cm.haveItem(4000015, 40)) {
                 if (status == 0) {
-                    cm.sendNext("Hey, voce parece que precisade provas de amor? Eu posso leva-las para voce.");
+                    cm.sendNext("Hey, do you need proof of love? I can give it to you.");
                 } else if (status == 1) {
-                    cm.sendNext("Tudo que voce tem a fazer e trazer me 40 #bHorned Mushroom Caps#k.");
+                    cm.sendNext("All you have to do is bring me 40 #bHorned Mushroom Caps#k.");
                     cm.dispose();
                 }
             } else {
                 if (status == 0) {
-                    cm.sendNext("Uau, voce foi rapido ! Aqui a prova de amor...");
+                    cm.sendNext("Wow, you were fast! Here is the proof of love...");
                     cm.gainItem(4000015, -40)
                     cm.gainItem(4031367, 1);
                     cm.dispose();
                 }
             }
         } else {
-            cm.sendOk("Oi, eu sou Nana a fada amor ... e voce quem e?");
+            cm.sendOk("Hi, I'm love fairy Nana... And who are you?");
             cm.dispose();
         }
     }

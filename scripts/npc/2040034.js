@@ -50,16 +50,16 @@ function action(mode, type, selection) {
 			status--;
 		if (status == 0) {
 			if (cm.getParty() == null) { 
-				cm.sendOk("Voce nao esta em um grupo. Voce so pode participar desta missao se estiver em um grupo.");
+				cm.sendOk("You are not in a party. You can only participate in this quest if you are in a party.");
 				cm.dispose();
                                 return;
 			}
 			if (!cm.isLeader()) { 
-				cm.sendSimple("Peca ao seu lider para falar comigo.");
+				cm.sendSimple("Tell your party leader to talk to me.");
 				cm.dispose();
                                 return;
                         } if (checkLevelsAndMap(minLevel, maxLevel) == 2) {  
-	                          cm.sendOk("Acho que nem todos os membros do seu grupo estao presentes.");
+	                          cm.sendOk("Some of your party members are not present or not in the acceptable level range.");
                                   cm.dispose();
                                   return;
                          }  else {
@@ -83,19 +83,19 @@ function action(mode, type, selection) {
 				 if (next) {
 		                  var em = cm.getEventManager("LudiPQ");
 	                          if (em == null) {
-	                          cm.sendOk("Este evento esta indisponivel.");
+	                          cm.sendOk("This event is unavailable.");
 		                  } else {
 		                  var prop = em.getProperty("state");
 		                  if (prop.equals("0") || prop == null) {
 						 em.startInstance(cm.getParty(),cm.getPlayer().getMap());
                                                  cm.dispose();
 		                  } else {
-		            	      cm.sendOk("Outro grupo esta la dentro participando da missao. Por favor, tente novamente depois que o grupo abrir a vaga.");
+		            	      cm.sendOk("Another party is currently participating in the quest. Please try again after the other group has finished.");
                                       cm.dispose();
 		                 }
 		               }
 	                 } else {
-					cm.sendOk("Seu grupo nao pode participar da missao porque nao possui 6 membros. Por favor, reuna 6 pessoas no seu grupo.");
+					cm.sendOk("Your party cannot participate in this mission because you it does not have 6 members. Please gather 6 members in your party.");
 					cm.dispose();
 				}
 			}

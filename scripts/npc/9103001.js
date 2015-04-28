@@ -27,23 +27,23 @@ function action(mode, type, selection) {
 	    status--;
 		
 	if (status == 0) {
-	    cm.sendSimple("Esta e a entrada para o labirinto Ludibrium.\r\n#b#L0#Entrar na Lubidrium Maze#l"/*\r\n#L1#Oque e o Ludibrium Maze?*/);
+	    cm.sendSimple("This and the entrance to the Ludibrium Maze.\r\n#b#L0#Enter the Lubidrium Maze#l"/*\r\n#L1#Oque e o Ludibrium Maze?*/);
 	 	
 	} else if (status == 1) {
 	    var em = cm.getEventManager("LudiMazePQ");
 	    if(selection == 0) {//ENTER THE PQ
 			if (!hasParty()) {//NO PARTY
-				cm.sendOk("Formar um grupo antes de entrar!");
+				cm.sendOk("Form a party to enter!");
 			} else if (!isLeader()) {//NOT LEADER
-				cm.sendOk("Peca seu lider para que fale comigo!");
+				cm.sendOk("Tell your party leader to talk to me.");
 			} else if (!checkPartySize()) {//PARTY SIZE WRONG
-				cm.sendOk("Seu partido tem de consistir em pelo menos " + minPlayers + " membros!");
+				cm.sendOk("Your party must consist of at least " + minPlayers + " members!");
 			} else if (!checkPartyLevels()) {//WRONG LEVELS
-				cm.sendOk("Um dos membros do seu partido nao cumpriu os requisitos de nivel de " + minlvl + "/" + maxlvl + ".");
+				cm.sendOk("A member of your party does not fulfill the level requirements of " + minlvl + "-" + maxlvl + ".");
 			} else if (em == null) {//EVENT ERROR
-				cm.sendOk("Evento desabilitado!");
+				cm.sendOk("Event unavailable!");
 			} else if (!open){
-				cm.sendOk("A PQ esta #rfechada#k por agora.");
+				cm.sendOk("The PQ is #rclosed#k for now.");
 			} else {
 				em.startInstance(cm.getParty(), cm.getChar().getMap());
 			}
