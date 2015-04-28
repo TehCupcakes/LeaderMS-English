@@ -56,15 +56,15 @@ function action(mode, type, selection) {
             status--;
         if (cm.getPlayer().getMapId() == 680000000) {
             if (status == 0) {
-                cm.sendSimple("Ola #h #,\r\n#bVoce gostaria de se casar, ou visitar seus amigos em um casamento?\r\n#L0#Eu quero me casar!#l\r\n#L1#Eu quero ver meus amigos se casar!#l\r\n#L2#Comprar bilhete de casamento por 25.000,000 Mesos!#l\r\n#L3#Gostaria de obter uma licenca de casamento.#l\r\n");
+                cm.sendSimple("Hello #h #,\r\n#b. Would you like to get married, or visit a friend's wedding?\r\n#L0#I want to get married!#l\r\n#L1#I want to see my friends get married!#l\r\n#L2#Buy wedding ticket for 25,000,000 Mesos.#l\r\n#L3#I would like to get a marriage license.#l\r\n");
             } else if (status == 1 && selection == 0) {
                 if (cm.getParty() == null) {
-                    cm.sendOk("Voce quer se casar? Entre em um grupo com sua/seu parceira(o)!");
+                    cm.sendOk("You want to get married? Create a party with your partner!");
                     cm.dispose();
                     return;
                 }
                 if (!cm.isLeader()) { 
-                    cm.sendOk("Por favor, peca ao seu parceiro para falar comigo.");
+                    cm.sendOk("Please ask your partner to talk to me.");
                     cm.dispose();
                 } else {
                     var party = cm.getParty().getMembers();
@@ -106,7 +106,7 @@ function action(mode, type, selection) {
                     if (next) {
                         var em = cm.getEventManager("CathedralWedding");
                         if (em == null) {
-                            cm.sendOk("Evento nao disponivel!");
+                            cm.sendOk("Event unavailable!");
                             cm.dispose();
                         }
                         else {
@@ -116,7 +116,7 @@ function action(mode, type, selection) {
                             var wname = party.get(1).getName();
                             var hidd = party.get(0).getId();
                             var widd = party.get(1).getId();
-                            var StringLine = hname + " e " + wname + "'s vao se casar na Catedral no Canal (" + cm.getC().getChannel() + ").";
+                            var StringLine = hname + " and " + wname + "'s wedding is starting in the Cathedral on Channel (" + cm.getC().getChannel() + ").";
                             cm.worldMessage(5, StringLine);
                             cm.gainItem(5251003, -1);
                             var eimi = cm.getPlayer().getEventInstance();
@@ -129,42 +129,42 @@ function action(mode, type, selection) {
                         cm.dispose();
                     }
                     else {
-                        cm.sendOk("Voce nao esta no mesmo mapa com a sua parceira, ou voces dois sao do mesmo sexo, ou um de voce ja esta casado, ou o lider do grupo e a noiva, ou voce nao tem permissao suficiente. Lembre-se, voce tem que ser nivel 10(+) para se casar.");
+                        cm.sendOk("Unable to start wedding. You must be on the same map with your partner. Only unmarried, opposite-sex partners can get married. The groom should be the party leader. Remember, you have to be level 10+ to get married.");
                         cm.dispose();
                     }
                 }
 
             }
             else if (status == 1 && selection == 1) {
-                cm.sendGetText("Por favor, insira o nome de um dos membros do casamento.");
+                cm.sendGetText("Please enter the name of one of the players getting married.");
             } else if (status == 1 && selection == 2) {
                 if (cm.getPlayer().getMeso() >= 25000000) {
                     cm.gainMeso(-25000000)
                     cm.gainItem(5251003, 1);
                     cm.dispose();
                 } else {
-                    cm.sendOk("Voce nao tem mesos suficientes.");
+                    cm.sendOk("You do not have enough mesos .");
                     cm.dispose();
                 }
             }
             else if (status == 1 && selection == 3) {
                 if (cm.getPlayer().getMarriageQuestLevel() == 50) {
-                    cm.sendNext("Por favor, va e visitar a Mom e Dad em sua casa. Eles vivem em algum lugar em  - Henesys Hunting Ground II");
+                    cm.sendNext("Please go and visit Mom and Dad. They live in Henesys Hunting Ground II.");
                     cm.getPlayer().addMarriageQuestLevel();
                     cm.dispose();
                 } else if (cm.getPlayer().getMarriageQuestLevel() == 53) {
                     if (cm.haveItem(4031373, 1)) {
-                        cm.sendNext("Grande, voce tem a minha permissao.");
+                        cm.sendNext("Great, you have my permission.");
                         cm.removeAll(4031373);
                         cm.gainItem(4031374, 1);
                         cm.getPlayer().setMarriageQuestLevel(100);
                         cm.dispose();
                     } else {
-                        cm.sendNext("Voce nao tem a bencao de Mom e Dad!");
+                        cm.sendNext("You do not have the blessing of Mom and Dad!");
                         cm.dispose();
                     }
                 } else {
-                    cm.sendNext("Eu nao sei o que esta falando.");
+                    cm.sendNext("I do not know what you're talking about.");
                     cm.dispose();
                 }
             } else if (status == 2) {
@@ -178,7 +178,7 @@ function action(mode, type, selection) {
                     eim.registerPlayer(cm.getPlayer());
                     cm.dispose();
                 } else {
-                    cm.sendOk("O casamento que voce gostaria de participar nao foi iniciado.");
+                    cm.sendOk("The wedding you would like to participate in has not started.");
                     cm.dispose();
                 }
                 cm.dispose();
@@ -192,14 +192,14 @@ function action(mode, type, selection) {
             var alrediClicked = eimii.getProperty("alreadyClicked");
             if (status == 0) {
                 if (cm.getPlayer().getId() != hiidii && cm.getPlayer().getId() != wiidii) {
-                    cm.sendOk("Voce nao esta se casando!");
+                    cm.sendOk("You're not getting married!");
                     cm.dispose();
                     cm.dispose();
                 } else if (cm.getPlayer().isMarried() != 0) {
-                    cm.sendOk("Voce ja foi casado.");
+                    cm.sendOk("You are already married.");
                     cm.dispose();
                 } else {
-                    cm.sendYesNo("Voce gostaria de se casar com seu parceiro(a)?\r\n\r\n");
+                    cm.sendYesNo("Would you like to marry your partner?\r\n\r\n");
                 }
             } else if (status == 1) {
                 if (alrediClicked == 0) {
@@ -223,7 +223,7 @@ function action(mode, type, selection) {
                         cm.getPlayer().saveToDB(true, true);
                     }
                 }
-                cm.sendOk("Voce se casou com sucesso, parabens!");
+                cm.sendOk("You have successfully gotten married! Congratulations!");
                 cm.gainItem(4031424, 1);
                 cm.removeAll(4031374);
                 cm.dispose();

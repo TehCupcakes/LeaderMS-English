@@ -6,12 +6,12 @@ var status;
 var curMap;
 var playerStatus;
 var chatState;
-var questions = Array("Esta e a tarefa. Recolher o mesmo numero de cupons, com o nivel minimo necessario para fazer o avanco para o primeiro trabalho como Guerreiro.",
-			"Esta e a tarefa. Recolher o mesmo numero de cupons, com a quantidade minima de STR ​​necessaria para fazer o avanco para o primeiro trabalho como um Guerreiro.",
-			"Esta e a tarefa. Recolher o mesmo numero de cupons, com a quantidade minima de INT necessaria para fazer o avanco para o primeiro trabalho como um Bruxo.",
-			"Esta e a tarefa. Recolher o mesmo numero de cupons, com a quantidade minima de DEX necessaria para fazer o avanco para o primeiro trabalho como um Arqueiro.",
-			"Esta e a tarefa. Recolher o mesmo numero de cupons, com a quantidade minima de DEX necessaria para fazer o avanco para o primeiro trabalho como um Gatuno.",
-			"Esta e a tarefa. Recolher o mesmo numero de cupons, com o nivel minimo necessario para avancar para a Segunda Classe.");
+var questions = Array("This is your task: Collect the same number of coupons as the minimum level necessary to make the first job advancement to Warrior.",
+			"This is your task: Collect the same number of coupons as the minimum STR ​​necessary to make the first job advancement to Warrior.",
+			"This is your task: Collect the same number of coupons as the minimum INT ​​necessary to make the first job advancement to Magician.",
+			"This is your task: Collect the same number of coupons as the minimum DEX ​​necessary to make the first job advancement to Bowman.",
+			"This is your task: Collect the same number of coupons as the minimum DEX ​​necessary to make the first job advancement to Thief.",
+			"This is your task: Collect the same number of coupons as the minimum level necessary to advance to the second job in a class.");
 var qanswers = Array(10, 35, 20, 25, 25, 30);
 var party;
 var preamble;
@@ -84,23 +84,23 @@ function action(mode, type, selection) {
 				party = eim.getPlayers();
 				preamble = eim.getProperty("leader1stpreamble");
 				if (preamble == null) {
-					cm.sendNext("Ola! Bem-vindo(a) ao 1 estagio. Ande pelo mapa e voce vera Jacares ao seu redor. Quando voce derrota-los, eles irao te dar um #bcupon#k. Cada membro do grupo que nao seja o lider deve conversar comigo, e reunir-se o mesmo numero de #bcupons#k como a resposta para a pergunta que eu vou dar para eles.\r\nSe voce juntar a quantidade correta de #bcupons#k, eu vou lhe dar o #bpasse#k. Uma vez que todos os outros membros do grupo acabarem, devem entregar ao lider os #bpasses#k, o lider vai me entregar os #bpasses#k, concluindo a fase. Quanto mais rapido voce terminar os estagios, mais estagios voce vai ser capaz de desafiar. Entao eu sugiro que voce tome o cuidado. Boa sorte!");
+					cm.sendNext("Hello! Welcome to the 1st stage. Walk around the map and you will see alligators all around. When you defeat them, they will give you a #bcoupon#k. Each member of the group besides the leader should talk to me when they have the same number of #bcoupons#k as the answer to the question I give them.\r\nIf you have the correct number of #bcoupons#k, I'll give you a #bpass#k. Once all the members of the group have finished, they must give the leader the #bpasses#k, and the leader should give the #bpasses#k to me, thus concluding this stage. The quicker you complete the stages, the more stages you will be able to challenge. Be careful and good luck!");
 					eim.setProperty("leader1stpreamble","done");
 					cm.dispose();
 				} else {
 					var complete = eim.getProperty(curMap.toString() + "stageclear");
 					if (complete != null) {
-						cm.sendNext("Por favor, nos apressarmos para a proxima fase, o portal esta aberto!");
+						cm.sendNext("Please hurry on to the next stage. The portal is open!");
 						cm.dispose();
 					} else {
 						var numpasses = party.size()-1;
 						var passes = cm.haveItem(4001008,numpasses);
 						var strpasses = "#b" + numpasses.toString() + " passes#k";
 						if (!passes) {
-							cm.sendNext("Voce precisa coletar o numero de cupons sugerido pela resposta. Nem mais nem menos. Verifique se voce tem mesmo os cupons.");
+							cm.sendNext("You need to collect the number of coupons that correctly answers the question. Neither more, nor less. Make sure you have the coupons in your inventory.");
 							cm.dispose();
 						} else {
-							cm.sendNext("Voce reuniu " + strpasses + "! Parabens por concluir este estagio. Eu vou liberar o portal e envia-lo para a proxima fase. Ha um limite de tempo para chegar la, entao por favor apresse. Boa sorte para todos voces!");
+							cm.sendNext("You collected " + strpasses + "! Congratulations on completing this stage. I will open the portal and send you to the next stage. There is a time limit, so please hurry. Good luck to all of you!");
 							clear(1,eim,cm);
 							cm.givePartyExp(100, party);
 							cm.gainItem(4001008, -numpasses);
@@ -120,28 +120,23 @@ function action(mode, type, selection) {
 					var questionNum = Math.floor(Math.random() * questions.length);
 					eim.setProperty(qstring, questionNum.toString());
 				}
-					cm.sendNext("Ola! Bem-vindo(a) ao 1 estagio. Ande pelo mapa e voce vera Jacares ao seu redor. Quando voce derrota-los, eles irao te dar um #bcupon#k. Cada membro do grupo que nao seja o lider deve conversar comigo, e reunir-se o mesmo numero de #bcupons#k como a resposta para a pergunta que eu vou dar para eles.\r\nSe voce juntar a quantidade correta de #bcupons#k, eu vou lhe dar o #bpasse#k. Uma vez que todos os outros membros do grupo acabarem, devem entregar ao lider os #bpasses#k, o lider vai me entregar os #bpasses#k, concluindo a fase. Quanto mais rapido voce terminar os estagios, mais estagios voce vai ser capaz de desafiar. Entao eu sugiro que voce tome o cuidado. Boa sorte!");
+					cm.sendNext("Hello! Welcome to the 1st stage. Walk around the map and you will see alligators all around. When you defeat them, they will give you a #bcoupon#k. Each member of the group besides the leader should talk to me when they have the same number of #bcoupons#k as the answer to the question I give them.\r\nIf you have the correct number of #bcoupons#k, I'll give you a #bpass#k. Once all the members of the group have finished, they must give the leader the #bpasses#k, and the leader should give the #bpasses#k to me, thus concluding this stage. The quicker you complete the stages, the more stages you will be able to challenge. Be careful and good luck!");
 			} else if (status == 0) { 
 				var complete = eim.getProperty(curMap.toString() + "stageclear");
 				if (complete != null) {
-					cm.sendNext("Por favor, nos apressarmos para a proxima fase, o portal esta aberto!");
+					cm.sendNext("Please hurry on to the next stage. The portal is open!");
 					cm.dispose();
 				} else {
 					var qstring = "member1st" + cm.getPlayer().getId().toString();
 					var numcoupons = qanswers[parseInt(eim.getProperty(qstring))];
-					var qcorr = cm.haveItem(4001007,(numcoupons+1));
-					var enough = false;
-					if (!qcorr) { 
-						qcorr = cm.haveItem(4001007,numcoupons);
-						if (qcorr) { 
-							cm.sendNext("Resposta correta! Voce acaba de ganhar um #bpasse#k. Por favor, entregue-o para o lider do seu grupo.");
-							cm.gainItem(4001007, -numcoupons);
-							cm.gainItem(4001008, 1);
-							enough = true;
-						}
-					}
-					if (!enough) {
-						cm.sendNext("Resposta incorreta. So posso entregar o passe se voce coletar o numero de #bcupons#k sugerido pela resposta a pergunta.");
+                                        var enough = cm.haveItem(4001007,numcoupons);
+					var toomany = cm.haveItem(4001007,(numcoupons+1));
+					if (enough && !toomany) {
+                                            cm.sendNext("Correct! You just won a #bpass#k. Please give it to your party leader.");
+                                            cm.gainItem(4001007, -numcoupons);
+                                            cm.gainItem(4001008, 1);
+					} else {
+                                            cm.sendNext("Incorrect answer. I can give you the pass if you collect the number of #bcoupons#k that correctly answers the question.");
 					}
 					cm.dispose();
 				}
@@ -171,7 +166,7 @@ function action(mode, type, selection) {
 				var map = eim.getMapInstance(cm.getPlayer().getMapId());
 				var passes = cm.haveItem(4001008,10);
 				if (passes) {
-					cm.sendNext("Aqui esta o portal que leva ao ultimo estagio de bonus. E um estagio que permite derrotar monstros comuns um pouco mais facilmente. Voce tera um tempo limite para derrotar o maximo possivel deles, mas podera sair do estagio quando quiser falando com o NPC. Mais uma vez, parabens por completar todos os estagios. Cuidado...");
+					cm.sendNext("Here is the gate that leads to the ultimate bonus stage. This stage allows you to defeat common monsters a bit more easily. You will have a time limit to defeat as many as possible, but will be able to leave the stage when you want by talking to the NPC. Again, congratulations on completing the stages.");
 					party = eim.getPlayers();
 					cm.gainItem(4001008, -10);
 					clear(5,eim,cm);
@@ -179,16 +174,16 @@ function action(mode, type, selection) {
                                       //  cm.givePartyQPoints(20, party);
 					cm.dispose();
 				} else { 
-					cm.sendNext("Ola! Bem-vindo(a) ao 5 estagio final. Ande pelo mapa e voce podera ver alguns Monstros Chefes. Derrote todos e junte 10 #bpasses#k para mim. Obtido o seu passe, o lider do seu grupo vai junta-los e me entregar quanto tiver todos os 10. Os monstros podem parecer familiares, mas eles sao muito mais fortes do que voce pensa. Por isso, tenha cuidado. Boa sorte!");
+					cm.sendNext("Hello! Welcome to the 5th and final stage. Walk around the map and you will see some Monster Heads. Defeat all of them and give 10 #bpasses#k to me. Give your passes to your party leader, and the leader will deliver all 10 passes to me. The monsters may look familiar, but they are much stronger than you think. Be careful. Good luck!");
 				}
 				cm.dispose();
 			} else { 
-					cm.sendNext("Ola! Bem-vindo(a) ao 5 estagio final. Ande pelo mapa e voce podera ver alguns Monstros Chefes. Derrote todos e junte 10 #bpasses#k para mim. Obtido o seu passe, o lider do seu grupo vai junta-los e me entregar quanto tiver todos os 10. Os monstros podem parecer familiares, mas eles sao muito mais fortes do que voce pensa. Por isso, tenha cuidado. Boa sorte!");
+					cm.sendNext("Hello! Welcome to the 5th and final stage. Walk around the map and you will see some Monster Heads. Defeat all of them and give 10 #bpasses#k to me. Give your passes to your party leader, and the leader will deliver all 10 passes to me. The monsters may look familiar, but they are much stronger than you think. Be careful. Good luck!");
 				cm.dispose();
 			}
 		} else { 
 			if (status == 0) {
-				cm.sendNext("Incrivel! Voce completou todos os estágios para chegar até aqui. Aqui esta uma pequena recompensa pelo trabalho bem-feito. Mas, antes de aceitar, verifique se voce possui slots disponiveis nos inventarios de uso e etc.");
+				cm.sendNext("Incredible! You have completed all the stages in order to get here! Here is a small reward for a job well done. But before accepting, make sure you have available space in your use and etc. inventory tabs.");
 			}
 			if (status == 1) {
 				getPrize(eim,cm);
@@ -196,7 +191,7 @@ function action(mode, type, selection) {
 			}
 		}
 	} else { 
-		cm.sendNext("Mapa invalido, isso significa que o estagio esta incompleto.");
+		cm.sendNext("Invalid map. You cannot complete this stage.");
 		cm.dispose();
 		}
 	}
@@ -233,25 +228,25 @@ function rectanglestages (cm) {
 	var eim = cm.getPlayer().getEventInstance();
 	if (curMap == 2) {
 		var nthtext = "2";
-		var nthobj = "cordas";
-		var nthverb = "pendurar";
-		var nthpos = "pendurar nas cordas muito baixas";
+		var nthobj = "ropes";
+		var nthverb = "hang";
+		var nthpos = "hang very low on the ropes";
 		var curcombo = stage2combos;
 		var currect = stage2rects;
 		var objset = [0,0,0,0];
 	} else if (curMap == 3) {
 		var nthtext = "3";
-		var nthobj = "plataformas";
-		var nthverb = "suporte";
-		var nthpos = "ficar muito perto das bordas";
+		var nthobj = "platforms";
+		var nthverb = "stand";
+		var nthpos = "stand too close to the edge";
 		var curcombo = stage3combos;
 		var currect = stage3rects;
 		var objset = [0,0,0,0,0];
 	} else if (curMap == 4) {
 		var nthtext = "4";
-		var nthobj = "barris";
-		var nthverb = "suporte";
-		var nthpos = "ficar muito perto das bordas";
+		var nthobj = "barrels";
+		var nthverb = "stand";
+		var nthpos = "stand too close to the edge";
 		var curcombo = stage4combos;
 		var currect = stage4rects;
 		var objset = [0,0,0,0,0,0];
@@ -261,7 +256,7 @@ function rectanglestages (cm) {
 			party = eim.getPlayers();
 			preamble = eim.getProperty("leader" + nthtext + "preamble");
 			if (preamble == null) {
-				cm.sendNext("Ola! Bem-vindo(a) ao " + nthtext + " estagio. . Voce vera alguns barris por perto. 3 desses barris estarao conectados ao portal que leva ao proximo estagio. #b3 membros do grupo precisam encontrar os barris corretos e ficar em cima deles#k para completar o estagio. MAS, para a resposta contar, e preciso ficar bem firme no centro do barril, nao na beira. E apenas 3 membros do seu grupo podem ficar em cima dos barris. Quando os membros estiverem em cima, o lider do grupo devera #bclicar duas vezes em mim para saber se a resposta esta correta ou nao#k. Agora, encontre os barris corretos!");
+				cm.sendNext("Hello! Welcome to stage " + nthtext + ". You'll see some barrels nearby. 3 barrels are connected to the portal leading to the next stage. #b3 members of the party need to find the correct barrels and stand on top of them to complete the stage. BUT, to determine the answer, the player must stand in the center of the barrel, not at the edge, and only 3 members of your group can stand on top of the barrels. When the members are on top, the leader of the group should #bdouble click me to see if the answer is correct or not#k. Now, find the correct barrels!");
 				eim.setProperty("leader" + nthtext + "preamble","done");
 				var sequenceNum = Math.floor(Math.random() * curcombo.length);
 				eim.setProperty("stage" + nthtext + "combo",sequenceNum.toString());
@@ -271,7 +266,7 @@ function rectanglestages (cm) {
 				if (complete != null) {	
 					var mapClear = curMap.toString() + "stageclear";
 					eim.setProperty(mapClear,"true"); 
-					cm.sendNext("Por favor, nos apressarmos para a proxima fase, o portal esta aberto!");
+					cm.sendNext("Please hurry on to the next stage. The portal is open!");
 				} else { 
 					var totplayers = 0;
 					for (i = 0; i < objset.length; i++) {
@@ -301,13 +296,13 @@ function rectanglestages (cm) {
 				}
 			} else {
 				if (debug) {
-					var outstring = "Objetos contem:"
+					var outstring = "Objects contain:"
 					for (i = 0; i < objset.length; i++) {
 						outstring += "\r\n" + (i+1).toString() + ". " + objset[i].toString();
 					}
 					cm.sendNext(outstring); 
 				} else
-					cm.sendNext("Parece que voce ainda nao encontrou os 3 barris. Pense numa combinacao diferente dos barris. E nao esqueca que apenas 3 membros podem ficar em cima dos barris, firmes no centro para que a resposta conte como correta. Continue!");
+					cm.sendNext("It seems that you still have not found the three barrels. Think of a different combination of the barrels. Don't forget that only 3 members can stand on top of the barrels, and they must be in the center for the response to count as correct. Keep trying!");
 					cm.dispose();
 					}
 				}
@@ -325,9 +320,9 @@ function rectanglestages (cm) {
 		if (status == 0) {
 			var complete = eim.getProperty(curMap.toString() + "stageclear");
 			if (complete != null) {
-				cm.sendNext("Por favor, nos apressarmos para a proxima fase, o portal esta aberto!");
+				cm.sendNext("Please hurry on to the next stage. The portal is open!");
 			} else {
-				cm.sendNext("Por favor, peca o lider do grupo para falar comigo.");
+				cm.sendNext("Please tell your party leader to speak to me.");
 				cm.dispose();
 			}
 		} else {

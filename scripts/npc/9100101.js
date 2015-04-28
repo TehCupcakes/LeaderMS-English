@@ -38,7 +38,7 @@ function start() {
     if (cm.haveItem(5451000)) {
         cm.dispose();
     } else if (cm.haveItem(5220000))
-        cm.sendYesNo("Do you want to use a Gachapon Ticket?");
+        cm.sendYesNo("I see you have a Gachapon ticket. Do you wish to use it?");
     else {
         cm.sendSimple("Welcome to " + cm.getPlayer().getMap().getMapName() + " Gachapon. How can I help you?\r\n\r\n#L0#What is Gachapon?#l\r\n#L1#Where can you buy Gachapon Tickets?#l");
     }
