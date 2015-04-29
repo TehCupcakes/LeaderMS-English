@@ -25,7 +25,7 @@ function action(mode, type, selection) {
 	else
 		status--;
 	if (status == 0) {
-		cm.sendNext("Hello! Welcome to the 6th stage. Here you will see boxes with numbers written on them. Stand on top of a box and press the UP ARROW, then carry the box to the correct location. I will give the leader of the party a clue about how to pass this stage. I will do this on #btwo times#k, and the leader must keep track of each step.\r\nOnce you reach the top, you will find the portal to the next stage. When all of your party has passed through the portal, the stage will be complete. Everything depends on remembering the correct boxes. Once I have given you advice #btwo times#k I can no longer help you. Good luck!");
+		cm.sendNext("Hello and welcome to the sixth stage of Ludibrium Party Quest. Look here, and you'll see a number of boxes. All you have to do, is find the right combination, and press up on it to teleport up. But, if you get it wrong, you will be teleported back down to the bottom. Good Luck!");
 		cm.dispose();
 		}
 	}

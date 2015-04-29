@@ -32,29 +32,30 @@ function action(mode, type, selection) {
 			status++;
 		else
 			status--;
-			if (playerStatus) { 
+			if (playerStatus) { // party leader
 				if (status == 0) {
 					var eim = cm.getChar().getEventInstance();
 					party = eim.getPlayers();
 					preamble = eim.getProperty("leader3rdpreamble");
 					if (preamble == null) {
-						cm.sendNext("Ola! Bem-vindo(a) ao 3 estagio. Aqui voce vera um monte de monstros e caixas. Se voce derrotar os monstros, eles vao entregar #b#t4001022##k, igual aos monstros da outra dimensao. Se voce quebrar a caixa, um monstro aparecera e ele tambem dara #b#t4001022##k.\r\nO numero de #b#t4001022#s#k que voce precisa coletar sao 32.");
+						cm.sendNext("Hello, and welcome to the third stage of Ludibrium PQ. There are #r32#k #bBlocktopus#k in here, kill them to retrieve the passes, and give them to me, and I will open the portal.");
 						eim.setProperty("leader3rdpreamble","done");
 						cm.dispose();
 					}
-					else { 
+					else { // check how many they have compared to number of party members
+                        			// check for stage completed
                         			var complete = eim.getProperty("3stageclear");
                         			if (complete != null) {
-                        				cm.sendNext("Por favor completar todos processos, para abrir o portal.");
+                        				cm.sendNext("Please proceed in the Party Quest, the portal opened!");
                         				cm.dispose();
                         			}
                         			else {
 							if (cm.haveItem(4001022, 32) == false) {
-								cm.sendNext("Sinto muito, mas voce nao tem todos os 32 passes necessarios para concluir esta fase.");
+								cm.sendNext("I'm sorry, but you do not have all 32 passes needed to clear this stage.");
 								cm.dispose();
 							}
 							else {
-								cm.sendNext("Bom trabalho derrotando todos os monstros e coletando #b32 #t4001022#s#k. Muito impressionante!");
+								cm.sendNext("Congratulations on clearing the third stage! I will open the portal now.");
 								clear(1,eim,cm);
 								cm.givePartyExp(3000, party);
 								cm.gainItem(4001022, -32);
@@ -64,7 +65,7 @@ function action(mode, type, selection) {
 					}
 				}
 			}
-			else { 
+			else { // non leader
 				var eim = cm.getChar().getEventInstance();
 				pstring = "member3rdpreamble" + cm.getChar().getId().toString();
 				preamble = eim.getProperty(pstring);
@@ -72,38 +73,39 @@ function action(mode, type, selection) {
 					var qstring = "member3rd" + cm.getChar().getId().toString();
 					var question = eim.getProperty(qstring);
 					if (question == null) {
-						qstring = "CRAP";
+						qstring = "Something went wrong.";
 					}
-						cm.sendNext("Ola! Bem-vindo(a) ao 3 estagio. Aqui voca vera um monte de monstros e caixas. Se voce derrotar os monstros, eles vao entregar #b#t4001022##k, igual aos monstros da outra dimensao. Se voce quebrar a caixa, um monstro aparecera e ele tambem dara #b#t4001022##k.\r\nO numero de #b#t4001022#s#k que voce precisa coletar sao 32.");
+					cm.sendNext("Hello, and welcome to the third stage of Ludibrium PQ. There are #r32#k #bBlocktopus#k in here, kill them to retrieve the passes, and give them to me, and I will open the portal.");
 					
 				}
-				else if (status == 0) {
+				else if (status == 0) {// otherwise
+                        		// check for stage completed
                         		var complete = eim.getProperty("3stageclear");
                         		if (complete != null) {
-                        			cm.sendNext("Por favor completar todos processos, para abrir o portal.");
+                        			cm.sendNext("Please proceed in the Party Quest, the portal opened!");
                         			cm.dispose();
                         		}
                         		else {
-							cm.sendOk("Por favor, fale comigo depois de ter concluido o estagio.");
+							cm.sendOk("Please talk to me after you've completed the stage.");
 							cm.dispose();
 					}
 				}
 				else if (status == 1) {
 					if (preamble == null) {
-						cm.sendOk("Ok, boa sorte para voce!");
+						cm.sendOk("Ok, best of luck to you!");
 						cm.dispose();
 					}
-					else { 
+					else { // shouldn't happen, if it does then just dispose
 						cm.dispose();
 					}
 						
 				}
-				else if (status == 2) { 
+				else if (status == 2) { // preamble completed
 					eim.setProperty(pstring,"done");
 					cm.dispose();
 				}
-				else { 
-					eim.setProperty(pstring,"done"); 
+				else { // shouldn't happen, but still...
+					eim.setProperty(pstring,"done"); // just to be sure
 					cm.dispose();
 				}
 			}
@@ -111,16 +113,16 @@ function action(mode, type, selection) {
 	}
 			
 function clear(stage, eim, cm) {
-eim.setProperty("3stageclear","true");
-var packetef = MaplePacketCreator.showEffect("quest/party/clear");
-var packetsnd = MaplePacketCreator.playSound("Party1/Clear");
-var packetglow = MaplePacketCreator.environmentChange("gate",2);
-var map = eim.getMapInstance(cm.getChar().getMapId());
-map.broadcastMessage(packetef);
-map.broadcastMessage(packetsnd);
-map.broadcastMessage(packetglow);
-var mf = eim.getMapFactory();
-map = mf.getMap(922010100 + stage * 100);
-cm.givePartyExp(300, party);
-cm.mapMessage("["+cm.getServerName()+" Quest] O portal que leva para o proximo estagio esta aberto.");
+    eim.setProperty("3stageclear","true");
+    var packetef = MaplePacketCreator.showEffect("quest/party/clear");
+    var packetsnd = MaplePacketCreator.playSound("Party1/Clear");
+    var packetglow = MaplePacketCreator.environmentChange("gate",2);
+    var map = eim.getMapInstance(cm.getChar().getMapId());
+    map.broadcastMessage(packetef);
+    map.broadcastMessage(packetsnd);
+    map.broadcastMessage(packetglow);
+    var mf = eim.getMapFactory();
+    map = mf.getMap(922010100 + stage * 100);
+    cm.givePartyExp(300, party);
+    cm.mapMessage("["+cm.getServerName()+" Quest] The portal leading to the next stage is open.");
 }
