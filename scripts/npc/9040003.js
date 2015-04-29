@@ -44,22 +44,22 @@ function action(mode, type, selection) {
     if (status == 0) {
 	if (cm.getEventInstance().getProperty("leader").equals(cm.getPlayer().getName())) {
 	    if (cm.getEventInstance().getProperty("stage4clear") != null && cm.getEventInstance().getProperty("stage4clear").equals("true")) {
-			cm.sendOk("I thought it would be an eternal sleep. I finally found someone who will save Sharenian! I can truly rest in peace now.");
+			cm.sendOk("The path ahead of you is clear. Your most enduring trial has yet to come...");
 			cm.safeDispose();
 	    } else {
 			var prev = cm.getEventInstance().setProperty("stage4clear","true",true);
 			if (prev == null) {
-				cm.sendNext("I thought it would be an eternal sleep. I finally found someone who will save Sharenian! This will pave the way for you to complete the quest...");
+				cm.sendNext("I have opened the path for you. Go now, and defeat the evil lurking ahead...");
 			} else { 
-				cm.sendOk("I thought it would be an eternal sleep. I finally found someone who will save Sharenian! I can truly rest in peace now.");
+				cm.sendOk("The path ahead of you is clear. Your most enduring trial has yet to come...");
 				cm.safeDispose();
 			}
 	    }
 	} else {
 	    if (cm.getEventInstance().getProperty("stage4clear") != null && cm.getEventInstance().getProperty("stage4clear").equals("true"))
-		cm.sendOk("I thought it would be an eternal sleep. I finally found someone who will save Sharenian! I can truly rest in peace now.");
+		cm.sendOk("The path ahead of you is clear. Your most enduring trial has yet to come...");
 	    else
-		cm.sendOk("Please tell the leader of your group to talk to me, no one else.");
+		cm.sendOk("I need the leader of your party to speak with me, nobody else.");
 	    cm.safeDispose();
 	}
     } else if (status == 1) {

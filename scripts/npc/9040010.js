@@ -35,7 +35,7 @@ function start() {
                 eim.finishPQ();
             }
             else {
-                cm.sendOk("This is the final challenge. Defeat the evil that lurks within the Rubian and return to me.");
+                cm.sendOk("This is your final challenge. Defeat the evil lurking within the Rubian and return it to me. That is all.");
             }
         }
     }

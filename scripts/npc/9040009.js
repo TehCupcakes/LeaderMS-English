@@ -55,7 +55,7 @@ function action(mode, type, selection) {
                 } else {
                         if (eim.getProperty("leader").equals(cm.getPlayer().getName())) {
                                 if (cm.getPlayer().getMap().getReactorByName("statuegate").getState() > 0){
-                                        cm.sendOk("Prosseguir.");
+                                        cm.sendOk("Proceed.");
                                         cm.dispose();
                                 } else {
                                         if (status == 0) {
@@ -67,10 +67,10 @@ function action(mode, type, selection) {
                                                                 stage = parseInt(eim.getProperty("stage1phase"));
                                                         }
                                                         if (stage == 1) {
-                                                                cm.sendOk("Neste desafio, vou mostrar um padrao nas estatuas em torno de mim. Quando eu der a palavra, repetir o padrao para poder continuar.");
+                                                                cm.sendOk("In this challenge, I shall show a pattern on the statues around me. When I give the word, repeat the pattern to me to proceed.");
                                                         }
                                                         else {
-                                                                cm.sendOk("Vou agora apresentar um quebra-cabeca mais dificil para voce.")
+                                                                cm.sendOk("I shall now present a more difficult puzzle for you. Good luck.")
                                                         }
                                                 }
                                                 else if (eim.getProperty("stage1status").equals("active")) {
@@ -78,7 +78,7 @@ function action(mode, type, selection) {
                                                         if (eim.getProperty("stage1combo").equals(eim.getProperty("stage1guess"))) {
                                                                 if (stage == 3) {
                                                                         cm.getPlayer().getMap().getReactorByName("statuegate").hitReactor(cm.getC());
-                                                                        cm.sendOk("Excelente trabalho. Por favor, prossiga para a proxima fase.");
+                                                                        cm.sendOk("Excellent work. Please proceed to the next stage.");
                                                                         cm.showEffect("quest/party/clear");
                                                                         cm.playSound("Party1/Clear");
                                                                         var prev = eim.setProperty("stage1clear","true",true);
@@ -87,21 +87,21 @@ function action(mode, type, selection) {
                                                                         }
                                                                 } else {
                                                                         
-                                                                        cm.sendOk("Muito bom. Voce ainda tem mais trabalho a concluir. Fale comigo novamente quando estiver pronto.");
+                                                                        cm.sendOk("Very good. You still have more to complete, however. Talk to me again when you're ready.");
                                                                         eim.setProperty("stage1phase", stage + 1);
-                                                                        cm.mapMessage("Voce concluiu a parte (" + stage + ") Teste do Gatekeeper.");
+                                                                        cm.mapMessage("You have completed part " + stage + " of the Gatekeeper Test.");
                                                                 }
                                                                 
                                                         } else {
-                                                                cm.sendOk("Voce falhou neste teste.");
-                                                                cm.mapMessage("Voce falhou no Teste do Gatekeeper.");
+                                                                cm.sendOk("You have failed this test.");
+                                                                cm.mapMessage("You have failed the Gatekeeper Test.");
                                                                 eim.setProperty("stage1phase","1")
                                                         }
                                                         eim.setProperty("stage1status", "waiting");
                                                         cm.dispose();
                                                 }
                                                 else {
-                                                        cm.sendOk("Por favor, aguarde.");
+                                                        cm.sendOk("Please wait.");
                                                         cm.dispose();
                                                 }
                                         }
@@ -119,7 +119,7 @@ function action(mode, type, selection) {
                                                         reactorString += combo[i] + " ";
                                                 }
                                                 cm.playerMessage(reactorString);*/
-                                                cm.mapMessage("Por favor, aguarde enquanto a combinacao e revelada.");
+                                                cm.mapMessage("Please wait while the combination is revealed.");
                                                 
                                                 var delay = 5000;
                                                 for (var i = 0; i < combo.length; i++) {
@@ -132,7 +132,7 @@ function action(mode, type, selection) {
                                 }
 
                         } else {
-                                cm.sendOk("Eu preciso que o lider de seu partido fale comigo, mais ninguem.");
+                                cm.sendOk("I need the leader of your party to speak with me, nobody else.");
                                 cm.dispose();
                         }
                 }

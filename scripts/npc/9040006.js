@@ -46,7 +46,7 @@ function start() {
                                         eim.setProperty("stage3combo",newCombo);
                                         //cm.playerMessage("Debug: " + newCombo);
                                         eim.setProperty("stage3attempt","1");
-                                        cm.sendOk("Esta fonte guarda a passagem secreta para a sala do trono. Voce ira oferecer items nesta area para prosseguir. Os vassalos deve dizer se as suas ofertas sao aceitas, e se nao, quais vassalos estao descontentes. Voce tem sete tentativas!")
+                                        cm.sendOk("This fountain guards the secret passage to the throne room. Offer items in the area to the vassals to proceed. The vassals shall tell you whether your offerings are accepted, and if not, which vassals are displeased. You have seven attempts. Good luck.")
                                 } else {
                                         var attempt = parseInt(eim.getProperty("stage3attempt"));
                                         var combo = parseInt(currentCombo);
@@ -54,7 +54,7 @@ function start() {
                                         if (guess != null) {
                                                 if (combo == guess) {
                                                         cm.getPlayer().getMap().getReactorByName("watergate").hitReactor(cm.getC());
-                                                        cm.sendOk("Voce pode prosseguir.");
+                                                        cm.sendOk("You may proceed.");
                                                         cm.showEffect("quest/party/clear");
                                                         cm.playSound("Party1/Clear");
                                                         var prev = eim.setProperty("stage3clear","true",true);
@@ -62,8 +62,8 @@ function start() {
                                                                 cm.getGuild().gainGP(25);
                                                         }
                                                 } else {
-                                                        var black = MapleLifeFactory.getMonster(9300036);
-                                                        var myst = MapleLifeFactory.getMonster(9300037);
+                                                        var black = net.sf.odinms.server.life.MapleLifeFactory.getMonster(9300036);
+                                                        var myst = net.sf.odinms.server.life.MapleLifeFactory.getMonster(9300037);
                                                         if (attempt < 7) {
                                                                 //cm.playerMessage("Combo : " + combo);
                                                                 //cm.playerMessage("Guess : " + guess);
@@ -74,26 +74,26 @@ function start() {
                                                                 //cm.playerMessage("Results - Correct: " + results[0] + " | Incorrect: " + results[1] + " | Unknown: " + results[2]);
                                                                 if (results[0] != 0) {
                                                                         if (results[0] == 1) {
-                                                                                string += "Um (1) vassalo esta #esatisfeito#n com a sua oferta.\r\n";
+                                                                                string += "1 vassal is pleased with their offering.\r\n";
                                                                         } else {
-                                                                                string += results[0] + " vassalos estao #esatisfeitos#n com suas ofertas.\r\n";
+                                                                                string += results[0] + " vassals are pleased with their offerings.\r\n";
                                                                         }
                                                                 }
                                                                 if (results[1] != 0) {
                                                                         if (results[1] == 1) {
-                                                                                string += "Um (1) vassalo esta #einsatisfeito#n com a sua oferta.\r\n";
+                                                                                string += "1 vassal has recieved an incorrect offering.\r\n";
                                                                         } else {
-                                                                                string += results[1] + " vassalos estao #einsatisfeitos#n com suas ofertas.\r\n";
+                                                                                string += results[1] + " vassals have recieved incorrect offerings.\r\n";
                                                                         }
                                                                 }
                                                                 if (results[2] != 0) {
                                                                         if (results[2] == 1) {
-                                                                                string += "Um (1) vassalo tem recebido uma oferta desconhecida.\r\n";
+                                                                                string += "1 vassal has recieved an unknown offering.\r\n";
                                                                         } else {
-                                                                                string += results[2] + " vassalos tem recebido ofertas de desconhecidas.\r\n";
+                                                                                string += results[2] + " vassals have recieved unknown offerings.\r\n";
                                                                         }
                                                                 }
-                                                                string += "Esta e sua ";
+                                                                string += "This is your ";
                                                                 switch (attempt) {
                                                                         case 1:
                                                                                 string += "1st";
@@ -108,7 +108,7 @@ function start() {
                                                                                 string += attempt + "th";
                                                                                 break;
                                                                 }
-                                                                string += " tentativa.";
+                                                                string += " attempt.";
 
                                                                 //spawn one black and one myst knight
                                                                 cm.getPlayer().getMap().spawnMonsterOnGroundBelow(black, new java.awt.Point(-350, 150));
@@ -119,24 +119,24 @@ function start() {
                                                         } else {
                                                                 //reset the combo and mass spawn monsters
                                                                 eim.setProperty("stage3combo","reset");
-                                                                cm.sendOk("Voce falhou no teste. Por favor, tente novamente mais tarde.");
+                                                                cm.sendOk("You have failed the test. Please compose yourselves and try again later.");
 
                                                                 for (var i = 0; i < 5; i++) {
                                                                         //keep getting new monsters, lest we spawn the same monster five times o.o!
-                                                                        black = MapleLifeFactory.getMonster(9300036);
-                                                                        myst =  MapleLifeFactory.getMonster(9300037);
+                                                                        black = net.sf.odinms.server.life.MapleLifeFactory.getMonster(9300036);
+                                                                        myst = net.sf.odinms.server.life.MapleLifeFactory.getMonster(9300037);
                                                                         cm.getPlayer().getMap().spawnMonsterOnGroundBelow(black, new java.awt.Point(randX(), 150));
                                                                         cm.getPlayer().getMap().spawnMonsterOnGroundBelow(myst, new java.awt.Point(randX(), 150));
                                                                 }
                                                         }
                                                 }
                                         } else {
-                                                cm.sendOk("Verifique se o seu tentativa esta devidamente ajustada na frente dos vassalos e fale comigo de novo.");
+                                                cm.sendOk("Please make sure your attempt is properly set in front of the vassals and talk to me again.");
                                         }
                                 }
                         }
                 } else {
-                        cm.sendOk("Peca o seu lider falar comigo.");
+                        cm.sendOk("Please have your leader speak to me.");
                 }
         }
         cm.dispose();

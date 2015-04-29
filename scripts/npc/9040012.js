@@ -27,7 +27,7 @@
  */
 
 function start() {
-        cm.sendOk("The card translates as follows: \r\n\"The Sharenian riders are proud warriors. Sua Longinus Spears are the two formidable weapons and the key to the castle's defense. By removing them from their platforms in the highest points of this place, they can be used to block incoming invaders.\"\r\n\r\nThis text appears to be written in English on the side, although barely readable: \r\n\"Evil stole spears, charged through obstacles, and vaulted over the top of the towers.\"\r\n...Obviously he figured out he did not have long to live... poor guy.");
+        cm.sendOk("The plaque translates as follows: \r\n\"The knights of Sharenian are proud warriors. Their Longinus Spears are both formidable weapons and the key to the castle's defense: By removing them from their platforms at the highest points of this hall, they block off the entrance from invaders.\"\r\n\r\nSomething seems to be etched in English on the side, barely readable: \r\n\"evil stole spears, chained up behind obstacles. return to top of towers. large spear, grab from higher up.\"\r\n...Obviously whoever figured it out didn't have much time to live. Poor guy.");
         cm.dispose();
 }
 

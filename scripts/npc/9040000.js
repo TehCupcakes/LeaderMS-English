@@ -27,29 +27,35 @@ function action(mode, type, selection) {
         else
             status--;
         if (status == 0) 
-            cm.sendSimple("O caminho para Sharenian comeca aqui. O que voce gostaria de fazer? #b\r\n#L0#Iniciar a Guild Quest#l\r\n#L1#Junte-se a sua guild (Guild Quest)#l");
+            cm.sendSimple("The path to Sharenian starts here. What would you like to do? #b\r\n#L0#Start a Guild Quest#l\r\n#L1#Join your guild's Guild Quest#l");
         else if (status == 1) {
             if (selection == 0) { 
-                if (cm.getPlayer().getGuildId() == 0 || cm.getPlayer().getGuildRank() >= 3) { 
-                    cm.sendNext("Somente um Mestre ou Jr. da guild pode iniciar.");
+                if (cm.getPlayer().getGuildId() == 0 || cm.getPlayer().getGuildRank() >= 3) { //no guild or not guild master/jr. master
+                    cm.sendNext("Only a Master or Jr. Master of the guild can start an instance.");
                     cm.dispose();
                 }
                 else {
                     var em = cm.getEventManager("GuildQuest");
                     if (em == null) 
-                        cm.sendOk("Esta quest esta em construcao.");
+                        cm.sendOk("This trial is currently under construction.");
                      else {
                         if (getEimForGuild(em, cm.getPlayer().getGuildId()) != null) 
-                            cm.sendOk("Sua guild ja tem uma quest ativa. Por favor, tente novamente mais tarde.")
+                            cm.sendOk("Your guild already has an active instance. Please try again later.")
                         else {
+                            //start GQ
                             var guildId = cm.getPlayer().getGuildId();
                             var eim = em.newInstance(guildId);
                             em.startInstance(eim, cm.getPlayer().getName());
+                            
+                            //force the two scripts on portals in the map
                             var map = eim.getMapInstance(990000000);
+                            
                             map.getPortal(5).setScriptName("guildwaitingenter");
                             map.getPortal(4).setScriptName("guildwaitingexit");
                             eim.registerPlayer(cm.getPlayer());
-                            cm.guildMessage("Sua guild acaba de entrar na Guild Quest. Por favor, informe a Shuang no Campo de Escavacao no canal (" + cm.getPlayer().getClient().getChannel() + ").");
+                            cm.guildMessage("The guild has been entered into the Guild Quest. Please report to Shuang at the Excavation Camp on channel " + cm.getPlayer().getClient().getChannel() + ".");
+                            
+                            //remove all GQ items from player entering
                             for (var i = 0; i < GQItems.length; i++) 
                                 cm.removeAll(GQItems[i]);
                         }
@@ -57,27 +63,29 @@ function action(mode, type, selection) {
                     cm.dispose();
                 }
             }
-            else if (selection == 1) { 
-                if (cm.getPlayer().getGuildId() == 0) { 
-                    cm.sendNext("Vocedeve estar em uma guild para se juntar a quest.");
+            else if (selection == 1) { //entering existing GQ
+                if (cm.getPlayer().getGuildId() == 0) { //no guild or not guild master/jr. master
+                    cm.sendNext("You must be in a guild to join an instance.");
                     cm.dispose();
                 }
                 else {
                     var em = cm.getEventManager("GuildQuest");
                     if (em == null)
-                        cm.sendOk("Esta quest esta em construcao.");
+                        cm.sendOk("This trial is currently under construction.");
                      else {
                         var eim = getEimForGuild(em, cm.getPlayer().getGuildId());
                         if (eim == null) 
-                            cm.sendOk("Sua guild atualmente nao esta registrada para uma quest no momento.");
+                            cm.sendOk("Your guild is currently not registered for an instance.");
                         else {
                             if ("true".equals(eim.getProperty("canEnter"))) {
                                 eim.registerPlayer(cm.getPlayer());
+                                
+                                 //remove all GQ items from player entering
                                 for (var i = 0; i < GQItems.length; i++)
                                     cm.removeAll(GQItems[i]);
                             }
                             else 
-                                cm.sendOk("Sinto muito, mas sua guild entrou sem voce. Tente novamente mais tarde .");
+                                cm.sendOk("I'm sorry, but the guild has gone on without you. Try again later.");
                         }
                     }
                     cm.dispose();
