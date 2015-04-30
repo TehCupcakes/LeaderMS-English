@@ -97,6 +97,7 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.nio.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.SocketAcceptorConfig;
 import server.AutobanManager;
+import server.CashItemFactory;
 import server.MapleItemInformationProvider;
 import server.MapleTrade;
 import server.maps.MapTimer;
@@ -279,6 +280,7 @@ public class ChannelServer implements Runnable, ChannelServerMBean {
         MapTimer.getInstance().start();
         SkillFactory.cacheSkills();
         MapleItemInformationProvider.getInstance().getAllItems();
+        CashItemFactory.getInstance();
         System.out.println("[INFO] Loaded items in " + ((System.currentTimeMillis() - timeToTake) / 1000.0) + " seconds.");
         
         try {

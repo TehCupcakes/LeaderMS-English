@@ -2221,7 +2221,7 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
     }
        
 
-       public void changeMap(final MapleMap to, final Point pos) {
+    public void changeMap(final MapleMap to, final Point pos) {
         /*getClient().getSession().write(MaplePacketCreator.spawnPortal(map.getId(), to.getId(), pos));
         if (getParty() != null) {
         getClient().getSession().write(MaplePacketCreator.partyPortal(map.getId(), to.getId(), pos));
@@ -2231,13 +2231,8 @@ public class MapleCharacter extends AbstractAnimatedMapleMapObject implements In
     }
        
     public void changeMap(final MapleMap to, final MaplePortal pto) {
-        if (to.getId() == 100000200 || to.getId() == 211000100 || to.getId() == 220000300) {
-            MaplePacket warpPacket = MaplePacketCreator.getWarpToMap(to, pto.getId() - 2, this);
-            changeMapInternal(to, pto.getPosition(), warpPacket);
-        } else {
-            MaplePacket warpPacket = MaplePacketCreator.getWarpToMap(to, pto.getId(), this);
-            changeMapInternal(to, pto.getPosition(), warpPacket);
-        }
+        MaplePacket warpPacket = MaplePacketCreator.getWarpToMap(to, pto.getId(), this);
+        changeMapInternal(to, pto.getPosition(), warpPacket);
     }
         
     public void changeMap(int map, int portal) {

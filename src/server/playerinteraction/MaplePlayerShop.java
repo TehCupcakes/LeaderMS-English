@@ -17,7 +17,7 @@ public class MaplePlayerShop extends PlayerInteractionManager {
     private List<String> bannedList = new ArrayList<String>();
 
     public MaplePlayerShop(MapleCharacter owner, int itemId, String desc) {
-        super(owner, itemId % 10, desc, 3);
+        super(owner, itemId % 10, desc, null, 3);
         this.owner = owner;
     }
 

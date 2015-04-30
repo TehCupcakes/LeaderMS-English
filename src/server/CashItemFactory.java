@@ -47,6 +47,24 @@ public class CashItemFactory {
 		
 		return stats;
 	}
+        
+        protected CashItemFactory() {
+		System.out.println("Loading CashItemFactory :::");
+                
+		for (MapleData field : data.getData("Commodity.img").getChildren()) {
+			boolean onSale = MapleDataTool.getIntConvert("OnSale", field, 0) > 0;
+			if (onSale) {
+				final CashItemInfo stats = new CashItemInfo(
+				MapleDataTool.getIntConvert("ItemId", field),
+				MapleDataTool.getIntConvert("Count", field, 1),
+				MapleDataTool.getIntConvert("Price", field, 0),
+                                MapleDataTool.getIntConvert("Period", field, 1),
+				MapleDataTool.getIntConvert("SN", field, 0));
+
+				itemStats.put(MapleDataTool.getIntConvert("SN", field, 0), stats);
+			}
+		}
+	}
 	
 	private static int getCommodityFromSN(int sn) {
 		int cid;

@@ -7,10 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import client.MapleCharacter;
 import client.MapleClient;
 import database.DatabaseConnection;
 import server.maps.MapleMapObjectType;
+import tools.packet.MiniGamePacket;
 import tools.packet.MaplePacketCreator;
 
 public class MapleMiniGame extends PlayerInteractionManager {
@@ -34,8 +36,8 @@ public class MapleMiniGame extends PlayerInteractionManager {
         OMOK, MATCH_CARDS
     }
 
-    public MapleMiniGame(MapleCharacter owner, int type, String desc) {
-        super(owner, type, desc, 1);
+    public MapleMiniGame(MapleCharacter owner, int type, String desc, String pass) {
+        super(owner, type, desc, pass, 1);
         this.owner = owner;
     }
 
@@ -80,30 +82,30 @@ public class MapleMiniGame extends PlayerInteractionManager {
         ownerpoints++;
         if (ownerpoints + visitorpoints == matchestowin) {
             if (ownerpoints == visitorpoints) {
-                broadcast(MaplePacketCreator.getMiniGameTie(this), true);
+                broadcast(MiniGamePacket.getMiniGameTie(this), true);
             } else if (ownerpoints > visitorpoints) {
-                broadcast(MaplePacketCreator.getMiniGameWin(this, 0), true);
+                broadcast(MiniGamePacket.getMiniGameWin(this, 0), true);
             } else if (visitorpoints > ownerpoints) {
-                broadcast(MaplePacketCreator.getMiniGameWin(this, 1), true);
+                broadcast(MiniGamePacket.getMiniGameWin(this, 1), true);
             }
+            ownerpoints = 0;
+            visitorpoints = 0;
         }
-        ownerpoints = 0;
-        visitorpoints = 0;
     }
 
     public void setVisitorPoints() {
         visitorpoints++;
         if ((ownerpoints + visitorpoints) == matchestowin) {
             if (ownerpoints > visitorpoints) {
-                broadcast(MaplePacketCreator.getMiniGameWin(this, 0), true);
+                broadcast(MiniGamePacket.getMiniGameWin(this, 0), true);
             } else if (visitorpoints > ownerpoints) {
-                broadcast(MaplePacketCreator.getMiniGameWin(this, 1), true);
+                broadcast(MiniGamePacket.getMiniGameWin(this, 1), true);
             } else if (ownerpoints == visitorpoints) {
-                broadcast(MaplePacketCreator.getMiniGameTie(this), true);
+                broadcast(MiniGamePacket.getMiniGameTie(this), true);
             }
+            ownerpoints = 0;
+            visitorpoints = 0;
         }
-        ownerpoints = 0;
-        visitorpoints = 0;
     }
 
     public int getOwnerPoints() {
@@ -302,16 +304,16 @@ public class MapleMiniGame extends PlayerInteractionManager {
         int slot = ((move2 * 15) + (move1 + 1));
         if (piece[slot] == 0) {
             piece[slot] = type;
-            broadcast(MaplePacketCreator.getMiniGameMoveOmok(move1, move2, type), true);
+            broadcast(MiniGamePacket.getMiniGameMoveOmok(move1, move2, type), true);
             for (int y = 0; y < 15; y++) {
                 for (int x = 0; x < 11; x++) {
                     if (searchCombo(x, y, type)) {
                         if (isOwner(chr)) {
-                            broadcast(MaplePacketCreator.getMiniGameWin(this, 0), true);
+                            broadcast(MiniGamePacket.getMiniGameWin(this, 0), true);
                             setStarted(false);
                             setLoser(0);
                         } else {
-                            broadcast(MaplePacketCreator.getMiniGameWin(this, 1), true);
+                            broadcast(MiniGamePacket.getMiniGameWin(this, 1), true);
                             this.setStarted(false);
                             this.setLoser(1);
                         }
@@ -329,11 +331,11 @@ public class MapleMiniGame extends PlayerInteractionManager {
                 for (int x = 4; x < 15; x++) {
                     if (searchCombo2(x, y, type)) {
                         if (isOwner(chr)) {
-                            broadcast(MaplePacketCreator.getMiniGameWin(this, 0), true);
+                            broadcast(MiniGamePacket.getMiniGameWin(this, 0), true);
                             setStarted(false);
                             setLoser(0);
                         } else {
-                            broadcast(MaplePacketCreator.getMiniGameWin(this, 1), true);
+                            broadcast(MiniGamePacket.getMiniGameWin(this, 1), true);
                             setStarted(false);
                             setLoser(1);
                         }

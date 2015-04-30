@@ -49,4 +49,6 @@ public interface IPlayerInteractionManager {
     public boolean isOwner(MapleCharacter chr);
 
     public byte getShopType();
+    
+    public String getPassword();
 }

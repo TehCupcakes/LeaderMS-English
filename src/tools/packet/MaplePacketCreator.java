@@ -1751,98 +1751,15 @@ public class MaplePacketCreator {
         }
     }
 
-	public static MaplePacket facialExpression(MapleCharacter from, int expression) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-		mplew.writeShort(SendPacketOpcode.FACIAL_EXPRESSION.getValue());
-		mplew.writeInt(from.getId());
-		mplew.writeInt(expression);
-		
-		return mplew.getPacket();
-	}
-
-    public static MaplePacket getMiniGameClose(byte number) {
+    public static MaplePacket facialExpression(MapleCharacter from, int expression) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0xA);
-        mplew.write(1);
-        mplew.write(3);
+
+        mplew.writeShort(SendPacketOpcode.FACIAL_EXPRESSION.getValue());
+        mplew.writeInt(from.getId());
+        mplew.writeInt(expression);
+
         return mplew.getPacket();
     }
-
-    public static MaplePacket getMatchCardStart(MapleMiniGame game, int loser) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(HexTool.getByteArrayFromHexString("37 0" + loser));
-        mplew.write(HexTool.getByteArrayFromHexString("0C"));
-        mplew.writeInt(game.getCardId(1));
-        mplew.writeInt(game.getCardId(2));
-        mplew.writeInt(game.getCardId(3));
-        mplew.writeInt(game.getCardId(4));
-        mplew.writeInt(game.getCardId(5));
-        mplew.writeInt(game.getCardId(6));
-        mplew.writeInt(game.getCardId(7));
-        mplew.writeInt(game.getCardId(8));
-        mplew.writeInt(game.getCardId(9));
-        mplew.writeInt(game.getCardId(10));
-        mplew.writeInt(game.getCardId(11));
-        mplew.writeInt(game.getCardId(12));
-        if (game.getMatchesToWin() > 6) {
-            mplew.writeInt(game.getCardId(13));
-            mplew.writeInt(game.getCardId(14));
-            mplew.writeInt(game.getCardId(15));
-            mplew.writeInt(game.getCardId(16));
-            mplew.writeInt(game.getCardId(17));
-            mplew.writeInt(game.getCardId(18));
-            mplew.writeInt(game.getCardId(19));
-            mplew.writeInt(game.getCardId(20));
-        }
-        if (game.getMatchesToWin() > 10) {
-            mplew.writeInt(game.getCardId(21));
-            mplew.writeInt(game.getCardId(22));
-            mplew.writeInt(game.getCardId(23));
-            mplew.writeInt(game.getCardId(24));
-            mplew.writeInt(game.getCardId(25));
-            mplew.writeInt(game.getCardId(26));
-            mplew.writeInt(game.getCardId(27));
-            mplew.writeInt(game.getCardId(28));
-            mplew.writeInt(game.getCardId(29));
-            mplew.writeInt(game.getCardId(30));
-        }
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMatchCardNewVisitor(MapleCharacter c, int slot) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(HexTool.getByteArrayFromHexString("04 0" + slot));
-        PacketHelper.addCharLook(mplew, c, false);
-        mplew.writeMapleAsciiString(c.getName());
-        mplew.writeInt(1);
-        mplew.writeInt(c.getMatchCardPoints("wins"));
-        mplew.writeInt(c.getMatchCardPoints("ties"));
-        mplew.writeInt(c.getMatchCardPoints("losses"));
-        mplew.writeInt(2000);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMatchCardSelect(MapleMiniGame game, int turn, int slot, int firstslot, int type) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(HexTool.getByteArrayFromHexString("3E 0" + turn));
-        if (turn == 1) {
-            mplew.write(slot);
-        }
-        if (turn == 0) {
-            mplew.write(slot);
-            mplew.write(firstslot);
-            mplew.write(type);
-        }
-        log.info(mplew.toString());
-        return mplew.getPacket();
-    }
-    
-
 
     public static MaplePacket getHiredMerchant(MapleClient c, MapleMiniGame minigame, String description) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
@@ -1857,86 +1774,70 @@ public class MaplePacketCreator {
         return mplew.getPacket();
     }
 
-    public static MaplePacket removeOmokBox(MapleCharacter c) {
+    public static MaplePacket movePlayer(int cid, List<LifeMovementFragment> moves) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.UPDATE_CHAR_BOX.getValue());
-        mplew.writeInt(c.getId());
-        mplew.write(0);
+
+        mplew.writeShort(SendPacketOpcode.MOVE_PLAYER.getValue());
+        mplew.writeInt(cid);
+        mplew.writeInt(0);
+        PacketHelper.serializeMovementList(mplew, moves);
+
         return mplew.getPacket();
     }
 
-    public static MaplePacket removeMatchcardBox(MapleCharacter c) {
+    public static MaplePacket moveSummon(int cid, int oid, Point startPos, List<LifeMovementFragment> moves) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.UPDATE_CHAR_BOX.getValue());
-        mplew.writeInt(c.getId());
-        mplew.write(0);
+
+        mplew.writeShort(SendPacketOpcode.MOVE_SUMMON.getValue());
+        mplew.writeInt(cid);
+        mplew.writeInt(oid);
+        mplew.writeShort(startPos.x);
+        mplew.writeShort(startPos.y);
+        PacketHelper.serializeMovementList(mplew, moves);
+
         return mplew.getPacket();
     }
 
-	public static MaplePacket movePlayer(int cid, List<LifeMovementFragment> moves) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+    public static MaplePacket moveMonster(int useskill, int skill, int skill_1, int skill_2, int skill_3, int oid, Point startPos, List<LifeMovementFragment> moves) {
+        /*
+         * A0 00 C8 00 00 00 00 FF 00 00 00 00 48 02 7D FE 02 00 1C 02 7D FE 9C FF 00 00 2A 00 03 BD 01 00 DC 01 7D FE
+         * 9C FF 00 00 2B 00 03 7B 02
+         */
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		mplew.writeShort(SendPacketOpcode.MOVE_PLAYER.getValue());
-		mplew.writeInt(cid);
-		mplew.writeInt(0);
-		PacketHelper.serializeMovementList(mplew, moves);
-		
-		return mplew.getPacket();
-	}
+        mplew.writeShort(SendPacketOpcode.MOVE_MONSTER.getValue());
+        // mplew.writeShort(0xA2); // 47 a0
+        mplew.writeInt(oid);
+        mplew.write(useskill);
+        mplew.write(skill);
+        mplew.write(skill_1);
+        mplew.write(skill_2);
+        mplew.write(skill_3);
+        mplew.write(0);
+        mplew.writeShort(startPos.x);
+        mplew.writeShort(startPos.y);
+        PacketHelper.serializeMovementList(mplew, moves);
 
-	public static MaplePacket moveSummon(int cid, int oid, Point startPos, List<LifeMovementFragment> moves) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        return mplew.getPacket();
+    }
 
-		mplew.writeShort(SendPacketOpcode.MOVE_SUMMON.getValue());
-		mplew.writeInt(cid);
-		mplew.writeInt(oid);
-		mplew.writeShort(startPos.x);
-		mplew.writeShort(startPos.y);
-		PacketHelper.serializeMovementList(mplew, moves);
+    public static MaplePacket summonAttack(int cid, int summonSkillId, int newStance, List<SummonAttackEntry> allDamage) {
+            MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
-		return mplew.getPacket();
-	}
-        
-	public static MaplePacket moveMonster(int useskill, int skill, int skill_1, int skill_2, int skill_3, int oid, Point startPos, List<LifeMovementFragment> moves) {
-		/*
-		 * A0 00 C8 00 00 00 00 FF 00 00 00 00 48 02 7D FE 02 00 1C 02 7D FE 9C FF 00 00 2A 00 03 BD 01 00 DC 01 7D FE
-		 * 9C FF 00 00 2B 00 03 7B 02
-		 */
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+            mplew.writeShort(SendPacketOpcode.SUMMON_ATTACK.getValue());
+            mplew.writeInt(cid);
+            mplew.writeInt(summonSkillId);
+            mplew.write(newStance);
+            mplew.write(allDamage.size());
+            for (SummonAttackEntry attackEntry : allDamage) {
+                    mplew.writeInt(attackEntry.getMonsterOid()); // oid
+                    mplew.write(6); // who knows
+                    mplew.writeInt(attackEntry.getDamage()); // damage
 
-		mplew.writeShort(SendPacketOpcode.MOVE_MONSTER.getValue());
-		// mplew.writeShort(0xA2); // 47 a0
-		mplew.writeInt(oid);
-		mplew.write(useskill);
-		mplew.write(skill);
-		mplew.write(skill_1);
-		mplew.write(skill_2);
-		mplew.write(skill_3);
-		mplew.write(0);
-		mplew.writeShort(startPos.x);
-		mplew.writeShort(startPos.y);
-		PacketHelper.serializeMovementList(mplew, moves);
+            }
 
-		return mplew.getPacket();
-	}
-
-	public static MaplePacket summonAttack(int cid, int summonSkillId, int newStance, List<SummonAttackEntry> allDamage) {
-		MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-		mplew.writeShort(SendPacketOpcode.SUMMON_ATTACK.getValue());
-		mplew.writeInt(cid);
-		mplew.writeInt(summonSkillId);
-		mplew.write(newStance);
-		mplew.write(allDamage.size());
-		for (SummonAttackEntry attackEntry : allDamage) {
-			mplew.writeInt(attackEntry.getMonsterOid()); // oid
-			mplew.write(6); // who knows
-			mplew.writeInt(attackEntry.getDamage()); // damage
-
-		}
-
-		return mplew.getPacket();
-	}
+            return mplew.getPacket();
+    }
 
 	public static MaplePacket closeRangeAttack(int cid, int skill, int stance, int numAttackedAndDamage, List<Pair<Integer, List<Integer>>> damage, int speed) {
 		// 7D 00 #30 75 00 00# 12 00 06 02 0A 00 00 00 00 01 00 00 00 00 97 02 00 00 97 02 00 00
@@ -6099,151 +6000,6 @@ public class MaplePacketCreator {
         mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
         mplew.writeShort(5);
         mplew.write(2);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameStart(int loser) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0x37);
-        mplew.write(loser);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameSkipTurn(int slot) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0x39);
-        mplew.write(slot);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameReady() {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0x34);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameUnReady() {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0x35);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameRequestTie() {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0x2C);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameDenyTie() {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0x2D);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameMoveOmok(int move1, int move2, int move3) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0x3A);
-        mplew.writeInt(move1);
-        mplew.writeInt(move2);
-        mplew.write(move3);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameWin(MapleMiniGame game, int person) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(HexTool.getByteArrayFromHexString("38 00"));
-        mplew.write(person);
-        mplew.writeInt(1); // start of owner; unknown
-        mplew.writeInt(game.getOmokPoints("wins", true)); // wins
-        mplew.writeInt(game.getOmokPoints("ties", true)); // ties
-        mplew.writeInt(game.getOmokPoints("losses", true) + 1); // losses
-        mplew.writeInt(2000); // points
-        mplew.writeInt(1); // start of visitor; unknown
-        mplew.writeInt(game.getOmokPoints("wins", false) + 1); // wins
-        mplew.writeInt(game.getOmokPoints("ties", false)); // ties
-        mplew.writeInt(game.getOmokPoints("losses", false)); // losses
-        mplew.writeInt(2000); // points
-        game.setOmokPoints(person + 1);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameTie(MapleMiniGame game) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(HexTool.getByteArrayFromHexString("38 01"));
-        mplew.writeInt(1); // unknown
-        mplew.writeInt(game.getOmokPoints("wins", true)); // wins
-        mplew.writeInt(game.getOmokPoints("ties", true) + 1); // ties
-        mplew.writeInt(game.getOmokPoints("losses", true)); // losses
-        mplew.writeInt(2000); // points
-        mplew.writeInt(1); // start of visitor; unknown
-        mplew.writeInt(game.getOmokPoints("wins", false)); // wins
-        mplew.writeInt(game.getOmokPoints("ties", false) + 1); // ties
-        mplew.writeInt(game.getOmokPoints("losses", false)); // losses
-        mplew.writeInt(2000); // points
-        game.setMatchCardPoints(3);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMiniGameForfeit(MapleMiniGame game, int person) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(HexTool.getByteArrayFromHexString("38 02"));
-        mplew.write(person);
-        mplew.writeInt(1); // start of owner; unknown
-        mplew.writeInt(game.getOmokPoints("wins", true)); // wins
-        mplew.writeInt(game.getOmokPoints("ties", true)); // ties
-        mplew.writeInt(game.getOmokPoints("losses", true) + 1); // losses
-        mplew.writeInt(2000); // points
-        mplew.writeInt(1); // start of visitor; unknown
-        mplew.writeInt(game.getOmokPoints("wins", false) + 1); // wins
-        mplew.writeInt(game.getOmokPoints("ties", false)); // ties
-        mplew.writeInt(game.getOmokPoints("losses", false)); // losses
-        mplew.writeInt(2000); // points
-        game.setOmokPoints(person + 1);
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMatchCardStart(MapleMiniGame game) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0x37);
-        mplew.write(game.getLoser());
-        int times;
-        if (game.getMatchesToWin() > 10) {
-            times = 30;
-        } else if (game.getMatchesToWin() > 6) {
-            times = 20;
-        } else {
-            times = 12;
-        }
-        mplew.write(times);
-        for (int i = 1; i <= times; i++) {
-            mplew.writeInt(game.getCardId(i));
-        }
-        return mplew.getPacket();
-    }
-
-    public static MaplePacket getMatchCardSelect(int turn, int slot, int firstslot, int type) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(SendPacketOpcode.PLAYER_INTERACTION.getValue());
-        mplew.write(0x3E);
-        mplew.write(turn);
-        if (turn == 1) {
-            mplew.write(slot);
-        } else if (turn == 0) {
-            mplew.write(slot);
-            mplew.write(firstslot);
-            mplew.write(type);
-        }
         return mplew.getPacket();
     }
 	

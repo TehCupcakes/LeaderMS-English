@@ -1,6 +1,7 @@
 package handling.channel.handler;
 
 import java.util.Arrays;
+
 import client.IItem;
 import client.MapleCharacter;
 import client.MapleClient;
@@ -23,9 +24,10 @@ import server.PlayerInteraction.MaplePlayerShop;
 import server.maps.MapleMapObjectType;
 import tools.packet.MaplePacketCreator;
 import tools.data.input.SeekableLittleEndianAccessor;
+import tools.packet.MiniGamePacket;
 
 public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
-
+    
     private enum Action {
 
         CREATE(0),
@@ -48,6 +50,7 @@ public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
         MAINTENANCE_OFF(0x25),
         MERCHANT_ORGANIZE(0x26),
         CLOSE_MERCHANT(0x27),
+        EXPEL_PLAYER(0x36), //Game Expel
         REQUEST_TIE(44),
         ANSWER_TIE(45),
         GIVE_UP(46),
@@ -88,7 +91,7 @@ public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
                         pass = slea.readMapleAsciiString();
                     }
                     int type = slea.readByte();
-                    IPlayerInteractionManager game = new MapleMiniGame(c.getPlayer(), type, desc);
+                    IPlayerInteractionManager game = new MapleMiniGame(c.getPlayer(), type, desc, pass);
                     c.getPlayer().setInteraction(game);
                     if (createType == 1) {
                         ((MapleMiniGame) game).setGameType(MiniGameType.OMOK);
@@ -174,6 +177,16 @@ public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
                             c.getPlayer().dropMessage(1, "You have been banned from this store.");
                             return;
                         }
+                    } else if (ips.getShopType() == 3 || ips.getShopType() == 4) { //mini game
+                        String pass = null;
+                        if (slea.readByte() == 1) { //a password has been entered
+                            pass = slea.readMapleAsciiString();
+                        }
+
+                        if (pass != null && !pass.equals(ips.getPassword())) {
+                            c.getPlayer().dropMessage(1, "The password is not correct.");
+                            return;
+                        }
                     }
                     if (ips.getFreeSlot() == -1) {
                         c.getSession().write(MaplePacketCreator.getMiniBoxFull());
@@ -244,47 +257,47 @@ public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
                 slea.readByte();
             }
         } else if (mode == Action.READY.getCode()) {
-            c.getPlayer().getInteraction().broadcast(MaplePacketCreator.getMiniGameReady(), true);
+            c.getPlayer().getInteraction().broadcast(MiniGamePacket.getMiniGameReady(), true);
         } else if (mode == Action.UN_READY.getCode()) {
-            c.getPlayer().getInteraction().broadcast(MaplePacketCreator.getMiniGameUnReady(), true);
+            c.getPlayer().getInteraction().broadcast(MiniGamePacket.getMiniGameUnReady(), true);
         } else if (mode == Action.START.getCode()) {
             MapleMiniGame game = (MapleMiniGame) c.getPlayer().getInteraction();
             if (game.getGameType() == MiniGameType.OMOK) {
-                game.broadcast(MaplePacketCreator.getMiniGameStart(game.getLoser()), true);
+                game.broadcast(MiniGamePacket.getMiniGameStart(game.getLoser()), true);
             } else if (game.getGameType() == MiniGameType.MATCH_CARDS) {
                 game.shuffleList();
-                game.broadcast(MaplePacketCreator.getMatchCardStart(game), true);
+                game.broadcast(MiniGamePacket.getMatchCardStart(game), true);
             }
             c.getPlayer().getMap().broadcastMessage(MaplePacketCreator.sendInteractionBox(game.getOwner()));
             game.setStarted(true);
         } else if (mode == Action.GIVE_UP.getCode()) {
             MapleMiniGame game = (MapleMiniGame) c.getPlayer().getInteraction();
             if (game.getGameType() == MiniGameType.OMOK) {
-                game.broadcast(MaplePacketCreator.getMiniGameForfeit(game, game.isOwner(c.getPlayer()) ? 0 : 1), true);
+                game.broadcast(MiniGamePacket.getMiniGameForfeit(game, game.isOwner(c.getPlayer()) ? 0 : 1), true);
             } else if (game.getGameType() == MiniGameType.MATCH_CARDS) {
                 if (game.isOwner(c.getPlayer())) {
-                    game.broadcast(MaplePacketCreator.getMiniGameWin(game, 1), true);
+                    game.broadcast(MiniGamePacket.getMiniGameWin(game, 1), true);
                 } else {
-                    game.broadcast(MaplePacketCreator.getMiniGameWin(game, 0), true);
+                    game.broadcast(MiniGamePacket.getMiniGameWin(game, 0), true);
                 }
             }
         } else if (mode == Action.REQUEST_TIE.getCode()) {
             MapleMiniGame game = (MapleMiniGame) c.getPlayer().getInteraction();
             if (game.isOwner(c.getPlayer())) {
-                game.getVisitors()[0].getClient().getSession().write(MaplePacketCreator.getMiniGameRequestTie());
+                game.getVisitors()[0].getClient().getSession().write(MiniGamePacket.getMiniGameRequestTie());
             } else {
-                game.getOwner().getClient().getSession().write(MaplePacketCreator.getMiniGameRequestTie());
+                game.getOwner().getClient().getSession().write(MiniGamePacket.getMiniGameRequestTie());
             }
         } else if (mode == Action.ANSWER_TIE.getCode()) {
             MapleMiniGame game = (MapleMiniGame) c.getPlayer().getInteraction();
             if (slea.readByte() == 1) {
-                game.broadcast(MaplePacketCreator.getMiniGameTie(game), true);
+                game.broadcast(MiniGamePacket.getMiniGameTie(game), true);
             } else {
-                game.broadcast(MaplePacketCreator.getMiniGameDenyTie(), true);
+                game.broadcast(MiniGamePacket.getMiniGameDenyTie(), true);
             }
         } else if (mode == Action.SKIP.getCode()) {
             IPlayerInteractionManager game = c.getPlayer().getInteraction();
-            game.broadcast(MaplePacketCreator.getMiniGameSkipTurn(game.isOwner(c.getPlayer()) ? 0 : 1), true);
+            game.broadcast(MiniGamePacket.getMiniGameSkipTurn(game.isOwner(c.getPlayer()) ? 0 : 1), true);
         } else if (mode == Action.MOVE_OMOK.getCode()) {
             int x = slea.readInt(); // x point
             int y = slea.readInt(); // y point
@@ -297,17 +310,17 @@ public class PlayerInteractionHandler extends AbstractMaplePacketHandler {
             int firstslot = game.getFirstSlot();
             if (turn == 1) {
                 game.setFirstSlot(slot);
-                game.broadcast(MaplePacketCreator.getMatchCardSelect(turn, slot, firstslot, turn), !game.isOwner(c.getPlayer()));
+                game.broadcast(MiniGamePacket.getMatchCardSelect(turn, slot, firstslot, turn), !game.isOwner(c.getPlayer()));
             } else if (game.getCardId(firstslot + 1) == game.getCardId(slot + 1)) {
                 if (game.isOwner(c.getPlayer())) {
-                    game.broadcast(MaplePacketCreator.getMatchCardSelect(turn, slot, firstslot, 2), true);
+                    game.broadcast(MiniGamePacket.getMatchCardSelect(turn, slot, firstslot, 2), true);
                     game.setOwnerPoints();
                 } else {
-                    game.broadcast(MaplePacketCreator.getMatchCardSelect(turn, slot, firstslot, 3), true);
+                    game.broadcast(MiniGamePacket.getMatchCardSelect(turn, slot, firstslot, 3), true);
                     game.setVisitorPoints();
                 }
             } else {
-                game.broadcast(MaplePacketCreator.getMatchCardSelect(turn, slot, firstslot, game.isOwner(c.getPlayer()) ? 0 : 1), true);
+                game.broadcast(MiniGamePacket.getMatchCardSelect(turn, slot, firstslot, game.isOwner(c.getPlayer()) ? 0 : 1), true);
             }
         } else if (mode == Action.SET_MESO.getCode()) {
             c.getPlayer().getTrade().setMeso(slea.readInt());

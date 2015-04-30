@@ -28,7 +28,7 @@ public class HiredMerchant extends PlayerInteractionManager {
     private String ownerName = "";
 
     public HiredMerchant(MapleCharacter owner, int itemId, String desc) {
-        super(owner, itemId % 10, desc, 3);
+        super(owner, itemId % 10, desc, null, 3);
         this.itemId = itemId;
         this.map = owner.getMap();
         this.schedule = TimerManager.getInstance().schedule(new Runnable() {

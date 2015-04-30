@@ -43,6 +43,9 @@ import handling.login.LoginServer;
 import handling.world.PlayerCoolDownValueHolder;
 import java.util.LinkedHashMap;
 import server.MapleItemInformationProvider;
+import server.PlayerInteraction.IPlayerInteractionManager;
+import server.PlayerInteraction.MapleMiniGame;
+import server.PlayerInteraction.MaplePlayerShop;
 import server.movement.LifeMovementFragment;
 import tools.HexTool;
 import tools.KoreanDateUtil;
@@ -493,5 +496,32 @@ public class PacketHelper {
             for (LifeMovementFragment move : moves) {
                     move.serialize(lew);
             }
+    }
+
+    private static void addAnnounceBox(MaplePacketLittleEndianWriter mplew, IPlayerInteractionManager interaction) {
+        if (interaction.getShopType() == 2) {
+            mplew.write(4); //Shop
+            mplew.writeInt(((MaplePlayerShop) interaction).getObjectId());
+        } else if (interaction.getShopType() == 3) {
+            mplew.write(2); //Match Card
+            mplew.writeInt(((MapleMiniGame) interaction).getObjectId());
+        } else if (interaction.getShopType() == 4) {
+            mplew.write(1); //Omok
+            mplew.writeInt(((MapleMiniGame) interaction).getObjectId());
+        }
+        mplew.writeMapleAsciiString(interaction.getDescription()); // desc
+        if (interaction.getPassword() != null)
+            mplew.write(1); //private
+        else
+            mplew.write(0); //public
+        mplew.write(interaction.getItemType());
+        mplew.write(1);
+        if (interaction.getShopType() == 2) {
+            mplew.write(interaction.getFreeSlot() > -1 ? 4 : 1);
+            mplew.write(0);
+        } else {
+            mplew.write(interaction.getFreeSlot() > -1 ? 2 : 1); //4 slots, but only 2 can enter
+            mplew.write(((MapleMiniGame) interaction).getStarted() ? 1 : 0);
+        }
     }
 }

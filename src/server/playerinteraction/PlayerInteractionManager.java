@@ -25,17 +25,19 @@ public abstract class PlayerInteractionManager extends AbstractMapleMapObject im
     private int ownerId;
     private byte type;
     private String description = "";
+    private String password = "";
     private short capacity;
     protected MapleCharacter[] visitors = new MapleCharacter[3];
     protected List<MaplePlayerShopItem> items = new LinkedList<MaplePlayerShopItem>();
 
-    public PlayerInteractionManager(MapleCharacter owner, int type, String desc, int capacity) {
+    public PlayerInteractionManager(MapleCharacter owner, int type, String desc, String pass, int capacity) {
         this.setPosition(owner.getPosition());
         this.ownerName = owner.getName();
         this.ownerId = owner.getId();
         this.type = (byte) type;
-        this.capacity = (short) capacity;
         this.description = desc;
+        this.password = pass;
+        this.capacity = (short) capacity;
     }
 
     @Override
@@ -279,6 +281,11 @@ public abstract class PlayerInteractionManager extends AbstractMapleMapObject im
     @Override
     public byte getItemType() {
         return type;
+    }
+    
+    @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override
